@@ -17,17 +17,17 @@
 						<text class="profile-field-value" :class="{ 'profile-field-placeholder': !form.occupation }">
 							{{ form.occupation || '请选择职业' }}
 						</text>
-						<text class="profile-field-arrow">›</text>
+						<text class="profile-field-arrow">�?/text>
 					</view>
 				</view>
 				
 				<view class="profile-field">
-					<text class="profile-field-label">年收入</text>
+					<text class="profile-field-label">年收�?/text>
 					<view class="profile-field-input" @click="selectIncome">
 						<text class="profile-field-value" :class="{ 'profile-field-placeholder': !form.annualIncomeText }">
-							{{ form.annualIncomeText || '请选择年收入范围' }}
+							{{ form.annualIncomeText || '请选择年收入范�? }}
 						</text>
-						<text class="profile-field-arrow">›</text>
+						<text class="profile-field-arrow">�?/text>
 					</view>
 				</view>
 				
@@ -37,7 +37,7 @@
 						<text class="profile-field-value" :class="{ 'profile-field-placeholder': !form.educationLevel }">
 							{{ form.educationLevel || '请选择学历' }}
 						</text>
-						<text class="profile-field-arrow">›</text>
+						<text class="profile-field-arrow">�?/text>
 					</view>
 				</view>
 				
@@ -47,7 +47,7 @@
 						<text class="profile-field-value" :class="{ 'profile-field-placeholder': !form.familyStatusText }">
 							{{ form.familyStatusText || '请选择家庭状况' }}
 						</text>
-						<text class="profile-field-arrow">›</text>
+						<text class="profile-field-arrow">�?/text>
 					</view>
 				</view>
 			</view>
@@ -61,7 +61,7 @@
 						<text class="profile-field-value" :class="{ 'profile-field-placeholder': !form.investmentExperienceText }">
 							{{ form.investmentExperienceText || '请选择投资经验' }}
 						</text>
-						<text class="profile-field-arrow">›</text>
+						<text class="profile-field-arrow">�?/text>
 					</view>
 				</view>
 				
@@ -127,7 +127,7 @@
 					{ label: '稳健', value: 2 },
 					{ label: '平衡', value: 3 },
 					{ label: '积极', value: 4 },
-					{ label: '激进', value: 5 }
+					{ label: '激�?, value: 5 }
 				] as RiskOption[]
 			}
 		},
@@ -153,7 +153,7 @@
 			},
 			
 			selectOccupation() {
-				const items = ['企业职员', '公务员', '事业单位', '自由职业', '企业主', '学生', '退休', '其他']
+				const items = ['企业职员', '公务�?, '事业单位', '自由职业', '企业�?, '学生', '退�?, '其他']
 				uni.showActionSheet({
 					itemList: items,
 					success: (res) => {
@@ -163,7 +163,7 @@
 			},
 			
 			selectIncome() {
-				const items = ['10万以下', '10-30万', '30-50万', '50-100万', '100万以上']
+				const items = ['10万以�?, '10-30�?, '30-50�?, '50-100�?, '100万以�?]
 				const values = [50000, 200000, 400000, 750000, 1500000]
 				uni.showActionSheet({
 					itemList: items,
@@ -175,7 +175,7 @@
 			},
 			
 			selectEducation() {
-				const items = ['高中及以下', '大专', '本科', '硕士', '博士']
+				const items = ['高中及以�?, '大专', '本科', '硕士', '博士']
 				uni.showActionSheet({
 					itemList: items,
 					success: (res) => {
@@ -185,7 +185,7 @@
 			},
 			
 			selectFamily() {
-				const items = ['单身', '已婚无子女', '已婚有子女', '其他']
+				const items = ['单身', '已婚无子�?, '已婚有子�?, '其他']
 				uni.showActionSheet({
 					itemList: items,
 					success: (res) => {
@@ -196,7 +196,7 @@
 			},
 			
 			selectExperience() {
-				const items = ['无经验', '1年以下', '1-3年', '3-5年', '5年以上']
+				const items = ['无经�?, '1年以�?, '1-3�?, '3-5�?, '5年以�?]
 				uni.showActionSheet({
 					itemList: items,
 					success: (res) => {
@@ -236,3 +236,7 @@
 		}
 	}
 </script>
+
+<style lang="scss">
+	@import './user-profile.scss';
+</style>

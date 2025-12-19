@@ -34,14 +34,14 @@
 					class="risk-btn risk-btn--prev" 
 					@click="prevQuestion"
 				>
-					<text class="risk-btn-text">上一题</text>
+					<text class="risk-btn-text">上一�?/text>
 				</view>
 				<view 
 					class="risk-btn risk-btn--next" 
 					:class="{ 'risk-btn--disabled': !hasAnswer }"
 					@click="nextQuestion"
 				>
-					<text class="risk-btn-text">{{ isLastQuestion ? '提交' : '下一题' }}</text>
+					<text class="risk-btn-text">{{ isLastQuestion ? '提交' : '下一�? }}</text>
 				</view>
 			</view>
 		</view>
@@ -52,7 +52,7 @@
 					<text class="risk-result-icon-text">{{ riskIcon }}</text>
 				</view>
 				<text class="risk-result-level">{{ riskLevelText }}</text>
-				<text class="risk-result-score">评分：{{ score }}分</text>
+				<text class="risk-result-score">评分：{{ score }}�?/text>
 				<text class="risk-result-desc">{{ riskDesc }}</text>
 			</view>
 			
@@ -97,37 +97,37 @@
 				riskLevel: 0,
 				questions: [
 					{
-						title: '您的年龄段是？',
+						title: '您的年龄段是�?,
 						options: [
-							{ label: '25岁以下', value: 5 },
-							{ label: '25-35岁', value: 4 },
-							{ label: '35-45岁', value: 3 },
-							{ label: '45-55岁', value: 2 },
-							{ label: '55岁以上', value: 1 }
+							{ label: '25岁以�?, value: 5 },
+							{ label: '25-35�?, value: 4 },
+							{ label: '35-45�?, value: 3 },
+							{ label: '45-55�?, value: 2 },
+							{ label: '55岁以�?, value: 1 }
 						]
 					},
 					{
-						title: '您的家庭年收入水平是？',
+						title: '您的家庭年收入水平是�?,
 						options: [
-							{ label: '10万以下', value: 1 },
-							{ label: '10-30万', value: 2 },
-							{ label: '30-50万', value: 3 },
-							{ label: '50-100万', value: 4 },
-							{ label: '100万以上', value: 5 }
+							{ label: '10万以�?, value: 1 },
+							{ label: '10-30�?, value: 2 },
+							{ label: '30-50�?, value: 3 },
+							{ label: '50-100�?, value: 4 },
+							{ label: '100万以�?, value: 5 }
 						]
 					},
 					{
-						title: '您的投资经验有多少年？',
+						title: '您的投资经验有多少年�?,
 						options: [
 							{ label: '没有投资经验', value: 1 },
-							{ label: '1-3年', value: 2 },
-							{ label: '3-5年', value: 3 },
-							{ label: '5-10年', value: 4 },
-							{ label: '10年以上', value: 5 }
+							{ label: '1-3�?, value: 2 },
+							{ label: '3-5�?, value: 3 },
+							{ label: '5-10�?, value: 4 },
+							{ label: '10年以�?, value: 5 }
 						]
 					},
 					{
-						title: '您能承受的最大投资亏损比例是？',
+						title: '您能承受的最大投资亏损比例是�?,
 						options: [
 							{ label: '不能接受亏损', value: 1 },
 							{ label: '10%以内', value: 2 },
@@ -137,13 +137,13 @@
 						]
 					},
 					{
-						title: '如果您的投资短期内下跌20%，您会？',
+						title: '如果您的投资短期内下�?0%，您会？',
 						options: [
-							{ label: '非常担心，全部卖出', value: 1 },
+							{ label: '非常担心，全部卖�?, value: 1 },
 							{ label: '有些担心，卖出一部分', value: 2 },
-							{ label: '继续观望，不做操作', value: 3 },
+							{ label: '继续观望，不做操�?, value: 3 },
 							{ label: '可以接受，考虑加仓', value: 4 },
-							{ label: '这是机会，大幅加仓', value: 5 }
+							{ label: '这是机会，大幅加�?, value: 5 }
 						]
 					},
 					{
@@ -151,29 +151,29 @@
 						options: [
 							{ label: '资产保值，避免亏损', value: 1 },
 							{ label: '稳健增值，略高于通胀', value: 2 },
-							{ label: '平衡收益与风险', value: 3 },
+							{ label: '平衡收益与风�?, value: 3 },
 							{ label: '追求较高收益，可承受波动', value: 4 },
-							{ label: '追求最高收益，接受高风险', value: 5 }
+							{ label: '追求最高收益，接受高风�?, value: 5 }
 						]
 					},
 					{
 						title: '这笔投资资金的预计使用时间？',
 						options: [
-							{ label: '1年以内', value: 1 },
-							{ label: '1-3年', value: 2 },
-							{ label: '3-5年', value: 3 },
-							{ label: '5-10年', value: 4 },
-							{ label: '10年以上', value: 5 }
+							{ label: '1年以�?, value: 1 },
+							{ label: '1-3�?, value: 2 },
+							{ label: '3-5�?, value: 3 },
+							{ label: '5-10�?, value: 4 },
+							{ label: '10年以�?, value: 5 }
 						]
 					},
 					{
-						title: '您目前的负债情况是？',
+						title: '您目前的负债情况是�?,
 						options: [
-							{ label: '负债较重，还款压力大', value: 1 },
-							{ label: '有一定负债，可正常偿还', value: 2 },
+							{ label: '负债较重，还款压力�?, value: 1 },
+							{ label: '有一定负债，可正常偿�?, value: 2 },
 							{ label: '少量负债，压力不大', value: 3 },
-							{ label: '基本无负债', value: 4 },
-							{ label: '无任何负债', value: 5 }
+							{ label: '基本无负�?, value: 4 },
+							{ label: '无任何负�?, value: 5 }
 						]
 					}
 				] as Question[]
@@ -196,16 +196,16 @@
 				return RISK_LEVEL_MAP[this.riskLevel] || '未知'
 			},
 			riskIcon(): string {
-				const icons = ['🛡️', '🏦', '⚖️', '📈', '🚀']
-				return icons[this.riskLevel - 1] || '❓'
+				const icons = ['🛡�?, '🏦', '⚖️', '📈', '🚀']
+				return icons[this.riskLevel - 1] || '�?
 			},
 			riskDesc(): string {
 				const descs = [
 					'您属于保守型投资者，建议以保本型产品为主',
-					'您属于稳健型投资者，建议以中低风险产品为主',
+					'您属于稳健型投资者，建议以中低风险产品为�?,
 					'您属于平衡型投资者，可适当配置中等风险产品',
-					'您属于积极型投资者，可配置较高风险产品',
-					'您属于激进型投资者，可承受高风险高收益产品'
+					'您属于积极型投资者，可配置较高风险产�?,
+					'您属于激进型投资者，可承受高风险高收益产�?
 				]
 				return descs[this.riskLevel - 1] || ''
 			},
@@ -270,7 +270,7 @@
 						score: this.score,
 						riskLevel: this.riskLevel
 					})
-					uni.showToast({ title: '评估结果已保存', icon: 'success' })
+					uni.showToast({ title: '评估结果已保�?, icon: 'success' })
 					setTimeout(() => {
 						uni.navigateBack()
 					}, 1500)
@@ -281,3 +281,7 @@
 		}
 	}
 </script>
+
+<style lang="scss">
+	@import './risk-assess.scss';
+</style>

@@ -194,3 +194,7 @@
 		}
 	}
 </script>
+
+<style lang="scss">
+	@import './register.scss';
+</style>

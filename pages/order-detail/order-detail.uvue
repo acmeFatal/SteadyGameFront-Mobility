@@ -33,7 +33,7 @@
 					<text class="order-info-value order-info-value--amount">¥{{ formatMoney(order.amount) }}</text>
 				</view>
 				<view class="order-info-item">
-					<text class="order-info-label">手续费</text>
+					<text class="order-info-label">手续�?/text>
 					<text class="order-info-value">¥{{ formatMoney(order.fee) }}</text>
 				</view>
 				<view class="order-info-item">
@@ -166,25 +166,25 @@
 				
 				if (this.order.orderStatus >= 1) {
 					timeline.push({
-						text: '订单已提交',
+						text: '订单已提�?,
 						time: this.formatTime(this.order.createdAt)
 					})
 				}
 				if (this.order.orderStatus >= 2) {
 					timeline.push({
-						text: '订单处理中',
+						text: '订单处理�?,
 						time: this.formatTime(this.order.updatedAt)
 					})
 				}
 				if (this.order.orderStatus === 3) {
 					timeline.push({
-						text: '交易已成交',
+						text: '交易已成�?,
 						time: this.formatTime(this.order.updatedAt)
 					})
 				}
 				if (this.order.orderStatus === 4) {
 					timeline.push({
-						text: '订单已取消',
+						text: '订单已取�?,
 						time: this.formatTime(this.order.updatedAt)
 					})
 				}
@@ -216,19 +216,19 @@
 				const descMap: Record<number, string> = {
 					1: '订单正在等待处理',
 					2: '订单正在处理中，请耐心等待',
-					3: '订单已成交，收益将于T+1日开始计算',
-					4: '订单已取消',
-					5: '订单处理失败，请重试或联系客服'
+					3: '订单已成交，收益将于T+1日开始计�?,
+					4: '订单已取�?,
+					5: '订单处理失败，请重试或联系客�?
 				}
 				return descMap[status] || ''
 			},
 			
 			getStatusIcon(status: number): string {
 				const iconMap: Record<number, string> = {
-					1: '⏳',
+					1: '�?,
 					2: '🔄',
-					3: '✅',
-					4: '❌',
+					3: '�?,
+					4: '�?,
 					5: '⚠️'
 				}
 				return iconMap[status] || '📋'
@@ -253,7 +253,7 @@
 				uni.setClipboardData({
 					data: this.order.orderNo,
 					success: () => {
-						uni.showToast({ title: '已复制', icon: 'success' })
+						uni.showToast({ title: '已复�?, icon: 'success' })
 					}
 				})
 			},
@@ -282,3 +282,7 @@
 		}
 	}
 </script>
+
+<style lang="scss">
+	@import './order-detail.scss';
+</style>

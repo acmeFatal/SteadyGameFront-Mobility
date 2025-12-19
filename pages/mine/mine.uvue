@@ -244,3 +244,7 @@
 		}
 	}
 </script>
+
+<style lang="scss">
+	@import './mine.scss';
+</style>

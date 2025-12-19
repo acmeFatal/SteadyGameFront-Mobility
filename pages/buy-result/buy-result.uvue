@@ -2,7 +2,7 @@
 	<view class="result-page">
 		<view class="result-content">
 			<view class="result-icon" :class="isSuccess ? 'result-icon--success' : 'result-icon--fail'">
-				<text class="result-icon-text">{{ isSuccess ? '✓' : '✕' }}</text>
+				<text class="result-icon-text">{{ isSuccess ? '�? : '�? }}</text>
 			</view>
 			<text class="result-title">{{ isSuccess ? '购买成功' : '购买失败' }}</text>
 			<text class="result-desc">{{ resultDesc }}</text>
@@ -51,7 +51,7 @@
 				if (this.isSuccess) {
 					return '您的购买申请已提交，请耐心等待确认'
 				}
-				return '购买失败，请稍后重试或联系客服'
+				return '购买失败，请稍后重试或联系客�?
 			}
 		},
 		onLoad(options: any) {
@@ -101,3 +101,7 @@
 		}
 	}
 </script>
+
+<style lang="scss">
+	@import './buy-result.scss';
+</style>

@@ -27,7 +27,7 @@
 						class="plan-input"
 						type="digit"
 						v-model="initialCapital"
-						placeholder="请输入初始投入金额"
+						placeholder="请输入初始投入金�?
 					/>
 				</view>
 			</view>
@@ -40,7 +40,7 @@
 						class="plan-input"
 						type="digit"
 						v-model="monthlyInvestment"
-						placeholder="请输入每月投入金额"
+						placeholder="请输入每月投入金�?
 					/>
 				</view>
 			</view>
@@ -89,7 +89,7 @@
 			<view class="plan-result-summary">
 				<view class="plan-result-item">
 					<text class="plan-result-value">¥{{ formatMoney(totalInvestment) }}</text>
-					<text class="plan-result-label">总投入</text>
+					<text class="plan-result-label">总投�?/text>
 				</view>
 				<view class="plan-result-item">
 					<text class="plan-result-value text-rise">¥{{ formatMoney(expectedTotal) }}</text>
@@ -160,25 +160,25 @@
 				selectedRisk: 0,
 				planResult: null as FinancePlan | null,
 				goals: [
-					{ label: '养老储蓄', value: 'retirement', icon: '🏠' },
+					{ label: '养老储�?, value: 'retirement', icon: '🏠' },
 					{ label: '子女教育', value: 'education', icon: '📚' },
 					{ label: '买房首付', value: 'house', icon: '🏡' },
-					{ label: '资产增值', value: 'growth', icon: '📈' },
+					{ label: '资产增�?, value: 'growth', icon: '📈' },
 					{ label: '其他目标', value: 'other', icon: '🎯' }
 				] as Goal[],
 				periods: [
-					{ label: '1年', value: 1 },
-					{ label: '3年', value: 3 },
-					{ label: '5年', value: 5 },
-					{ label: '10年', value: 10 },
-					{ label: '20年', value: 20 }
+					{ label: '1�?, value: 1 },
+					{ label: '3�?, value: 3 },
+					{ label: '5�?, value: 5 },
+					{ label: '10�?, value: 10 },
+					{ label: '20�?, value: 20 }
 				] as Period[],
 				risks: [
 					{ label: '保守', value: 1 },
 					{ label: '稳健', value: 2 },
 					{ label: '平衡', value: 3 },
 					{ label: '积极', value: 4 },
-					{ label: '激进', value: 5 }
+					{ label: '激�?, value: 5 }
 				] as Risk[]
 			}
 		},
@@ -211,7 +211,7 @@
 					return
 				}
 				if (!this.initialCapital && !this.monthlyInvestment) {
-					uni.showToast({ title: '请输入投资金额', icon: 'none' })
+					uni.showToast({ title: '请输入投资金�?, icon: 'none' })
 					return
 				}
 				if (!this.selectedPeriod) {
@@ -262,7 +262,7 @@
 			},
 			
 			savePlan() {
-				uni.showToast({ title: '方案已保存', icon: 'success' })
+				uni.showToast({ title: '方案已保�?, icon: 'success' })
 			},
 			
 			executePlan() {
@@ -271,7 +271,7 @@
 					content: '确定要按照此方案进行投资吗？',
 					success: (res) => {
 						if (res.confirm) {
-							uni.showToast({ title: '已开始执行', icon: 'success' })
+							uni.showToast({ title: '已开始执�?, icon: 'success' })
 						}
 					}
 				})
@@ -279,3 +279,7 @@
 		}
 	}
 </script>
+
+<style lang="scss">
+	@import './finance-plan.scss';
+</style>

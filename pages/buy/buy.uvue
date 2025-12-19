@@ -18,7 +18,7 @@
 					class="buy-amount-value"
 					type="digit"
 					v-model="amount"
-					placeholder="请输入金额"
+					placeholder="请输入金�?
 					@input="onAmountInput"
 				/>
 			</view>
@@ -34,7 +34,7 @@
 					:class="{ 'buy-quick-item--active': amount === String(item) }"
 					@click="setAmount(item)"
 				>
-					<text class="buy-quick-text">{{ item >= 10000 ? (item / 10000) + '万' : item }}</text>
+					<text class="buy-quick-text">{{ item >= 10000 ? (item / 10000) + '�? : item }}</text>
 				</view>
 			</view>
 		</view>
@@ -46,7 +46,7 @@
 			</view>
 			<view class="buy-info-item">
 				<text class="buy-info-label">投资期限</text>
-				<text class="buy-info-value">{{ product.investmentPeriod }}天</text>
+				<text class="buy-info-value">{{ product.investmentPeriod }}�?/text>
 			</view>
 			<view class="buy-info-item">
 				<text class="buy-info-label">到期日期</text>
@@ -60,10 +60,10 @@
 				:class="{ 'buy-checkbox--checked': agreed }"
 				@click="agreed = !agreed"
 			>
-				<text v-if="agreed" class="buy-checkbox-icon">✓</text>
+				<text v-if="agreed" class="buy-checkbox-icon">�?/text>
 			</view>
 			<text class="buy-agreement-text">
-				我已阅读并同意《产品说明书》《风险揭示书》
+				我已阅读并同意《产品说明书》《风险揭示书�?
 			</text>
 		</view>
 		
@@ -83,7 +83,7 @@
 		
 		<sg-modal
 			:visible="showPasswordModal"
-			title="请输入交易密码"
+			title="请输入交易密�?
 			@confirm="confirmPassword"
 			@cancel="showPasswordModal = false"
 			@close="showPasswordModal = false"
@@ -95,7 +95,7 @@
 					password
 					maxlength="6"
 					v-model="tradePassword"
-					placeholder="请输入6位交易密码"
+					placeholder="请输�?位交易密�?
 				/>
 			</view>
 		</sg-modal>
@@ -187,7 +187,7 @@
 					if (!this.agreed) {
 						uni.showToast({ title: '请先同意相关协议', icon: 'none' })
 					} else if (Number(this.amount) < this.product.minInvestment) {
-						uni.showToast({ title: `起购金额为${this.product.minInvestment}元`, icon: 'none' })
+						uni.showToast({ title: `起购金额�?{this.product.minInvestment}元`, icon: 'none' })
 					}
 					return
 				}
@@ -196,14 +196,14 @@
 			
 			async confirmPassword() {
 				if (this.tradePassword.length !== 6) {
-					uni.showToast({ title: '请输入6位交易密码', icon: 'none' })
+					uni.showToast({ title: '请输�?位交易密�?, icon: 'none' })
 					return
 				}
 				
 				this.showPasswordModal = false
 				
 				try {
-					uni.showLoading({ title: '提交中...' })
+					uni.showLoading({ title: '提交�?..' })
 					
 					const params: CreateOrderParams = {
 						productId: this.productId,
@@ -233,3 +233,7 @@
 		}
 	}
 </script>
+
+<style lang="scss">
+	@import './buy.scss';
+</style>

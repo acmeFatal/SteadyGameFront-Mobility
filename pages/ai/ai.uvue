@@ -198,3 +198,7 @@
 		}
 	}
 </script>
+
+<style lang="scss">
+	@import './ai.scss';
+</style>

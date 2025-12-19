@@ -5,11 +5,11 @@
 		<view class="transactions-filter">
 			<view class="filter-item" @click="showDatePicker = true">
 				<text class="filter-label">{{ dateRange }}</text>
-				<text class="filter-arrow">â–¼</text>
+				<text class="filter-arrow">â–?/text>
 			</view>
 			<view class="filter-item" @click="showTypePicker = true">
 				<text class="filter-label">{{ currentTypeText }}</text>
-				<text class="filter-arrow">â–¼</text>
+				<text class="filter-arrow">â–?/text>
 			</view>
 		</view>
 		
@@ -170,3 +170,7 @@
 		}
 	}
 </script>
+
+<style lang="scss">
+	@import './transactions.scss';
+</style>

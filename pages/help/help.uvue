@@ -38,7 +38,7 @@
 				<view class="help-category-header" @click="toggleCategory(cIndex)">
 					<text class="help-category-icon">{{ category.icon }}</text>
 					<text class="help-category-title">{{ category.title }}</text>
-					<text class="help-category-arrow" :class="{ 'help-category-arrow--expanded': category.expanded }">›</text>
+					<text class="help-category-arrow" :class="{ 'help-category-arrow--expanded': category.expanded }">�?/text>
 				</view>
 				<view v-if="category.expanded" class="help-category-questions">
 					<view 
@@ -48,7 +48,7 @@
 						@click="goToAnswer(question)"
 					>
 						<text class="help-question-text">{{ question.title }}</text>
-						<text class="help-question-arrow">›</text>
+						<text class="help-question-arrow">�?/text>
 					</view>
 				</view>
 			</view>
@@ -80,10 +80,10 @@
 						icon: '👤',
 						expanded: true,
 						questions: [
-							{ id: 1, title: '如何注册账户？', answer: '' },
+							{ id: 1, title: '如何注册账户�?, answer: '' },
 							{ id: 2, title: '忘记密码怎么办？', answer: '' },
-							{ id: 3, title: '如何修改绑定手机？', answer: '' },
-							{ id: 4, title: '如何实名认证？', answer: '' }
+							{ id: 3, title: '如何修改绑定手机�?, answer: '' },
+							{ id: 4, title: '如何实名认证�?, answer: '' }
 						]
 					},
 					{
@@ -91,8 +91,8 @@
 						icon: '💰',
 						expanded: false,
 						questions: [
-							{ id: 5, title: '如何购买理财产品？', answer: '' },
-							{ id: 6, title: '如何赎回理财产品？', answer: '' },
+							{ id: 5, title: '如何购买理财产品�?, answer: '' },
+							{ id: 6, title: '如何赎回理财产品�?, answer: '' },
 							{ id: 7, title: '交易密码忘记了怎么办？', answer: '' },
 							{ id: 8, title: '资金到账需要多久？', answer: '' }
 						]
@@ -102,7 +102,7 @@
 						icon: '🔐',
 						expanded: false,
 						questions: [
-							{ id: 9, title: '账户安全如何保障？', answer: '' },
+							{ id: 9, title: '账户安全如何保障�?, answer: '' },
 							{ id: 10, title: '如何开启指纹登录？', answer: '' },
 							{ id: 11, title: '发现异常交易怎么办？', answer: '' }
 						]
@@ -112,9 +112,9 @@
 						icon: '📊',
 						expanded: false,
 						questions: [
-							{ id: 12, title: '什么是风险等级？', answer: '' },
-							{ id: 13, title: '收益是如何计算的？', answer: '' },
-							{ id: 14, title: '产品有保本保息吗？', answer: '' }
+							{ id: 12, title: '什么是风险等级�?, answer: '' },
+							{ id: 13, title: '收益是如何计算的�?, answer: '' },
+							{ id: 14, title: '产品有保本保息吗�?, answer: '' }
 						]
 					}
 				] as Category[]
@@ -145,7 +145,7 @@
 				uni.makePhoneCall({
 					phoneNumber: '400-888-8888',
 					fail: () => {
-						uni.showToast({ title: '客服热线：400-888-8888', icon: 'none' })
+						uni.showToast({ title: '客服热线�?00-888-8888', icon: 'none' })
 					}
 				})
 			},
@@ -156,3 +156,7 @@
 		}
 	}
 </script>
+
+<style lang="scss">
+	@import './help.scss';
+</style>

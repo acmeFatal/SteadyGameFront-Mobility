@@ -191,3 +191,7 @@
 		}
 	}
 </script>
+
+<style lang="scss">
+	@import './asset.scss';
+</style>

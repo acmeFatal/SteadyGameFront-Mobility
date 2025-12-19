@@ -12,14 +12,14 @@
 				<sg-list-item 
 					title="交易密码管理" 
 					icon="💳"
-					:value="hasTradePassword ? '已设置' : '未设置'"
+					:value="hasTradePassword ? '已设�? : '未设�?"
 					@click="goToTradePassword"
 				/>
 			</view>
 			
 			<view class="security-group">
 				<sg-list-item 
-					title="绑定手机号" 
+					title="绑定手机�? 
 					icon="📱"
 					:value="phoneDisplay"
 					@click="goToBindPhone"
@@ -98,12 +98,12 @@
 		},
 		computed: {
 			phoneDisplay(): string {
-				if (!this.userInfo.phone) return '未绑定'
-				return formatPhone(this.userInfo.phone) + (this.userInfo.phoneVerified ? ' 已验证' : ' 未验证')
+				if (!this.userInfo.phone) return '未绑�?
+				return formatPhone(this.userInfo.phone) + (this.userInfo.phoneVerified ? ' 已验�? : ' 未验�?)
 			},
 			emailDisplay(): string {
-				if (!this.userInfo.email) return '未绑定'
-				return formatEmail(this.userInfo.email) + (this.userInfo.emailVerified ? ' 已验证' : ' 未验证')
+				if (!this.userInfo.email) return '未绑�?
+				return formatEmail(this.userInfo.email) + (this.userInfo.emailVerified ? ' 已验�? : ' 未验�?)
 			}
 		},
 		onLoad() {
@@ -141,7 +141,7 @@
 			
 			toggleBiometric() {
 				if (!this.supportBiometric) {
-					uni.showToast({ title: '设备不支持生物识别', icon: 'none' })
+					uni.showToast({ title: '设备不支持生物识�?, icon: 'none' })
 					return
 				}
 			},
@@ -150,7 +150,7 @@
 				this.biometricEnabled = e.detail.value
 				setStorage('biometric_enabled', this.biometricEnabled)
 				uni.showToast({ 
-					title: this.biometricEnabled ? '已开启' : '已关闭', 
+					title: this.biometricEnabled ? '已开�? : '已关�?, 
 					icon: 'success' 
 				})
 			},
@@ -172,7 +172,7 @@
 						if (res.confirm) {
 							try {
 								await apiFreezeAccount()
-								uni.showToast({ title: '账号已冻结', icon: 'success' })
+								uni.showToast({ title: '账号已冻�?, icon: 'success' })
 								setTimeout(() => {
 									uni.reLaunch({ url: '/pages/login/login' })
 								}, 1500)
@@ -186,3 +186,7 @@
 		}
 	}
 </script>
+
+<style lang="scss">
+	@import './security.scss';
+</style>

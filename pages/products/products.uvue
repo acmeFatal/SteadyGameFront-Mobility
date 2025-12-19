@@ -48,7 +48,7 @@
 						</view>
 						<view class="product-info-item">
 							<text class="product-info-label">投资期限</text>
-							<text class="product-info-value">{{ product.investmentPeriod }}天</text>
+							<text class="product-info-value">{{ product.investmentPeriod }}�?/text>
 						</view>
 					</view>
 				</view>
@@ -62,7 +62,7 @@
 			<sg-empty v-if="productList.length === 0 && !loading" text="暂无产品" />
 			
 			<view v-if="loading" class="products-loading">
-				<text class="products-loading-text">加载中...</text>
+				<text class="products-loading-text">加载�?..</text>
 			</view>
 		</scroll-view>
 	</view>
@@ -84,11 +84,11 @@
 				currentRisk: null as number | null,
 				riskTabs: [
 					{ name: '全部', value: null },
-					{ name: '低风险', value: 1 },
+					{ name: '低风�?, value: 1 },
 					{ name: '中低风险', value: 2 },
-					{ name: '中风险', value: 3 },
+					{ name: '中风�?, value: 3 },
 					{ name: '中高风险', value: 4 },
-					{ name: '高风险', value: 5 }
+					{ name: '高风�?, value: 5 }
 				] as RiskTab[],
 				productList: [] as Product[],
 				loading: false,
@@ -177,3 +177,7 @@
 		}
 	}
 </script>
+
+<style lang="scss">
+	@import './products.scss';
+</style>

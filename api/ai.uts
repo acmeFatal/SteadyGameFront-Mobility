@@ -4,7 +4,7 @@
  * @version 1.0.0
  */
 
-import { get, post } from '@/utils/request.uts'
+import { get, post, del } from '@/utils/request.uts'
 import type { ResponseData, PageResponseData } from '@/utils/request.uts'
 
 /**
@@ -72,11 +72,12 @@ export interface GeneratePlanParams {
 }
 
 /**
- * 获取AI产品推荐
- * @param limit 推荐数量
+ * 获取AI产品推荐（智能推荐）
+ * @param riskLevel 风险等级
+ * @param goal 投资目标
  */
-export function getAIRecommendations(limit: number = 5): Promise<ResponseData<AIRecommendProduct[]>> {
-	return get<AIRecommendProduct[]>(`/ai/recommend?limit=${limit}`)
+export function getAIRecommendations(riskLevel: number = 3, goal: string = '理财'): Promise<ResponseData<AIRecommendProduct[]>> {
+	return post<AIRecommendProduct[]>(`/ai/recommendations/smart?riskLevel=${riskLevel}&goal=${encodeURIComponent(goal)}`)
 }
 
 /**
@@ -106,25 +107,27 @@ export function getFinancePlanDetail(planId: number): Promise<ResponseData<Finan
 
 /**
  * 创建对话会话
- * @param title 会话标题
+ * @param message 初始消息（可选）
  */
-export function createChatSession(title?: string): Promise<ResponseData<ChatSession>> {
-	return post<ChatSession>('/ai/chat/session', { title })
+export function createChatSession(message?: string): Promise<ResponseData<ChatSession>> {
+	return post<ChatSession>('/ai/chat/sessions', { message })
 }
 
 /**
  * 获取对话会话列表
+ * @param limit 限制数量
  */
-export function getChatSessions(): Promise<ResponseData<ChatSession[]>> {
-	return get<ChatSession[]>('/ai/chat/sessions')
+export function getChatSessions(limit: number = 20): Promise<ResponseData<ChatSession[]>> {
+	return get<ChatSession[]>(`/ai/chat/sessions?limit=${limit}`)
 }
 
 /**
  * 获取会话历史消息
  * @param sessionId 会话ID
+ * @param limit 消息数量限制
  */
-export function getChatHistory(sessionId: string): Promise<ResponseData<ChatMessage[]>> {
-	return get<ChatMessage[]>(`/ai/chat/history/${sessionId}`)
+export function getChatHistory(sessionId: string, limit: number = 100): Promise<ResponseData<ChatMessage[]>> {
+	return get<ChatMessage[]>(`/ai/chat/sessions/${sessionId}?limit=${limit}`)
 }
 
 /**
@@ -132,16 +135,20 @@ export function getChatHistory(sessionId: string): Promise<ResponseData<ChatMess
  * @param sessionId 会话ID
  */
 export function deleteChatSession(sessionId: string): Promise<ResponseData<boolean>> {
-	return post<boolean>(`/ai/chat/session/${sessionId}/delete`)
+	return del<boolean>(`/ai/chat/sessions/${sessionId}`)
 }
 
 /**
  * AI问答（SSE流式接口，需要特殊处理）
  * 该接口返回SSE流，需要使用EventSource处理
- * @param sessionId 会话ID
- * @param question 问题内容
+ * @param message 问题内容
+ * @param sessionId 会话ID（可选）
+ * @param sessionType 会话类型（可选）
  */
-export function getAIChatStreamUrl(sessionId: string, question: string): string {
-	const encodedQuestion = encodeURIComponent(question)
-	return `/ai/chat/ask?sessionId=${sessionId}&question=${encodedQuestion}`
+export function getAIChatStreamUrl(message: string, sessionId?: string, sessionType?: string): string {
+	const params = new URLSearchParams()
+	params.append('message', message)
+	if (sessionId) params.append('sessionId', sessionId)
+	if (sessionType) params.append('sessionType', sessionType)
+	return `/ai/chat/ask?${params.toString()}`
 }

@@ -1,0 +1,52 @@
+/**
+ * sg-tabbar 底部导航栏组件样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.sg-tabbar {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: $z-index-popup;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	height: 100rpx;
+	background-color: $bg-white;
+	border-top: 1rpx solid $border-light;
+	
+	&__item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		flex: 1;
+		height: 100%;
+		transition: all $transition-base;
+		
+		&--active {
+			.sg-tabbar__text {
+				color: $primary-color;
+			}
+		}
+	}
+	
+	&__icon {
+		width: 48rpx;
+		height: 48rpx;
+		margin-bottom: 4rpx;
+	}
+	
+	&__text {
+		font-size: $font-xs;
+		color: $text-secondary;
+		transition: color $transition-base;
+	}
+	
+	&__placeholder {
+		width: 100%;
+	}
+}

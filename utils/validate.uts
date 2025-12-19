@@ -1,0 +1,142 @@
+/**
+ * @description 表单验证工具类
+ * @author SteadyGame Team
+ * @version 1.0.0
+ */
+
+/**
+ * 验证手机号
+ * @param phone 手机号
+ * @returns 是否有效
+ */
+export function isValidPhone(phone: string): boolean {
+	const reg = /^1[3-9]\d{9}$/
+	return reg.test(phone)
+}
+
+/**
+ * 验证邮箱
+ * @param email 邮箱地址
+ * @returns 是否有效
+ */
+export function isValidEmail(email: string): boolean {
+	const reg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+	return reg.test(email)
+}
+
+/**
+ * 验证密码强度（至少6位，包含字母和数字）
+ * @param password 密码
+ * @returns 是否有效
+ */
+export function isValidPassword(password: string): boolean {
+	if (password.length < 6 || password.length > 64) {
+		return false
+	}
+	const hasLetter = /[a-zA-Z]/.test(password)
+	const hasNumber = /\d/.test(password)
+	return hasLetter && hasNumber
+}
+
+/**
+ * 验证交易密码（6位数字）
+ * @param tradePassword 交易密码
+ * @returns 是否有效
+ */
+export function isValidTradePassword(tradePassword: string): boolean {
+	const reg = /^\d{6}$/
+	return reg.test(tradePassword)
+}
+
+/**
+ * 验证验证码（6位数字）
+ * @param code 验证码
+ * @returns 是否有效
+ */
+export function isValidCode(code: string): boolean {
+	const reg = /^\d{6}$/
+	return reg.test(code)
+}
+
+/**
+ * 验证图形验证码（4位字母数字）
+ * @param captcha 图形验证码
+ * @returns 是否有效
+ */
+export function isValidCaptcha(captcha: string): boolean {
+	const reg = /^[a-zA-Z0-9]{4}$/
+	return reg.test(captcha)
+}
+
+/**
+ * 验证用户名（2-50位字母数字下划线）
+ * @param username 用户名
+ * @returns 是否有效
+ */
+export function isValidUsername(username: string): boolean {
+	const reg = /^[a-zA-Z0-9_]{2,50}$/
+	return reg.test(username)
+}
+
+/**
+ * 验证身份证号
+ * @param idCard 身份证号
+ * @returns 是否有效
+ */
+export function isValidIdCard(idCard: string): boolean {
+	const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+	return reg.test(idCard)
+}
+
+/**
+ * 验证金额（正数，最多2位小数）
+ * @param amount 金额
+ * @returns 是否有效
+ */
+export function isValidAmount(amount: string | number): boolean {
+	const num = typeof amount === 'string' ? parseFloat(amount) : amount
+	if (isNaN(num) || num <= 0) {
+		return false
+	}
+	const reg = /^\d+(\.\d{1,2})?$/
+	return reg.test(String(amount))
+}
+
+/**
+ * 判断是否为空
+ * @param value 值
+ * @returns 是否为空
+ */
+export function isEmpty(value: any): boolean {
+	if (value === null || value === undefined) {
+		return true
+	}
+	if (typeof value === 'string') {
+		return value.trim() === ''
+	}
+	if (Array.isArray(value)) {
+		return value.length === 0
+	}
+	if (typeof value === 'object') {
+		return Object.keys(value).length === 0
+	}
+	return false
+}
+
+/**
+ * 验证结果类型
+ */
+export interface ValidateResult {
+	valid: boolean
+	message: string
+}
+
+/**
+ * 创建验证结果
+ * @param valid 是否有效
+ * @param message 提示信息
+ * @returns 验证结果
+ */
+export function createValidateResult(valid: boolean, message: string = ''): ValidateResult {
+	return { valid, message }
+}

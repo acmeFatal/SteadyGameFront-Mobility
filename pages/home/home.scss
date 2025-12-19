@@ -1,0 +1,210 @@
+/**
+ * 首页样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.home-page {
+	min-height: 100vh;
+	background-color: $bg-base;
+	padding-bottom: 120rpx;
+}
+
+.home-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: $spacing-base;
+	padding-top: calc(env(safe-area-inset-top) + $spacing-base);
+	background: linear-gradient(135deg, $primary-color 0%, $primary-light 100%);
+}
+
+.home-user {
+	display: flex;
+	align-items: center;
+}
+
+.home-avatar {
+	width: 96rpx;
+	height: 96rpx;
+	border-radius: 50%;
+	border: 4rpx solid rgba(255, 255, 255, 0.5);
+	margin-right: $spacing-sm;
+}
+
+.home-user-info {
+	display: flex;
+	flex-direction: column;
+}
+
+.home-username {
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-inverse;
+}
+
+.home-greeting {
+	font-size: $font-sm;
+	color: rgba(255, 255, 255, 0.8);
+	margin-top: 4rpx;
+}
+
+.home-actions {
+	display: flex;
+	align-items: center;
+}
+
+.home-action {
+	position: relative;
+	padding: $spacing-sm;
+}
+
+.home-action-icon {
+	font-size: 48rpx;
+}
+
+.home-badge {
+	position: absolute;
+	top: 0;
+	right: 0;
+	min-width: 32rpx;
+	height: 32rpx;
+	padding: 0 8rpx;
+	background-color: $error-color;
+	border-radius: $radius-round;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.home-badge-text {
+	font-size: $font-xs;
+	color: $text-inverse;
+}
+
+.home-asset-card {
+	margin: -40rpx $spacing-base $spacing-base;
+}
+
+.home-quick-actions {
+	display: flex;
+	justify-content: space-around;
+	padding: $spacing-base;
+	background-color: $bg-white;
+	margin: 0 $spacing-base $spacing-base;
+	border-radius: $radius-lg;
+}
+
+.home-quick-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.home-quick-icon-wrap {
+	width: 96rpx;
+	height: 96rpx;
+	background-color: rgba($primary-color, 0.1);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: $spacing-xs;
+}
+
+.home-quick-icon {
+	font-size: 48rpx;
+}
+
+.home-quick-text {
+	font-size: $font-sm;
+	color: $text-regular;
+}
+
+.home-recommend-list {
+	margin-top: $spacing-sm;
+}
+
+.home-recommend-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: $spacing-sm 0;
+	border-bottom: 1rpx solid $border-light;
+	
+	&:last-child {
+		border-bottom: none;
+	}
+}
+
+.home-recommend-info {
+	display: flex;
+	flex-direction: column;
+}
+
+.home-recommend-name {
+	font-size: $font-base;
+	color: $text-primary;
+	margin-bottom: 4rpx;
+}
+
+.home-recommend-tag {
+	font-size: $font-xs;
+	color: $primary-color;
+	background-color: rgba($primary-color, 0.1);
+	padding: 4rpx 12rpx;
+	border-radius: $radius-sm;
+	align-self: flex-start;
+}
+
+.home-recommend-rate {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+}
+
+.home-recommend-rate-value {
+	font-size: $font-lg;
+	font-weight: bold;
+	color: $rise-color;
+}
+
+.home-recommend-rate-label {
+	font-size: $font-xs;
+	color: $text-placeholder;
+}
+
+.home-market-list {
+	display: flex;
+	flex-direction: column;
+}
+
+.home-market-item {
+	display: flex;
+	align-items: center;
+	padding: $spacing-sm 0;
+	border-bottom: 1rpx solid $border-light;
+	
+	&:last-child {
+		border-bottom: none;
+	}
+}
+
+.home-market-name {
+	flex: 1;
+	font-size: $font-base;
+	color: $text-primary;
+}
+
+.home-market-value {
+	font-size: $font-base;
+	color: $text-primary;
+	margin-right: $spacing-base;
+}
+
+.home-market-change {
+	font-size: $font-base;
+	min-width: 120rpx;
+	text-align: right;
+}

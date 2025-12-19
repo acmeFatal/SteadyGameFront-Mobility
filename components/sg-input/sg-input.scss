@@ -1,0 +1,119 @@
+/**
+ * sg-input 输入框组件样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.sg-input {
+	margin-bottom: $spacing-base;
+	
+	&__label {
+		display: flex;
+		align-items: center;
+		margin-bottom: $spacing-xs;
+	}
+	
+	&__label-text {
+		font-size: $font-base;
+		color: $text-regular;
+	}
+	
+	&__required {
+		color: $error-color;
+		margin-left: 4rpx;
+	}
+	
+	&__wrapper {
+		display: flex;
+		align-items: center;
+		height: 88rpx;
+		padding: 0 $spacing-base;
+		background-color: $bg-gray;
+		border-radius: $radius-base;
+		border: 2rpx solid transparent;
+		transition: all $transition-base;
+		
+		&:focus-within {
+			border-color: $primary-color;
+			background-color: $bg-white;
+		}
+	}
+	
+	&__prefix,
+	&__suffix {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	
+	&__prefix {
+		margin-right: $spacing-sm;
+	}
+	
+	&__suffix {
+		margin-left: $spacing-sm;
+	}
+	
+	&__icon {
+		font-size: $font-lg;
+		color: $text-placeholder;
+	}
+	
+	&__inner {
+		flex: 1;
+		height: 100%;
+		font-size: $font-base;
+		color: $text-primary;
+		background: transparent;
+		border: none;
+		outline: none;
+	}
+	
+	&__clear,
+	&__eye {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 48rpx;
+		height: 48rpx;
+		margin-left: $spacing-xs;
+	}
+	
+	&__clear-icon {
+		font-size: $font-lg;
+		color: $text-placeholder;
+	}
+	
+	&__eye-icon {
+		font-size: $font-base;
+	}
+	
+	&__error {
+		margin-top: $spacing-xs;
+	}
+	
+	&__error-text {
+		font-size: $font-sm;
+		color: $error-color;
+	}
+	
+	/* 错误状态 */
+	&--error {
+		.sg-input__wrapper {
+			border-color: $error-color;
+		}
+	}
+	
+	/* 禁用状态 */
+	&--disabled {
+		.sg-input__wrapper {
+			background-color: $bg-gray;
+			opacity: 0.6;
+		}
+		
+		.sg-input__inner {
+			color: $text-disabled;
+		}
+	}
+}

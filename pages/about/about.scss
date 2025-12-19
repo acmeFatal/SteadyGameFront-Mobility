@@ -1,0 +1,77 @@
+/**
+ * 关于我们页面样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.about-page {
+	min-height: 100vh;
+	background-color: $bg-base;
+}
+
+.about-header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: $spacing-xl $spacing-base;
+	background-color: $bg-white;
+}
+
+.about-logo {
+	width: 160rpx;
+	height: 160rpx;
+	margin-bottom: $spacing-base;
+}
+
+.about-name {
+	font-size: $font-lg;
+	font-weight: bold;
+	color: $text-primary;
+	margin-bottom: $spacing-xs;
+}
+
+.about-version {
+	font-size: $font-sm;
+	color: $text-placeholder;
+}
+
+.about-intro {
+	padding: $spacing-base;
+	margin: $spacing-base;
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+}
+
+.about-intro-text {
+	display: block;
+	font-size: $font-base;
+	color: $text-secondary;
+	line-height: 1.8;
+	margin-bottom: $spacing-sm;
+	
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+.about-menu {
+	margin: $spacing-base;
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	overflow: hidden;
+}
+
+.about-footer {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: $spacing-xl $spacing-base;
+}
+
+.about-copyright,
+.about-icp {
+	font-size: $font-xs;
+	color: $text-placeholder;
+	margin-bottom: $spacing-xs;
+}

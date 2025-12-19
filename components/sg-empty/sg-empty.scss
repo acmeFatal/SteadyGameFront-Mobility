@@ -1,0 +1,50 @@
+/**
+ * sg-empty 空状态组件样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.sg-empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: $spacing-xl 0;
+	
+	&__image {
+		width: 300rpx;
+		height: 300rpx;
+		margin-bottom: $spacing-base;
+	}
+	
+	&__icon {
+		width: 200rpx;
+		height: 200rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: $spacing-base;
+	}
+	
+	&__icon-text {
+		font-size: 120rpx;
+	}
+	
+	&__text {
+		font-size: $font-base;
+		color: $text-placeholder;
+		margin-bottom: $spacing-base;
+	}
+	
+	&__button {
+		padding: $spacing-sm $spacing-md;
+		background-color: $primary-color;
+		border-radius: $radius-round;
+	}
+	
+	&__button-text {
+		font-size: $font-sm;
+		color: $text-inverse;
+	}
+}

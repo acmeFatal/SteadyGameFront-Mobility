@@ -1,0 +1,196 @@
+<template>
+	<view class="register-page">
+		<sg-navbar title="注册账号" />
+		
+		<view class="register-form">
+			<view class="register-section">
+				<text class="register-section-title">基本信息</text>
+				
+				<view class="register-field">
+					<text class="register-label">用户名</text>
+					<input 
+						class="register-input"
+						v-model="form.username"
+						placeholder="请输入用户名（字母数字下划线）"
+						type="text"
+					/>
+				</view>
+				
+				<view class="register-field">
+					<text class="register-label">手机号</text>
+					<input 
+						class="register-input"
+						v-model="form.phone"
+						placeholder="请输入手机号"
+						type="number"
+						maxlength="11"
+					/>
+				</view>
+				
+				<view class="register-field">
+					<text class="register-label">邮箱</text>
+					<input 
+						class="register-input"
+						v-model="form.email"
+						placeholder="请输入邮箱地址"
+						type="text"
+					/>
+				</view>
+				
+				<view class="register-field">
+					<text class="register-label">真实姓名</text>
+					<input 
+						class="register-input"
+						v-model="form.realName"
+						placeholder="请输入真实姓名（选填）"
+						type="text"
+					/>
+				</view>
+			</view>
+			
+			<view class="register-section">
+				<text class="register-section-title">安全设置</text>
+				
+				<view class="register-field">
+					<text class="register-label">登录密码</text>
+					<input 
+						class="register-input"
+						v-model="form.password"
+						placeholder="6-64位，包含字母和数字"
+						:password="true"
+						type="text"
+					/>
+				</view>
+				
+				<view class="register-field">
+					<text class="register-label">确认密码</text>
+					<input 
+						class="register-input"
+						v-model="form.confirmPassword"
+						placeholder="请再次输入密码"
+						:password="true"
+						type="text"
+					/>
+				</view>
+			</view>
+			
+			<view class="register-agreement">
+				<view 
+					class="register-checkbox"
+					:class="{ 'register-checkbox--checked': agreed }"
+					@click="agreed = !agreed"
+				>
+					<text v-if="agreed" class="register-checkbox-icon">✓</text>
+				</view>
+				<text class="register-agreement-text">
+					我已阅读并同意《用户协议》和《隐私政策》
+				</text>
+			</view>
+			
+			<view class="register-actions">
+				<view 
+					class="register-btn"
+					:class="{ 'register-btn--disabled': !canSubmit }"
+					@click="handleRegister"
+				>
+					<text class="register-btn-text">立即注册</text>
+				</view>
+			</view>
+			
+			<view class="register-login">
+				<text class="register-login-text">已有账号？</text>
+				<text class="register-login-link" @click="goToLogin">立即登录</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { register } from '@/api/auth.uts'
+	import type { RegisterParams } from '@/api/auth.uts'
+	import { isValidPhone, isValidEmail, isValidPassword, isValidUsername } from '@/utils/validate.uts'
+	
+	export default {
+		data() {
+			return {
+				agreed: false,
+				form: {
+					username: '',
+					phone: '',
+					email: '',
+					realName: '',
+					password: '',
+					confirmPassword: ''
+				}
+			}
+		},
+		computed: {
+			canSubmit(): boolean {
+				return this.agreed && 
+					this.form.username.length > 0 &&
+					this.form.phone.length > 0 &&
+					this.form.email.length > 0 &&
+					this.form.password.length > 0 &&
+					this.form.confirmPassword.length > 0
+			}
+		},
+		methods: {
+			validateForm(): boolean {
+				if (!isValidUsername(this.form.username)) {
+					uni.showToast({ title: '用户名格式不正确', icon: 'none' })
+					return false
+				}
+				if (!isValidPhone(this.form.phone)) {
+					uni.showToast({ title: '手机号格式不正确', icon: 'none' })
+					return false
+				}
+				if (!isValidEmail(this.form.email)) {
+					uni.showToast({ title: '邮箱格式不正确', icon: 'none' })
+					return false
+				}
+				if (!isValidPassword(this.form.password)) {
+					uni.showToast({ title: '密码需6-64位，包含字母和数字', icon: 'none' })
+					return false
+				}
+				if (this.form.password !== this.form.confirmPassword) {
+					uni.showToast({ title: '两次密码输入不一致', icon: 'none' })
+					return false
+				}
+				if (!this.agreed) {
+					uni.showToast({ title: '请先同意用户协议', icon: 'none' })
+					return false
+				}
+				return true
+			},
+			
+			async handleRegister() {
+				if (!this.canSubmit) return
+				if (!this.validateForm()) return
+				
+				try {
+					const params: RegisterParams = {
+						username: this.form.username,
+						phone: this.form.phone,
+						email: this.form.email,
+						password: this.form.password,
+						realName: this.form.realName || undefined
+					}
+					
+					const res = await register(params)
+					
+					uni.showToast({ title: '注册成功', icon: 'success' })
+					
+					setTimeout(() => {
+						uni.navigateBack()
+					}, 1500)
+				} catch (e) {
+					console.error('注册失败:', e)
+				}
+			},
+			
+			goToLogin() {
+				uni.navigateBack()
+			}
+		}
+	}
+</script>

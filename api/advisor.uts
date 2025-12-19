@@ -1,0 +1,348 @@
+/**
+ * @description 理财顾问端API（ADVISOR权限）
+ * @author SteadyGame Team
+ * @version 1.0.0
+ */
+
+import { get, post, del } from '@/utils/request.uts'
+import type { ResponseData, PageResponseData } from '@/utils/request.uts'
+
+/**
+ * 客户信息
+ */
+export interface AdvisorClient {
+	relationship_id: number
+	user_id: number
+	relationship_status: number
+	assigned_at: string
+	username: string
+	real_name: string
+	phone: string
+	email: string
+	avatar_url: string
+	risk_preference: number
+	total_assets: number
+	risk_level: string
+	risk_score: number
+}
+
+/**
+ * 客户详情
+ */
+export interface ClientDetail {
+	user_id: number
+	username: string
+	real_name: string
+	phone: string
+	email: string
+	avatar_url: string
+	gender: number
+	birth_date: string
+	risk_preference: number
+	financial_goal: string
+	annual_income: number
+	occupation: string
+	investment_experience: number
+	assigned_at: string
+	relationship_status: number
+}
+
+/**
+ * 客户统计
+ */
+export interface ClientStatistics {
+	totalClients: number
+	activeClients: number
+	newClientsThisMonth: number
+	byRiskLevel: Record<string, number>
+}
+
+/**
+ * 理财方案
+ */
+export interface AdvisorPlan {
+	planId: number
+	title: string
+	clientId: number
+	goal: string
+	planContent: string
+	portfolios: PlanPortfolio[]
+	expectedReturn: number
+	status: string
+	createdAt: string
+}
+
+/**
+ * 方案组合
+ */
+export interface PlanPortfolio {
+	name: string
+	percentage: number
+}
+
+/**
+ * 风险预警
+ */
+export interface AdvisorAlert {
+	id: number
+	advisor_id: number
+	client_id: number
+	client_name: string
+	client_real_name: string
+	alert_type: string
+	risk_level: number
+	message: string
+	detail_json: string
+	status: string
+	triggered_at: string
+	risk_preference: number
+	financial_goal: string
+}
+
+/**
+ * 客户标签
+ */
+export interface ClientTag {
+	id: number
+	advisor_id: number
+	client_id: number
+	tag_name: string
+	tag_type: string
+	create_time: string
+}
+
+/**
+ * 服务记录参数
+ */
+export interface ServiceRecordParams {
+	serviceType: string
+	serviceContent: string
+	serviceTime: string
+}
+
+/**
+ * 生成方案参数
+ */
+export interface GeneratePlanParams {
+	clientId: number
+	title: string
+	goal: string
+	riskLevel: number
+	initialCapital: number
+	monthlyInvestment: number
+	years: number
+}
+
+/**
+ * 处理预警参数
+ */
+export interface ProcessAlertParams {
+	action: string
+	note?: string
+}
+
+/**
+ * 添加标签参数
+ */
+export interface AddTagParams {
+	tagName: string
+	tagType?: string
+}
+
+/**
+ * 客户列表查询参数
+ */
+export interface ClientListParams {
+	page?: number
+	size?: number
+	status?: string
+	keyword?: string
+}
+
+/**
+ * 获取客户列表
+ */
+export function getAdvisorClients(params?: ClientListParams): Promise<ResponseData<PageResponseData<AdvisorClient>>> {
+	const queryParams = new URLSearchParams()
+	if (params?.page) queryParams.append('page', String(params.page))
+	if (params?.size) queryParams.append('size', String(params.size))
+	if (params?.status) queryParams.append('status', params.status)
+	if (params?.keyword) queryParams.append('keyword', params.keyword)
+	
+	const queryString = queryParams.toString()
+	const url = queryString ? `/user/advisor/clients?${queryString}` : '/user/advisor/clients'
+	return get<PageResponseData<AdvisorClient>>(url)
+}
+
+/**
+ * 获取客户详情
+ * @param userId 客户ID
+ */
+export function getClientDetail(userId: number): Promise<ResponseData<ClientDetail>> {
+	return get<ClientDetail>(`/user/advisor/clients/${userId}`)
+}
+
+/**
+ * 获取客户资产概览
+ * @param userId 客户ID
+ */
+export function getClientAssets(userId: number): Promise<ResponseData<any>> {
+	return get<any>(`/user/advisor/clients/${userId}/assets`)
+}
+
+/**
+ * 获取客户交易记录
+ * @param userId 客户ID
+ * @param page 页码
+ * @param size 每页条数
+ */
+export function getClientTrades(userId: number, page: number = 1, size: number = 20): Promise<ResponseData<any>> {
+	return get<any>(`/user/advisor/clients/${userId}/trades?page=${page}&size=${size}`)
+}
+
+/**
+ * 获取客户风险评估
+ * @param userId 客户ID
+ */
+export function getClientRisk(userId: number): Promise<ResponseData<any>> {
+	return get<any>(`/user/advisor/clients/${userId}/risk`)
+}
+
+/**
+ * 添加服务记录
+ * @param userId 客户ID
+ * @param params 服务记录参数
+ */
+export function addServiceRecord(userId: number, params: ServiceRecordParams): Promise<ResponseData<any>> {
+	return post<any>(`/user/advisor/clients/${userId}/service-records`, params)
+}
+
+/**
+ * 获取客户分类统计
+ */
+export function getClientStatistics(): Promise<ResponseData<ClientStatistics>> {
+	return get<ClientStatistics>('/user/advisor/clients/statistics')
+}
+
+/**
+ * AI生成理财方案
+ * @param params 方案参数
+ */
+export function generateAdvisorPlan(params: GeneratePlanParams): Promise<ResponseData<AdvisorPlan>> {
+	return post<AdvisorPlan>('/user/advisor/plans/generate', params)
+}
+
+/**
+ * 获取方案列表
+ * @param clientId 客户ID
+ * @param page 页码
+ * @param size 每页条数
+ */
+export function getAdvisorPlans(clientId?: number, page: number = 1, size: number = 20): Promise<ResponseData<PageResponseData<AdvisorPlan>>> {
+	let url = `/user/advisor/plans?page=${page}&size=${size}`
+	if (clientId) {
+		url += `&clientId=${clientId}`
+	}
+	return get<PageResponseData<AdvisorPlan>>(url)
+}
+
+/**
+ * 发送方案给客户
+ * @param planId 方案ID
+ */
+export function sendPlanToClient(planId: number): Promise<ResponseData<boolean>> {
+	return post<boolean>(`/user/advisor/plans/${planId}/send`)
+}
+
+/**
+ * 导出方案PDF
+ * @param planId 方案ID
+ */
+export function exportPlanPdf(planId: number): Promise<ResponseData<string>> {
+	return get<string>(`/user/advisor/plans/${planId}/export`)
+}
+
+/**
+ * 预警列表查询参数
+ */
+export interface AlertListParams {
+	status?: string
+	page?: number
+	size?: number
+}
+
+/**
+ * 获取风险预警列表
+ */
+export function getAdvisorAlerts(params?: AlertListParams): Promise<ResponseData<PageResponseData<AdvisorAlert>>> {
+	const queryParams = new URLSearchParams()
+	if (params?.status) queryParams.append('status', params.status)
+	if (params?.page) queryParams.append('page', String(params.page))
+	if (params?.size) queryParams.append('size', String(params.size))
+	
+	const queryString = queryParams.toString()
+	const url = queryString ? `/user/advisor/alerts?${queryString}` : '/user/advisor/alerts'
+	return get<PageResponseData<AdvisorAlert>>(url)
+}
+
+/**
+ * 获取预警详情
+ * @param alertId 预警ID
+ */
+export function getAlertDetail(alertId: number): Promise<ResponseData<AdvisorAlert>> {
+	return get<AdvisorAlert>(`/user/advisor/alerts/${alertId}`)
+}
+
+/**
+ * 处理预警
+ * @param alertId 预警ID
+ * @param params 处理参数
+ */
+export function processAlert(alertId: number, params: ProcessAlertParams): Promise<ResponseData<boolean>> {
+	return post<boolean>(`/user/advisor/alerts/${alertId}/process`, params)
+}
+
+/**
+ * 获取客户标签
+ * @param userId 客户ID
+ */
+export function getClientTags(userId: number): Promise<ResponseData<ClientTag[]>> {
+	return get<ClientTag[]>(`/user/advisor/clients/${userId}/tags`)
+}
+
+/**
+ * 添加客户标签
+ * @param userId 客户ID
+ * @param params 标签参数
+ */
+export function addClientTag(userId: number, params: AddTagParams): Promise<ResponseData<ClientTag>> {
+	return post<ClientTag>(`/user/advisor/clients/${userId}/tags`, params)
+}
+
+/**
+ * 删除客户标签
+ * @param userId 客户ID
+ * @param tagId 标签ID
+ */
+export function deleteClientTag(userId: number, tagId: number): Promise<ResponseData<boolean>> {
+	return del<boolean>(`/user/advisor/clients/${userId}/tags/${tagId}`)
+}
+
+/**
+ * 顾问KPI数据
+ */
+export interface AdvisorKPI {
+	totalClients: number
+	totalAssets: number
+	monthlyOrders: number
+	monthlyVolume: number
+	avgClientReturn: number
+	alertsPending: number
+}
+
+/**
+ * 获取顾问KPI看板数据
+ */
+export function getAdvisorKPI(): Promise<ResponseData<AdvisorKPI>> {
+	return get<AdvisorKPI>('/user/advisor/kpi')
+}

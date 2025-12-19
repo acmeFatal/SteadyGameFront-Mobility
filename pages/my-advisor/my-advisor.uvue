@@ -1,0 +1,147 @@
+<template>
+	<view class="advisor-page">
+		<sg-navbar title="我的顾问" />
+		
+		<view v-if="advisor" class="advisor-info">
+			<view class="advisor-card">
+				<image class="advisor-avatar" :src="advisor.avatar || '/static/default-avatar.png'" mode="aspectFill"></image>
+				<view class="advisor-details">
+					<text class="advisor-name">{{ advisor.realName }}</text>
+					<text class="advisor-title">{{ advisor.title }}</text>
+					<view class="advisor-rating">
+						<text class="advisor-rating-star">⭐</text>
+						<text class="advisor-rating-value">{{ advisor.rating }}</text>
+					</view>
+				</view>
+			</view>
+			
+			<view class="advisor-intro">
+				<text class="advisor-intro-title">个人简介</text>
+				<text class="advisor-intro-text">{{ advisor.introduction }}</text>
+			</view>
+			
+			<view class="advisor-specialties">
+				<text class="advisor-specialties-title">擅长领域</text>
+				<view class="advisor-tags">
+					<view v-for="(item, index) in advisor.specialties" :key="index" class="advisor-tag">
+						<text class="advisor-tag-text">{{ item }}</text>
+					</view>
+				</view>
+			</view>
+			
+			<view class="advisor-stats">
+				<view class="advisor-stat">
+					<text class="advisor-stat-value">{{ advisor.serviceYears }}年</text>
+					<text class="advisor-stat-label">从业经验</text>
+				</view>
+				<view class="advisor-stat">
+					<text class="advisor-stat-value">{{ advisor.clientCount }}</text>
+					<text class="advisor-stat-label">服务客户</text>
+				</view>
+			</view>
+			
+			<view class="advisor-actions">
+				<view class="advisor-btn advisor-btn--message" @click="goToMessage">
+					<text class="advisor-btn-icon">💬</text>
+					<text class="advisor-btn-text">发消息</text>
+				</view>
+				<view class="advisor-btn advisor-btn--call" @click="makeCall">
+					<text class="advisor-btn-icon">📞</text>
+					<text class="advisor-btn-text">电话咨询</text>
+				</view>
+				<view class="advisor-btn advisor-btn--appointment" @click="goToAppointment">
+					<text class="advisor-btn-icon">📅</text>
+					<text class="advisor-btn-text">预约咨询</text>
+				</view>
+			</view>
+			
+			<view class="advisor-change" @click="changeAdvisor">
+				<text class="advisor-change-text">更换顾问</text>
+			</view>
+		</view>
+		
+		<view v-else class="advisor-empty">
+			<view class="advisor-empty-icon">
+				<text class="advisor-empty-icon-text">👨‍💼</text>
+			</view>
+			<text class="advisor-empty-text">您还没有专属顾问</text>
+			<text class="advisor-empty-desc">选择一位专属顾问，获得专业的理财建议</text>
+			<view class="advisor-empty-btn" @click="goToSelectAdvisor">
+				<text class="advisor-empty-btn-text">选择顾问</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { get } from '@/utils/request.uts'
+	
+	interface Advisor {
+		advisorId: number
+		advisorName: string
+		realName: string
+		avatar: string
+		phone: string
+		email: string
+		title: string
+		introduction: string
+		specialties: string[]
+		serviceYears: number
+		clientCount: number
+		rating: number
+		assignedAt: string
+	}
+	
+	export default {
+		data() {
+			return {
+				advisor: null as Advisor | null
+			}
+		},
+		onLoad() {
+			this.loadAdvisor()
+		},
+		methods: {
+			async loadAdvisor() {
+				try {
+					const res = await get<Advisor>('/user/my-advisor')
+					this.advisor = res.data
+				} catch (e) {
+					console.error('获取顾问信息失败:', e)
+				}
+			},
+			
+			goToMessage() {
+				uni.navigateTo({ url: '/pages/advisor-message/advisor-message' })
+			},
+			
+			makeCall() {
+				if (this.advisor?.phone) {
+					uni.makePhoneCall({
+						phoneNumber: this.advisor.phone
+					})
+				}
+			},
+			
+			goToAppointment() {
+				uni.navigateTo({ url: '/pages/advisor-appointment/advisor-appointment' })
+			},
+			
+			changeAdvisor() {
+				uni.showModal({
+					title: '更换顾问',
+					content: '确定要申请更换顾问吗？',
+					success: (res) => {
+						if (res.confirm) {
+							this.goToSelectAdvisor()
+						}
+					}
+				})
+			},
+			
+			goToSelectAdvisor() {
+				uni.navigateTo({ url: '/pages/select-advisor/select-advisor' })
+			}
+		}
+	}
+</script>

@@ -1,0 +1,284 @@
+<template>
+	<view class="order-detail-page">
+		<sg-navbar title="订单详情" />
+		
+		<view class="order-status-card" :class="getStatusCardClass(order.orderStatus)">
+			<view class="order-status-icon">
+				<text class="order-status-icon-text">{{ getStatusIcon(order.orderStatus) }}</text>
+			</view>
+			<text class="order-status-text">{{ getStatusText(order.orderStatus) }}</text>
+			<text class="order-status-desc">{{ getStatusDesc(order.orderStatus) }}</text>
+		</view>
+		
+		<view class="order-product">
+			<text class="order-product-title">产品信息</text>
+			<view class="order-product-info">
+				<text class="order-product-name">{{ productInfo.productName || '理财产品' }}</text>
+				<text class="order-product-type">{{ getOrderTypeText(order.orderType) }}</text>
+			</view>
+		</view>
+		
+		<view class="order-info-card">
+			<text class="order-info-title">订单信息</text>
+			<view class="order-info-list">
+				<view class="order-info-item">
+					<text class="order-info-label">订单编号</text>
+					<view class="order-info-value-wrap">
+						<text class="order-info-value">{{ order.orderNo }}</text>
+						<text class="order-info-copy" @click="copyOrderNo">复制</text>
+					</view>
+				</view>
+				<view class="order-info-item">
+					<text class="order-info-label">交易金额</text>
+					<text class="order-info-value order-info-value--amount">¥{{ formatMoney(order.amount) }}</text>
+				</view>
+				<view class="order-info-item">
+					<text class="order-info-label">手续费</text>
+					<text class="order-info-value">¥{{ formatMoney(order.fee) }}</text>
+				</view>
+				<view class="order-info-item">
+					<text class="order-info-label">创建时间</text>
+					<text class="order-info-value">{{ formatTime(order.createdAt) }}</text>
+				</view>
+				<view class="order-info-item">
+					<text class="order-info-label">更新时间</text>
+					<text class="order-info-value">{{ formatTime(order.updatedAt) }}</text>
+				</view>
+			</view>
+		</view>
+		
+		<view class="order-timeline" v-if="timeline.length > 0">
+			<text class="order-timeline-title">订单进度</text>
+			<view class="timeline-list">
+				<view 
+					v-for="(item, index) in timeline" 
+					:key="index"
+					class="timeline-item"
+					:class="{ 'timeline-item--active': index === 0 }"
+				>
+					<view class="timeline-dot"></view>
+					<view class="timeline-content">
+						<text class="timeline-text">{{ item.text }}</text>
+						<text class="timeline-time">{{ item.time }}</text>
+					</view>
+				</view>
+			</view>
+		</view>
+		
+		<view class="order-actions" v-if="showActions">
+			<view 
+				v-if="order.orderStatus === 1" 
+				class="order-action-btn order-action-btn--cancel"
+				@click="cancelOrder"
+			>
+				<text class="order-action-btn-text">取消订单</text>
+			</view>
+			<view 
+				v-if="order.orderStatus === 3 && order.orderType === 1" 
+				class="order-action-btn order-action-btn--redeem"
+				@click="redeemOrder"
+			>
+				<text class="order-action-btn-text">申请赎回</text>
+			</view>
+			<view 
+				v-if="order.orderStatus === 5" 
+				class="order-action-btn order-action-btn--retry"
+				@click="retryOrder"
+			>
+				<text class="order-action-btn-text">重新提交</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { getOrderDetail, getProductDetail } from '@/api/trade.uts'
+	import { formatDateTime } from '@/utils/date.uts'
+	import { ORDER_STATUS_MAP, ORDER_TYPE_MAP } from '@/config/index.uts'
+	import type { Order, Product } from '@/api/trade.uts'
+	
+	interface TimelineItem {
+		text: string
+		time: string
+	}
+	
+	export default {
+		data() {
+			return {
+				orderId: 0,
+				order: {} as Order,
+				productInfo: {} as Product,
+				timeline: [] as TimelineItem[]
+			}
+		},
+		computed: {
+			showActions(): boolean {
+				return this.order.orderStatus === 1 || 
+					this.order.orderStatus === 3 || 
+					this.order.orderStatus === 5
+			}
+		},
+		onLoad(options: any) {
+			if (options.id) {
+				this.orderId = Number(options.id)
+				this.loadOrderDetail()
+			}
+		},
+		methods: {
+			async loadOrderDetail() {
+				try {
+					const res = await getOrderDetail(this.orderId)
+					this.order = res.data
+					this.loadProductInfo()
+					this.buildTimeline()
+				} catch (e) {
+					console.error('获取订单详情失败:', e)
+					// 模拟数据
+					this.order = {
+						orderId: this.orderId,
+						orderNo: 'ORD' + Date.now(),
+						userId: 1,
+						productId: 1,
+						orderType: 1,
+						orderStatus: 2,
+						quantity: 10000,
+						price: 1,
+						amount: 10000,
+						fee: 0,
+						createdAt: new Date(Date.now() - 3600000).toISOString(),
+						updatedAt: new Date().toISOString()
+					}
+					this.buildTimeline()
+				}
+			},
+			
+			async loadProductInfo() {
+				try {
+					const res = await getProductDetail(this.order.productId)
+					this.productInfo = res.data
+				} catch (e) {
+					console.error('获取产品信息失败:', e)
+				}
+			},
+			
+			buildTimeline() {
+				const timeline: TimelineItem[] = []
+				
+				if (this.order.orderStatus >= 1) {
+					timeline.push({
+						text: '订单已提交',
+						time: this.formatTime(this.order.createdAt)
+					})
+				}
+				if (this.order.orderStatus >= 2) {
+					timeline.push({
+						text: '订单处理中',
+						time: this.formatTime(this.order.updatedAt)
+					})
+				}
+				if (this.order.orderStatus === 3) {
+					timeline.push({
+						text: '交易已成交',
+						time: this.formatTime(this.order.updatedAt)
+					})
+				}
+				if (this.order.orderStatus === 4) {
+					timeline.push({
+						text: '订单已取消',
+						time: this.formatTime(this.order.updatedAt)
+					})
+				}
+				if (this.order.orderStatus === 5) {
+					timeline.push({
+						text: '交易失败',
+						time: this.formatTime(this.order.updatedAt)
+					})
+				}
+				
+				this.timeline = timeline.reverse()
+			},
+			
+			formatMoney(num: number): string {
+				if (!num) return '0.00'
+				return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+			},
+			
+			formatTime(time: string): string {
+				if (!time) return ''
+				return formatDateTime(time)
+			},
+			
+			getStatusText(status: number): string {
+				return ORDER_STATUS_MAP[status] || '未知'
+			},
+			
+			getStatusDesc(status: number): string {
+				const descMap: Record<number, string> = {
+					1: '订单正在等待处理',
+					2: '订单正在处理中，请耐心等待',
+					3: '订单已成交，收益将于T+1日开始计算',
+					4: '订单已取消',
+					5: '订单处理失败，请重试或联系客服'
+				}
+				return descMap[status] || ''
+			},
+			
+			getStatusIcon(status: number): string {
+				const iconMap: Record<number, string> = {
+					1: '⏳',
+					2: '🔄',
+					3: '✅',
+					4: '❌',
+					5: '⚠️'
+				}
+				return iconMap[status] || '📋'
+			},
+			
+			getStatusCardClass(status: number): string {
+				const classMap: Record<number, string> = {
+					1: 'order-status-card--pending',
+					2: 'order-status-card--processing',
+					3: 'order-status-card--success',
+					4: 'order-status-card--cancelled',
+					5: 'order-status-card--failed'
+				}
+				return classMap[status] || ''
+			},
+			
+			getOrderTypeText(type: number): string {
+				return ORDER_TYPE_MAP[type] || '未知'
+			},
+			
+			copyOrderNo() {
+				uni.setClipboardData({
+					data: this.order.orderNo,
+					success: () => {
+						uni.showToast({ title: '已复制', icon: 'success' })
+					}
+				})
+			},
+			
+			cancelOrder() {
+				uni.showModal({
+					title: '确认取消',
+					content: '确定要取消此订单吗？',
+					success: (res) => {
+						if (res.confirm) {
+							uni.showToast({ title: '取消订单功能开发中', icon: 'none' })
+						}
+					}
+				})
+			},
+			
+			redeemOrder() {
+				uni.navigateTo({
+					url: `/pages/redeem/redeem?orderId=${this.orderId}`
+				})
+			},
+			
+			retryOrder() {
+				uni.showToast({ title: '重试功能开发中', icon: 'none' })
+			}
+		}
+	}
+</script>

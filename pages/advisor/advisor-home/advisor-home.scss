@@ -1,0 +1,296 @@
+/**
+ * 顾问首页样式
+ * @author SteadyGame Team
+ */
+
+@import '../../../styles/variables.scss';
+
+.advisor-home-page {
+	min-height: 100vh;
+	background-color: $bg-base;
+	padding-bottom: $spacing-xl;
+}
+
+.advisor-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: $spacing-base;
+	padding-top: calc(env(safe-area-inset-top) + $spacing-base);
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.advisor-info {
+	display: flex;
+	align-items: center;
+}
+
+.advisor-avatar {
+	width: 100rpx;
+	height: 100rpx;
+	border-radius: 50%;
+	border: 4rpx solid rgba(255, 255, 255, 0.5);
+	margin-right: $spacing-sm;
+}
+
+.advisor-detail {
+	display: flex;
+	flex-direction: column;
+}
+
+.advisor-name {
+	font-size: $font-lg;
+	font-weight: bold;
+	color: $text-inverse;
+}
+
+.advisor-title {
+	font-size: $font-sm;
+	color: rgba(255, 255, 255, 0.8);
+}
+
+.advisor-actions {
+	display: flex;
+}
+
+.advisor-action {
+	position: relative;
+	padding: $spacing-sm;
+}
+
+.advisor-action-icon {
+	font-size: 48rpx;
+}
+
+.advisor-badge {
+	position: absolute;
+	top: 0;
+	right: 0;
+	min-width: 32rpx;
+	height: 32rpx;
+	padding: 0 8rpx;
+	background-color: $error-color;
+	border-radius: $radius-round;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.advisor-badge-text {
+	font-size: $font-xs;
+	color: $text-inverse;
+}
+
+.advisor-stats {
+	display: flex;
+	margin: -40rpx $spacing-base $spacing-base;
+	padding: $spacing-base;
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	box-shadow: $shadow-base;
+}
+
+.advisor-stat {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.advisor-stat-value {
+	font-size: $font-xl;
+	font-weight: bold;
+	color: $primary-color;
+}
+
+.advisor-stat-label {
+	font-size: $font-xs;
+	color: $text-secondary;
+	margin-top: 4rpx;
+}
+
+.advisor-quick {
+	display: flex;
+	margin: 0 $spacing-base $spacing-base;
+	padding: $spacing-base;
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+}
+
+.advisor-quick-item {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
+}
+
+.advisor-quick-icon {
+	width: 88rpx;
+	height: 88rpx;
+	background-color: rgba($primary-color, 0.1);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: $spacing-xs;
+}
+
+.advisor-quick-icon-text {
+	font-size: 40rpx;
+}
+
+.advisor-quick-text {
+	font-size: $font-sm;
+	color: $text-primary;
+}
+
+.advisor-quick-badge {
+	position: absolute;
+	top: 0;
+	right: 20%;
+	min-width: 32rpx;
+	height: 32rpx;
+	padding: 0 8rpx;
+	background-color: $error-color;
+	border-radius: $radius-round;
+	font-size: $font-xs;
+	color: $text-inverse;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.advisor-section {
+	margin: 0 $spacing-base $spacing-base;
+	padding: $spacing-base;
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+}
+
+.advisor-section-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: $spacing-sm;
+}
+
+.advisor-section-title {
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-primary;
+}
+
+.advisor-section-more {
+	font-size: $font-sm;
+	color: $text-secondary;
+}
+
+.advisor-tasks {
+	display: flex;
+	flex-direction: column;
+}
+
+.advisor-task {
+	display: flex;
+	align-items: center;
+	padding: $spacing-sm 0;
+	border-bottom: 1rpx solid $border-light;
+	
+	&:last-child {
+		border-bottom: none;
+	}
+}
+
+.advisor-task-icon {
+	width: 72rpx;
+	height: 72rpx;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-right: $spacing-sm;
+	
+	&--rebalance { background-color: rgba(#1890ff, 0.1); }
+	&--expiring { background-color: rgba(#faad14, 0.1); }
+	&--consult { background-color: rgba(#52c41a, 0.1); }
+	&--alert { background-color: rgba(#ff4d4f, 0.1); }
+}
+
+.advisor-task-icon-text {
+	font-size: 36rpx;
+}
+
+.advisor-task-info {
+	flex: 1;
+}
+
+.advisor-task-title {
+	display: block;
+	font-size: $font-base;
+	color: $text-primary;
+	margin-bottom: 4rpx;
+}
+
+.advisor-task-desc {
+	font-size: $font-sm;
+	color: $text-secondary;
+}
+
+.advisor-task-time {
+	font-size: $font-xs;
+	color: $text-placeholder;
+}
+
+.advisor-focus-clients {
+	display: flex;
+	flex-direction: column;
+}
+
+.advisor-client {
+	display: flex;
+	align-items: center;
+	padding: $spacing-sm 0;
+	border-bottom: 1rpx solid $border-light;
+	
+	&:last-child {
+		border-bottom: none;
+	}
+}
+
+.advisor-client-avatar {
+	width: 80rpx;
+	height: 80rpx;
+	border-radius: 50%;
+	margin-right: $spacing-sm;
+}
+
+.advisor-client-info {
+	flex: 1;
+}
+
+.advisor-client-name {
+	display: block;
+	font-size: $font-base;
+	font-weight: bold;
+	color: $text-primary;
+	margin-bottom: 4rpx;
+}
+
+.advisor-client-assets {
+	font-size: $font-sm;
+	color: $text-secondary;
+}
+
+.advisor-client-tag {
+	padding: 4rpx 16rpx;
+	border-radius: $radius-round;
+	
+	&--low { background-color: rgba($success-color, 0.1); .advisor-client-tag-text { color: $success-color; } }
+	&--mid { background-color: rgba($warning-color, 0.1); .advisor-client-tag-text { color: $warning-color; } }
+	&--high { background-color: rgba($error-color, 0.1); .advisor-client-tag-text { color: $error-color; } }
+}
+
+.advisor-client-tag-text {
+	font-size: $font-xs;
+}

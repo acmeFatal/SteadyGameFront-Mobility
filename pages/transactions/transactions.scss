@@ -1,0 +1,134 @@
+/**
+ * 交易流水页面样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.transactions-page {
+	min-height: 100vh;
+	background-color: $bg-base;
+	display: flex;
+	flex-direction: column;
+}
+
+.transactions-filter {
+	display: flex;
+	padding: $spacing-sm $spacing-base;
+	background-color: $bg-white;
+	gap: $spacing-sm;
+}
+
+.filter-item {
+	display: flex;
+	align-items: center;
+	padding: $spacing-xs $spacing-sm;
+	background-color: $bg-gray;
+	border-radius: $radius-base;
+}
+
+.filter-label {
+	font-size: $font-sm;
+	color: $text-primary;
+	margin-right: $spacing-xs;
+}
+
+.filter-arrow {
+	font-size: $font-xs;
+	color: $text-placeholder;
+}
+
+.transactions-summary {
+	display: flex;
+	padding: $spacing-base;
+	background-color: $bg-white;
+	border-top: 1rpx solid $border-light;
+}
+
+.summary-item {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.summary-label {
+	font-size: $font-sm;
+	color: $text-secondary;
+	margin-bottom: 4rpx;
+}
+
+.summary-value {
+	font-size: $font-md;
+	font-weight: bold;
+}
+
+.transactions-list {
+	flex: 1;
+	padding: $spacing-base;
+}
+
+.transaction-group {
+	margin-bottom: $spacing-base;
+}
+
+.transaction-date {
+	padding: $spacing-xs 0;
+}
+
+.transaction-date-text {
+	font-size: $font-sm;
+	color: $text-placeholder;
+}
+
+.transaction-item {
+	display: flex;
+	align-items: center;
+	padding: $spacing-sm;
+	background-color: $bg-white;
+	border-radius: $radius-base;
+	margin-bottom: $spacing-xs;
+}
+
+.transaction-icon {
+	width: 72rpx;
+	height: 72rpx;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-right: $spacing-sm;
+	
+	&--income {
+		background-color: rgba($success-color, 0.1);
+	}
+	
+	&--expense {
+		background-color: rgba($error-color, 0.1);
+	}
+}
+
+.transaction-icon-text {
+	font-size: 36rpx;
+}
+
+.transaction-info {
+	flex: 1;
+}
+
+.transaction-title {
+	display: block;
+	font-size: $font-base;
+	color: $text-primary;
+	margin-bottom: 4rpx;
+}
+
+.transaction-time {
+	font-size: $font-xs;
+	color: $text-placeholder;
+}
+
+.transaction-amount {
+	font-size: $font-md;
+	font-weight: bold;
+}

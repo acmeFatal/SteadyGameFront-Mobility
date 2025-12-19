@@ -1,0 +1,84 @@
+<template>
+	<view class="sg-navbar" :style="{ paddingTop: statusBarHeight + 'px' }">
+		<view class="sg-navbar__content">
+			<view class="sg-navbar__left" @click="handleLeftClick">
+				<view v-if="showBack" class="sg-navbar__back">
+					<text class="sg-navbar__back-icon">&#xe600;</text>
+				</view>
+				<slot name="left"></slot>
+			</view>
+			<view class="sg-navbar__center">
+				<text v-if="title" class="sg-navbar__title">{{ title }}</text>
+				<slot name="center"></slot>
+			</view>
+			<view class="sg-navbar__right">
+				<slot name="right"></slot>
+			</view>
+		</view>
+	</view>
+	<!-- 占位元素 -->
+	<view class="sg-navbar__placeholder" :style="{ height: navBarHeight + 'px' }"></view>
+</template>
+
+<script lang="uts">
+	/**
+	 * sg-navbar 导航栏组件
+	 * @description 自定义导航栏，支持多平台适配
+	 * @property {String} title - 标题文字
+	 * @property {Boolean} showBack - 是否显示返回按钮
+	 * @property {Boolean} fixed - 是否固定定位
+	 * @event {Function} back - 返回事件
+	 * @event {Function} leftClick - 左侧点击事件
+	 */
+	export default {
+		name: 'sg-navbar',
+		props: {
+			title: {
+				type: String,
+				default: ''
+			},
+			showBack: {
+				type: Boolean,
+				default: true
+			},
+			fixed: {
+				type: Boolean,
+				default: true
+			}
+		},
+		emits: ['back', 'leftClick'],
+		data() {
+			return {
+				statusBarHeight: 0,
+				navBarHeight: 0
+			}
+		},
+		created() {
+			this.initNavBar()
+		},
+		methods: {
+			initNavBar() {
+				try {
+					const sysInfo = uni.getSystemInfoSync()
+					this.statusBarHeight = sysInfo.statusBarHeight || 0
+					this.navBarHeight = this.statusBarHeight + 44
+				} catch (e) {
+					this.statusBarHeight = 20
+					this.navBarHeight = 64
+				}
+			},
+			handleLeftClick() {
+				this.$emit('leftClick')
+				if (this.showBack) {
+					this.$emit('back')
+					const pages = getCurrentPages()
+					if (pages.length > 1) {
+						uni.navigateBack({ delta: 1 })
+					} else {
+						uni.reLaunch({ url: '/pages/index/index' })
+					}
+				}
+			}
+		}
+	}
+</script>

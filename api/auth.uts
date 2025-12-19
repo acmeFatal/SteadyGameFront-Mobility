@@ -1,0 +1,163 @@
+/**
+ * @description 认证相关API
+ * @author SteadyGame Team
+ * @version 1.0.0
+ */
+
+import { get, post } from '@/utils/request.uts'
+import type { ResponseData } from '@/utils/request.uts'
+
+/**
+ * 注册请求参数
+ */
+export interface RegisterParams {
+	username: string
+	email: string
+	phone: string
+	password: string
+	realName?: string
+	gender?: number
+	birthDate?: string
+}
+
+/**
+ * 登录请求参数
+ */
+export interface LoginParams {
+	username: string
+	password: string
+	captcha?: string
+	captchaId?: string
+	deviceType?: number
+	deviceId?: string
+}
+
+/**
+ * 短信登录请求参数
+ */
+export interface SmsLoginParams {
+	phone: string
+	code: string
+	captchaId?: string
+	captcha?: string
+}
+
+/**
+ * 登录响应数据
+ */
+export interface LoginResponse {
+	userId: number
+	username: string
+	realName: string
+	email: string
+	emailVerified: boolean
+	phone: string
+	phoneVerified: boolean
+	avatar: string
+	accessToken: string
+	refreshToken: string
+	tokenType: string
+	expiresIn: number
+	roles: string[]
+	permissions?: string[]
+}
+
+/**
+ * 图形验证码响应
+ */
+export interface CaptchaResponse {
+	captchaId: string
+	captchaImage: string
+	expireSeconds: number
+}
+
+/**
+ * 修改密码请求参数
+ */
+export interface ChangePasswordParams {
+	oldPassword: string
+	newPassword: string
+}
+
+/**
+ * 重置密码请求参数
+ */
+export interface ResetPasswordParams {
+	identifier: string
+	code: string
+	newPassword: string
+}
+
+/**
+ * 用户注册
+ * @param params 注册参数
+ */
+export function register(params: RegisterParams): Promise<ResponseData<number>> {
+	return post<number>('/auth/register', params)
+}
+
+/**
+ * 用户登录
+ * @param params 登录参数
+ */
+export function login(params: LoginParams): Promise<ResponseData<LoginResponse>> {
+	return post<LoginResponse>('/auth/login', params)
+}
+
+/**
+ * 获取图形验证码
+ */
+export function getCaptcha(): Promise<ResponseData<CaptchaResponse>> {
+	return get<CaptchaResponse>('/auth/captcha')
+}
+
+/**
+ * 发送登录短信验证码
+ * @param phone 手机号
+ */
+export function sendLoginSmsCode(phone: string): Promise<ResponseData<null>> {
+	return post<null>('/auth/login-sms/code', null, {
+		url: `/auth/login-sms/code?phone=${phone}`
+	})
+}
+
+/**
+ * 短信验证码登录
+ * @param params 登录参数
+ */
+export function smsLogin(params: SmsLoginParams): Promise<ResponseData<LoginResponse>> {
+	return post<LoginResponse>('/auth/login-sms', params)
+}
+
+/**
+ * 用户登出
+ * @param userId 用户ID
+ */
+export function logout(userId: number): Promise<ResponseData<null>> {
+	return post<null>(`/auth/logout?userId=${userId}`)
+}
+
+/**
+ * 修改密码
+ * @param userId 用户ID
+ * @param params 修改密码参数
+ */
+export function changePassword(userId: number, params: ChangePasswordParams): Promise<ResponseData<null>> {
+	return post<null>(`/auth/change-password?userId=${userId}`, params)
+}
+
+/**
+ * 申请重置密码
+ * @param identifier 用户标识（用户名/邮箱/手机号）
+ */
+export function forgotPasswordRequest(identifier: string): Promise<ResponseData<null>> {
+	return post<null>('/auth/forgot-password/request', { identifier })
+}
+
+/**
+ * 确认重置密码
+ * @param params 重置密码参数
+ */
+export function forgotPasswordReset(params: ResetPasswordParams): Promise<ResponseData<null>> {
+	return post<null>('/auth/forgot-password/reset', params)
+}

@@ -1,0 +1,109 @@
+/**
+ * @description 全局配置文件
+ * @author SteadyGame Team
+ * @version 1.0.0
+ */
+
+// API 网关基础地址
+export const BASE_URL = 'http://localhost:8001'
+
+// 请求超时时间（毫秒）
+export const REQUEST_TIMEOUT = 30000
+
+// Token 存储键名
+export const TOKEN_KEY = 'steady_game_token'
+export const REFRESH_TOKEN_KEY = 'steady_game_refresh_token'
+export const USER_INFO_KEY = 'steady_game_user_info'
+
+// 设备类型
+export const DEVICE_TYPE = {
+	WEB: 1,
+	IOS: 2,
+	ANDROID: 3,
+	HARMONY: 4
+}
+
+// 风险等级映射
+export const RISK_LEVEL_MAP = {
+	1: '保守型',
+	2: '稳健型',
+	3: '平衡型',
+	4: '积极型',
+	5: '激进型'
+}
+
+// 资产类型映射
+export const ASSET_TYPE_MAP = {
+	1: '现金',
+	2: '基金',
+	3: '股票',
+	4: '债券',
+	5: '理财产品'
+}
+
+// 订单状态映射
+export const ORDER_STATUS_MAP = {
+	1: '待处理',
+	2: '处理中',
+	3: '已成交',
+	4: '已取消',
+	5: '失败'
+}
+
+// 订单类型映射
+export const ORDER_TYPE_MAP = {
+	1: '买入',
+	2: '卖出'
+}
+
+// 分页默认配置
+export const PAGE_CONFIG = {
+	PAGE_SIZE: 20,
+	FIRST_PAGE: 1
+}
+
+// 产品类型映射
+export const PRODUCT_TYPE_MAP: Record<number, string> = {
+	1: '货币基金',
+	2: '债券基金',
+	3: '混合基金',
+	4: '股票基金',
+	5: '理财产品'
+}
+
+// 性别映射
+export const GENDER_MAP: Record<number, string> = {
+	0: '未知',
+	1: '男',
+	2: '女'
+}
+
+// 家庭状况映射
+export const FAMILY_STATUS_MAP: Record<number, string> = {
+	1: '单身',
+	2: '已婚无孩',
+	3: '已婚有孩'
+}
+
+// 顾问预警类型映射
+export const ALERT_TYPE_MAP: Record<string, string> = {
+	'POSITION_RISK': '仓位风险',
+	'LOSS_ALERT': '亏损预警',
+	'CONCENTRATION': '集中度过高',
+	'OVERDUE': '产品到期'
+}
+
+// 预警状态映射
+export const ALERT_STATUS_MAP: Record<string, string> = {
+	'PENDING': '待处理',
+	'PROCESSING': '处理中',
+	'PROCESSED': '已处理',
+	'IGNORED': '已忽略'
+}
+
+// 客户标签类型映射
+export const TAG_TYPE_MAP: Record<string, string> = {
+	'NEED': '需求标签',
+	'INTEREST': '兴趣标签',
+	'BEHAVIOR': '行为标签'
+}

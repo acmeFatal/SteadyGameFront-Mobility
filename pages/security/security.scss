@@ -1,0 +1,22 @@
+/**
+ * 账号安全页面样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.security-page {
+	min-height: 100vh;
+	background-color: $bg-base;
+}
+
+.security-list {
+	padding: $spacing-base;
+}
+
+.security-group {
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	overflow: hidden;
+	margin-bottom: $spacing-base;
+}

@@ -1,0 +1,238 @@
+<template>
+	<view class="user-profile-page">
+		<sg-navbar title="用户画像" />
+		
+		<view class="profile-header">
+			<text class="profile-header-title">完善您的投资画像</text>
+			<text class="profile-header-desc">帮助我们为您提供更精准的理财建议</text>
+		</view>
+		
+		<view class="profile-form">
+			<view class="profile-section">
+				<text class="profile-section-title">基本信息</text>
+				
+				<view class="profile-field">
+					<text class="profile-field-label">职业</text>
+					<view class="profile-field-input" @click="selectOccupation">
+						<text class="profile-field-value" :class="{ 'profile-field-placeholder': !form.occupation }">
+							{{ form.occupation || '请选择职业' }}
+						</text>
+						<text class="profile-field-arrow">›</text>
+					</view>
+				</view>
+				
+				<view class="profile-field">
+					<text class="profile-field-label">年收入</text>
+					<view class="profile-field-input" @click="selectIncome">
+						<text class="profile-field-value" :class="{ 'profile-field-placeholder': !form.annualIncomeText }">
+							{{ form.annualIncomeText || '请选择年收入范围' }}
+						</text>
+						<text class="profile-field-arrow">›</text>
+					</view>
+				</view>
+				
+				<view class="profile-field">
+					<text class="profile-field-label">学历</text>
+					<view class="profile-field-input" @click="selectEducation">
+						<text class="profile-field-value" :class="{ 'profile-field-placeholder': !form.educationLevel }">
+							{{ form.educationLevel || '请选择学历' }}
+						</text>
+						<text class="profile-field-arrow">›</text>
+					</view>
+				</view>
+				
+				<view class="profile-field">
+					<text class="profile-field-label">家庭状况</text>
+					<view class="profile-field-input" @click="selectFamily">
+						<text class="profile-field-value" :class="{ 'profile-field-placeholder': !form.familyStatusText }">
+							{{ form.familyStatusText || '请选择家庭状况' }}
+						</text>
+						<text class="profile-field-arrow">›</text>
+					</view>
+				</view>
+			</view>
+			
+			<view class="profile-section">
+				<text class="profile-section-title">投资信息</text>
+				
+				<view class="profile-field">
+					<text class="profile-field-label">投资经验</text>
+					<view class="profile-field-input" @click="selectExperience">
+						<text class="profile-field-value" :class="{ 'profile-field-placeholder': !form.investmentExperienceText }">
+							{{ form.investmentExperienceText || '请选择投资经验' }}
+						</text>
+						<text class="profile-field-arrow">›</text>
+					</view>
+				</view>
+				
+				<view class="profile-field">
+					<text class="profile-field-label">风险偏好</text>
+					<view class="profile-risk-options">
+						<view 
+							v-for="(item, index) in riskOptions" 
+							:key="index"
+							class="profile-risk-option"
+							:class="{ 'profile-risk-option--active': form.riskPreference === item.value }"
+							@click="form.riskPreference = item.value"
+						>
+							<text class="profile-risk-option-text">{{ item.label }}</text>
+						</view>
+					</view>
+				</view>
+				
+				<view class="profile-field">
+					<text class="profile-field-label">理财目标</text>
+					<textarea 
+						class="profile-textarea"
+						v-model="form.financialGoal"
+						placeholder="请描述您的理财目标，如：子女教育、养老储备、资产增值等"
+						maxlength="200"
+					></textarea>
+				</view>
+			</view>
+		</view>
+		
+		<view class="profile-submit" @click="saveProfile">
+			<text class="profile-submit-text">保存画像</text>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { getUserProfile, saveUserProfile } from '@/api/user.uts'
+	import type { UpdateProfileParams } from '@/api/user.uts'
+	
+	interface RiskOption {
+		label: string
+		value: number
+	}
+	
+	export default {
+		data() {
+			return {
+				form: {
+					occupation: '',
+					annualIncome: 0,
+					annualIncomeText: '',
+					educationLevel: '',
+					familyStatus: 0,
+					familyStatusText: '',
+					investmentExperience: 0,
+					investmentExperienceText: '',
+					riskPreference: 0,
+					financialGoal: ''
+				},
+				riskOptions: [
+					{ label: '保守', value: 1 },
+					{ label: '稳健', value: 2 },
+					{ label: '平衡', value: 3 },
+					{ label: '积极', value: 4 },
+					{ label: '激进', value: 5 }
+				] as RiskOption[]
+			}
+		},
+		onLoad() {
+			this.loadProfile()
+		},
+		methods: {
+			async loadProfile() {
+				try {
+					const res = await getUserProfile()
+					if (res.data) {
+						this.form.occupation = res.data.occupation || ''
+						this.form.annualIncome = res.data.annualIncome || 0
+						this.form.educationLevel = res.data.educationLevel || ''
+						this.form.familyStatus = res.data.familyStatus || 0
+						this.form.investmentExperience = res.data.investmentExperience || 0
+						this.form.riskPreference = res.data.riskPreference || 0
+						this.form.financialGoal = res.data.financialGoal || ''
+					}
+				} catch (e) {
+					console.error('获取用户画像失败:', e)
+				}
+			},
+			
+			selectOccupation() {
+				const items = ['企业职员', '公务员', '事业单位', '自由职业', '企业主', '学生', '退休', '其他']
+				uni.showActionSheet({
+					itemList: items,
+					success: (res) => {
+						this.form.occupation = items[res.tapIndex]
+					}
+				})
+			},
+			
+			selectIncome() {
+				const items = ['10万以下', '10-30万', '30-50万', '50-100万', '100万以上']
+				const values = [50000, 200000, 400000, 750000, 1500000]
+				uni.showActionSheet({
+					itemList: items,
+					success: (res) => {
+						this.form.annualIncomeText = items[res.tapIndex]
+						this.form.annualIncome = values[res.tapIndex]
+					}
+				})
+			},
+			
+			selectEducation() {
+				const items = ['高中及以下', '大专', '本科', '硕士', '博士']
+				uni.showActionSheet({
+					itemList: items,
+					success: (res) => {
+						this.form.educationLevel = items[res.tapIndex]
+					}
+				})
+			},
+			
+			selectFamily() {
+				const items = ['单身', '已婚无子女', '已婚有子女', '其他']
+				uni.showActionSheet({
+					itemList: items,
+					success: (res) => {
+						this.form.familyStatusText = items[res.tapIndex]
+						this.form.familyStatus = res.tapIndex + 1
+					}
+				})
+			},
+			
+			selectExperience() {
+				const items = ['无经验', '1年以下', '1-3年', '3-5年', '5年以上']
+				uni.showActionSheet({
+					itemList: items,
+					success: (res) => {
+						this.form.investmentExperienceText = items[res.tapIndex]
+						this.form.investmentExperience = res.tapIndex
+					}
+				})
+			},
+			
+			async saveProfile() {
+				if (!this.form.riskPreference) {
+					uni.showToast({ title: '请选择风险偏好', icon: 'none' })
+					return
+				}
+				
+				try {
+					const params: UpdateProfileParams = {
+						occupation: this.form.occupation,
+						annualIncome: this.form.annualIncome,
+						educationLevel: this.form.educationLevel,
+						familyStatus: this.form.familyStatus,
+						investmentExperience: this.form.investmentExperience,
+						riskPreference: this.form.riskPreference,
+						financialGoal: this.form.financialGoal
+					}
+					
+					await saveUserProfile(params)
+					uni.showToast({ title: '保存成功', icon: 'success' })
+					
+					setTimeout(() => {
+						uni.navigateBack()
+					}, 1500)
+				} catch (e) {
+					console.error('保存失败:', e)
+				}
+			}
+		}
+	}
+</script>

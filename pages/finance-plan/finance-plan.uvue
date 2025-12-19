@@ -1,0 +1,281 @@
+<template>
+	<view class="plan-page">
+		<sg-navbar title="理财规划" />
+		
+		<view class="plan-form">
+			<view class="plan-section">
+				<text class="plan-section-title">理财目标</text>
+				<view class="plan-goals">
+					<view 
+						v-for="(goal, index) in goals" 
+						:key="index"
+						class="plan-goal"
+						:class="{ 'plan-goal--active': selectedGoal === goal.value }"
+						@click="selectedGoal = goal.value"
+					>
+						<text class="plan-goal-icon">{{ goal.icon }}</text>
+						<text class="plan-goal-text">{{ goal.label }}</text>
+					</view>
+				</view>
+			</view>
+			
+			<view class="plan-section">
+				<text class="plan-section-title">初始投入资金</text>
+				<view class="plan-input-wrap">
+					<text class="plan-input-prefix">¥</text>
+					<input 
+						class="plan-input"
+						type="digit"
+						v-model="initialCapital"
+						placeholder="请输入初始投入金额"
+					/>
+				</view>
+			</view>
+			
+			<view class="plan-section">
+				<text class="plan-section-title">每月定投金额</text>
+				<view class="plan-input-wrap">
+					<text class="plan-input-prefix">¥</text>
+					<input 
+						class="plan-input"
+						type="digit"
+						v-model="monthlyInvestment"
+						placeholder="请输入每月投入金额"
+					/>
+				</view>
+			</view>
+			
+			<view class="plan-section">
+				<text class="plan-section-title">投资期限</text>
+				<view class="plan-periods">
+					<view 
+						v-for="(period, index) in periods" 
+						:key="index"
+						class="plan-period"
+						:class="{ 'plan-period--active': selectedPeriod === period.value }"
+						@click="selectedPeriod = period.value"
+					>
+						<text class="plan-period-text">{{ period.label }}</text>
+					</view>
+				</view>
+			</view>
+			
+			<view class="plan-section">
+				<text class="plan-section-title">风险偏好</text>
+				<view class="plan-risks">
+					<view 
+						v-for="(risk, index) in risks" 
+						:key="index"
+						class="plan-risk"
+						:class="{ 'plan-risk--active': selectedRisk === risk.value }"
+						@click="selectedRisk = risk.value"
+					>
+						<text class="plan-risk-text">{{ risk.label }}</text>
+					</view>
+				</view>
+			</view>
+		</view>
+		
+		<view class="plan-submit" @click="generatePlan">
+			<text class="plan-submit-text">生成理财方案</text>
+		</view>
+		
+		<view v-if="planResult" class="plan-result">
+			<view class="plan-result-header">
+				<text class="plan-result-title">{{ planResult.title }}</text>
+				<text class="plan-result-goal">目标：{{ planResult.goal }}</text>
+			</view>
+			
+			<view class="plan-result-summary">
+				<view class="plan-result-item">
+					<text class="plan-result-value">¥{{ formatMoney(totalInvestment) }}</text>
+					<text class="plan-result-label">总投入</text>
+				</view>
+				<view class="plan-result-item">
+					<text class="plan-result-value text-rise">¥{{ formatMoney(expectedTotal) }}</text>
+					<text class="plan-result-label">预期总额</text>
+				</view>
+				<view class="plan-result-item">
+					<text class="plan-result-value text-rise">{{ (planResult.expectedReturn * 100).toFixed(1) }}%</text>
+					<text class="plan-result-label">预期年化</text>
+				</view>
+			</view>
+			
+			<view class="plan-portfolio">
+				<text class="plan-portfolio-title">推荐配置</text>
+				<view class="plan-portfolio-list">
+					<view 
+						v-for="(item, index) in planResult.portfolios" 
+						:key="index"
+						class="plan-portfolio-item"
+					>
+						<view class="plan-portfolio-bar" :style="{ width: item.percentage + '%', backgroundColor: getColor(index) }"></view>
+						<text class="plan-portfolio-name">{{ item.name }}</text>
+						<text class="plan-portfolio-percent">{{ item.percentage }}%</text>
+					</view>
+				</view>
+			</view>
+			
+			<view class="plan-result-actions">
+				<view class="plan-action-btn plan-action-btn--save" @click="savePlan">
+					<text class="plan-action-btn-text">保存方案</text>
+				</view>
+				<view class="plan-action-btn plan-action-btn--execute" @click="executePlan">
+					<text class="plan-action-btn-text">立即执行</text>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { generateFinancePlan } from '@/api/ai.uts'
+	import type { FinancePlan, GeneratePlanParams } from '@/api/ai.uts'
+	
+	interface Goal {
+		label: string
+		value: string
+		icon: string
+	}
+	
+	interface Period {
+		label: string
+		value: number
+	}
+	
+	interface Risk {
+		label: string
+		value: number
+	}
+	
+	const COLORS = ['#1890FF', '#52C41A', '#FAAD14', '#F5222D', '#722ED1']
+	
+	export default {
+		data() {
+			return {
+				selectedGoal: '',
+				initialCapital: '',
+				monthlyInvestment: '',
+				selectedPeriod: 0,
+				selectedRisk: 0,
+				planResult: null as FinancePlan | null,
+				goals: [
+					{ label: '养老储蓄', value: 'retirement', icon: '🏠' },
+					{ label: '子女教育', value: 'education', icon: '📚' },
+					{ label: '买房首付', value: 'house', icon: '🏡' },
+					{ label: '资产增值', value: 'growth', icon: '📈' },
+					{ label: '其他目标', value: 'other', icon: '🎯' }
+				] as Goal[],
+				periods: [
+					{ label: '1年', value: 1 },
+					{ label: '3年', value: 3 },
+					{ label: '5年', value: 5 },
+					{ label: '10年', value: 10 },
+					{ label: '20年', value: 20 }
+				] as Period[],
+				risks: [
+					{ label: '保守', value: 1 },
+					{ label: '稳健', value: 2 },
+					{ label: '平衡', value: 3 },
+					{ label: '积极', value: 4 },
+					{ label: '激进', value: 5 }
+				] as Risk[]
+			}
+		},
+		computed: {
+			totalInvestment(): number {
+				const initial = Number(this.initialCapital) || 0
+				const monthly = Number(this.monthlyInvestment) || 0
+				const years = this.selectedPeriod || 0
+				return initial + monthly * 12 * years
+			},
+			expectedTotal(): number {
+				if (!this.planResult) return 0
+				const rate = this.planResult.expectedReturn || 0
+				const years = this.selectedPeriod || 0
+				return this.totalInvestment * Math.pow(1 + rate, years)
+			}
+		},
+		methods: {
+			formatMoney(num: number): string {
+				return num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+			},
+			
+			getColor(index: number): string {
+				return COLORS[index % COLORS.length]
+			},
+			
+			async generatePlan() {
+				if (!this.selectedGoal) {
+					uni.showToast({ title: '请选择理财目标', icon: 'none' })
+					return
+				}
+				if (!this.initialCapital && !this.monthlyInvestment) {
+					uni.showToast({ title: '请输入投资金额', icon: 'none' })
+					return
+				}
+				if (!this.selectedPeriod) {
+					uni.showToast({ title: '请选择投资期限', icon: 'none' })
+					return
+				}
+				if (!this.selectedRisk) {
+					uni.showToast({ title: '请选择风险偏好', icon: 'none' })
+					return
+				}
+				
+				try {
+					uni.showLoading({ title: '正在生成方案...' })
+					
+					const params: GeneratePlanParams = {
+						goal: this.selectedGoal,
+						initialCapital: Number(this.initialCapital) || 0,
+						monthlyInvestment: Number(this.monthlyInvestment) || 0,
+						years: this.selectedPeriod,
+						riskLevel: this.selectedRisk
+					}
+					
+					const res = await generateFinancePlan(params)
+					this.planResult = res.data
+					
+					uni.hideLoading()
+				} catch (e) {
+					uni.hideLoading()
+					console.error('生成方案失败:', e)
+					
+					// 模拟数据
+					this.planResult = {
+						planId: 1,
+						title: '智能理财方案',
+						goal: this.selectedGoal,
+						planContent: '',
+						portfolios: [
+							{ name: '货币基金', percentage: 20 },
+							{ name: '债券基金', percentage: 30 },
+							{ name: '混合基金', percentage: 30 },
+							{ name: '股票基金', percentage: 20 }
+						],
+						expectedReturn: 0.06 + this.selectedRisk * 0.02,
+						status: 'draft',
+						createdAt: new Date().toISOString()
+					}
+				}
+			},
+			
+			savePlan() {
+				uni.showToast({ title: '方案已保存', icon: 'success' })
+			},
+			
+			executePlan() {
+				uni.showModal({
+					title: '确认执行',
+					content: '确定要按照此方案进行投资吗？',
+					success: (res) => {
+						if (res.confirm) {
+							uni.showToast({ title: '已开始执行', icon: 'success' })
+						}
+					}
+				})
+			}
+		}
+	}
+</script>

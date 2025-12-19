@@ -1,0 +1,36 @@
+<template>
+	<view v-if="visible" class="sg-loading">
+		<view v-if="mask" class="sg-loading__mask"></view>
+		<view class="sg-loading__container">
+			<view class="sg-loading__spinner"></view>
+			<text v-if="text" class="sg-loading__text">{{ text }}</text>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	/**
+	 * sg-loading 加载组件
+	 * @description 全局加载提示组件
+	 * @property {Boolean} visible - 是否显示
+	 * @property {String} text - 加载文字
+	 * @property {Boolean} mask - 是否显示遮罩
+	 */
+	export default {
+		name: 'sg-loading',
+		props: {
+			visible: {
+				type: Boolean,
+				default: false
+			},
+			text: {
+				type: String,
+				default: '加载中...'
+			},
+			mask: {
+				type: Boolean,
+				default: true
+			}
+		}
+	}
+</script>

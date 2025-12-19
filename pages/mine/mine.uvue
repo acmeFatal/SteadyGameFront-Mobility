@@ -1,0 +1,246 @@
+<template>
+	<view class="mine-page">
+		<view class="mine-header">
+			<view class="mine-user" @click="goToProfile">
+				<image class="mine-avatar" :src="userInfo.avatar || '/static/default-avatar.png'" mode="aspectFill"></image>
+				<view class="mine-user-info">
+					<text class="mine-username">{{ userInfo.realName || userInfo.username || '请登录' }}</text>
+					<view class="mine-verify" v-if="userInfo.userId">
+						<text class="mine-verify-tag" :class="userInfo.phoneVerified ? 'mine-verify-tag--success' : ''">
+							{{ userInfo.phoneVerified ? '✓ 手机已验证' : '手机未验证' }}
+						</text>
+					</view>
+				</view>
+				<text class="mine-arrow">›</text>
+			</view>
+			
+			<view class="mine-stats">
+				<view class="mine-stat" @click="goToRiskLevel">
+					<text class="mine-stat-value">{{ riskLevelText }}</text>
+					<text class="mine-stat-label">风险等级</text>
+				</view>
+				<view class="mine-stat" @click="goToOrders">
+					<text class="mine-stat-value">{{ orderCount }}</text>
+					<text class="mine-stat-label">交易订单</text>
+				</view>
+				<view class="mine-stat" @click="goToAdvisor">
+					<text class="mine-stat-value">{{ hasAdvisor ? '已绑定' : '未绑定' }}</text>
+					<text class="mine-stat-label">专属顾问</text>
+				</view>
+			</view>
+		</view>
+		
+		<view class="mine-menu">
+			<view class="mine-menu-group">
+				<sg-list-item 
+					title="我的订单" 
+					icon="📋" 
+					@click="goToOrders"
+				/>
+				<sg-list-item 
+					title="资产明细" 
+					icon="💰" 
+					@click="goToAssetDetail"
+				/>
+				<sg-list-item 
+					title="交易流水" 
+					icon="📊" 
+					@click="goToTransactions"
+				/>
+			</view>
+			
+			<view class="mine-menu-group">
+				<sg-list-item 
+					title="我的顾问" 
+					icon="👨‍💼" 
+					@click="goToAdvisor"
+				/>
+				<sg-list-item 
+					title="理财方案" 
+					icon="📑" 
+					@click="goToPlans"
+				/>
+				<sg-list-item 
+					title="风险评估" 
+					icon="⚖️" 
+					@click="goToRiskAssess"
+				/>
+			</view>
+			
+			<view class="mine-menu-group">
+				<sg-list-item 
+					title="账号安全" 
+					icon="🔐" 
+					@click="goToSecurity"
+				/>
+				<sg-list-item 
+					title="消息通知" 
+					icon="🔔" 
+					@click="goToNotification"
+				/>
+				<sg-list-item 
+					title="帮助中心" 
+					icon="❓" 
+					@click="goToHelp"
+				/>
+				<sg-list-item 
+					title="关于我们" 
+					icon="ℹ️" 
+					:border="false"
+					@click="goToAbout"
+				/>
+			</view>
+		</view>
+		
+		<view class="mine-logout" v-if="userInfo.userId" @click="handleLogout">
+			<text class="mine-logout-text">退出登录</text>
+		</view>
+		
+		<sg-tabbar :current="3" :list="tabList" />
+	</view>
+</template>
+
+<script lang="uts">
+	import { logout } from '@/api/auth.uts'
+	import { getLatestRiskAssessment } from '@/api/user.uts'
+	import { getStorage, removeStorage } from '@/utils/storage.uts'
+	import { TOKEN_KEY, REFRESH_TOKEN_KEY, USER_INFO_KEY, RISK_LEVEL_MAP } from '@/config/index.uts'
+	
+	interface UserInfo {
+		userId: number
+		username: string
+		realName: string
+		avatar: string
+		phoneVerified: boolean
+		roles: string[]
+	}
+	
+	interface TabBarItem {
+		pagePath: string
+		text: string
+		iconPath: string
+		selectedIconPath: string
+	}
+	
+	export default {
+		data() {
+			return {
+				userInfo: {} as UserInfo,
+				riskLevel: 0,
+				orderCount: 0,
+				hasAdvisor: false,
+				tabList: [
+					{ pagePath: '/pages/home/home', text: '首页', iconPath: '/static/tabbar/home.png', selectedIconPath: '/static/tabbar/home-active.png' },
+					{ pagePath: '/pages/asset/asset', text: '资产', iconPath: '/static/tabbar/asset.png', selectedIconPath: '/static/tabbar/asset-active.png' },
+					{ pagePath: '/pages/ai/ai', text: 'AI助手', iconPath: '/static/tabbar/ai.png', selectedIconPath: '/static/tabbar/ai-active.png' },
+					{ pagePath: '/pages/mine/mine', text: '我的', iconPath: '/static/tabbar/mine.png', selectedIconPath: '/static/tabbar/mine-active.png' }
+				] as TabBarItem[]
+			}
+		},
+		computed: {
+			riskLevelText(): string {
+				if (!this.riskLevel) return '未评估'
+				return RISK_LEVEL_MAP[this.riskLevel] || '未知'
+			}
+		},
+		onLoad() {
+			this.loadUserInfo()
+			this.loadRiskLevel()
+		},
+		onShow() {
+			this.loadUserInfo()
+		},
+		methods: {
+			loadUserInfo() {
+				const userInfo = getStorage<UserInfo>(USER_INFO_KEY)
+				if (userInfo) {
+					this.userInfo = userInfo
+				}
+			},
+			
+			async loadRiskLevel() {
+				try {
+					const res = await getLatestRiskAssessment()
+					this.riskLevel = res.data?.riskLevel || 0
+				} catch (e) {
+					console.error('获取风险等级失败:', e)
+				}
+			},
+			
+			async handleLogout() {
+				uni.showModal({
+					title: '提示',
+					content: '确定要退出登录吗？',
+					success: async (res) => {
+						if (res.confirm) {
+							try {
+								if (this.userInfo.userId) {
+									await logout(this.userInfo.userId)
+								}
+							} catch (e) {
+								console.error('登出失败:', e)
+							} finally {
+								removeStorage(TOKEN_KEY)
+								removeStorage(REFRESH_TOKEN_KEY)
+								removeStorage(USER_INFO_KEY)
+								uni.reLaunch({ url: '/pages/login/login' })
+							}
+						}
+					}
+				})
+			},
+			
+			goToProfile() {
+				if (!this.userInfo.userId) {
+					uni.navigateTo({ url: '/pages/login/login' })
+					return
+				}
+				uni.navigateTo({ url: '/pages/profile/profile' })
+			},
+			
+			goToRiskLevel() {
+				uni.navigateTo({ url: '/pages/risk-assess/risk-assess' })
+			},
+			
+			goToOrders() {
+				uni.navigateTo({ url: '/pages/orders/orders' })
+			},
+			
+			goToAdvisor() {
+				uni.navigateTo({ url: '/pages/my-advisor/my-advisor' })
+			},
+			
+			goToAssetDetail() {
+				uni.navigateTo({ url: '/pages/asset-detail/asset-detail' })
+			},
+			
+			goToTransactions() {
+				uni.navigateTo({ url: '/pages/transactions/transactions' })
+			},
+			
+			goToPlans() {
+				uni.navigateTo({ url: '/pages/my-plans/my-plans' })
+			},
+			
+			goToRiskAssess() {
+				uni.navigateTo({ url: '/pages/risk-assess/risk-assess' })
+			},
+			
+			goToSecurity() {
+				uni.navigateTo({ url: '/pages/security/security' })
+			},
+			
+			goToNotification() {
+				uni.navigateTo({ url: '/pages/notification-setting/notification-setting' })
+			},
+			
+			goToHelp() {
+				uni.navigateTo({ url: '/pages/help/help' })
+			},
+			
+			goToAbout() {
+				uni.navigateTo({ url: '/pages/about/about' })
+			}
+		}
+	}
+</script>

@@ -1,0 +1,270 @@
+<template>
+	<view class="advisor-home-page">
+		<view class="advisor-header">
+			<view class="advisor-info">
+				<image class="advisor-avatar" :src="advisorInfo.avatar || '/static/default-avatar.png'" mode="aspectFill"></image>
+				<view class="advisor-detail">
+					<text class="advisor-name">{{ advisorInfo.realName }}</text>
+					<text class="advisor-title">{{ advisorInfo.title }}</text>
+				</view>
+			</view>
+			<view class="advisor-actions">
+				<view class="advisor-action" @click="goToNotification">
+					<text class="advisor-action-icon">🔔</text>
+					<view v-if="unreadCount > 0" class="advisor-badge">
+						<text class="advisor-badge-text">{{ unreadCount }}</text>
+					</view>
+				</view>
+			</view>
+		</view>
+		
+		<view class="advisor-stats">
+			<view class="advisor-stat">
+				<text class="advisor-stat-value">{{ stats.clientCount }}</text>
+				<text class="advisor-stat-label">管理客户</text>
+			</view>
+			<view class="advisor-stat">
+				<text class="advisor-stat-value">{{ formatMoney(stats.totalAssets) }}</text>
+				<text class="advisor-stat-label">管理资产(万)</text>
+			</view>
+			<view class="advisor-stat">
+				<text class="advisor-stat-value">{{ stats.monthOrders }}</text>
+				<text class="advisor-stat-label">本月成交</text>
+			</view>
+		</view>
+		
+		<view class="advisor-quick">
+			<view class="advisor-quick-item" @click="goToClients">
+				<view class="advisor-quick-icon">
+					<text class="advisor-quick-icon-text">👥</text>
+				</view>
+				<text class="advisor-quick-text">客户管理</text>
+			</view>
+			<view class="advisor-quick-item" @click="goToAlerts">
+				<view class="advisor-quick-icon">
+					<text class="advisor-quick-icon-text">⚠️</text>
+				</view>
+				<text class="advisor-quick-text">风险预警</text>
+				<view v-if="alertCount > 0" class="advisor-quick-badge">{{ alertCount }}</view>
+			</view>
+			<view class="advisor-quick-item" @click="goToPlans">
+				<view class="advisor-quick-icon">
+					<text class="advisor-quick-icon-text">📋</text>
+				</view>
+				<text class="advisor-quick-text">理财方案</text>
+			</view>
+			<view class="advisor-quick-item" @click="goToPerformance">
+				<view class="advisor-quick-icon">
+					<text class="advisor-quick-icon-text">📊</text>
+				</view>
+				<text class="advisor-quick-text">业绩统计</text>
+			</view>
+		</view>
+		
+		<view class="advisor-section">
+			<view class="advisor-section-header">
+				<text class="advisor-section-title">待处理事项</text>
+				<text class="advisor-section-more" @click="goToTasks">查看全部 ›</text>
+			</view>
+			<view class="advisor-tasks">
+				<view 
+					v-for="(task, index) in pendingTasks" 
+					:key="index"
+					class="advisor-task"
+					@click="handleTask(task)"
+				>
+					<view class="advisor-task-icon" :class="getTaskClass(task.type)">
+						<text class="advisor-task-icon-text">{{ getTaskIcon(task.type) }}</text>
+					</view>
+					<view class="advisor-task-info">
+						<text class="advisor-task-title">{{ task.title }}</text>
+						<text class="advisor-task-desc">{{ task.description }}</text>
+					</view>
+					<text class="advisor-task-time">{{ task.time }}</text>
+				</view>
+				<sg-empty v-if="pendingTasks.length === 0" text="暂无待处理事项" />
+			</view>
+		</view>
+		
+		<view class="advisor-section">
+			<view class="advisor-section-header">
+				<text class="advisor-section-title">重点关注客户</text>
+				<text class="advisor-section-more" @click="goToClients">查看全部 ›</text>
+			</view>
+			<view class="advisor-focus-clients">
+				<view 
+					v-for="(client, index) in focusClients" 
+					:key="index"
+					class="advisor-client"
+					@click="goToClientDetail(client.userId)"
+				>
+					<image class="advisor-client-avatar" :src="client.avatar || '/static/default-avatar.png'" mode="aspectFill"></image>
+					<view class="advisor-client-info">
+						<text class="advisor-client-name">{{ client.realName }}</text>
+						<text class="advisor-client-assets">资产 ¥{{ formatAssets(client.totalAssets) }}</text>
+					</view>
+					<view class="advisor-client-tag" :class="getClientTagClass(client.riskLevel)">
+						<text class="advisor-client-tag-text">{{ getRiskText(client.riskLevel) }}</text>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { getStorage } from '@/utils/storage.uts'
+	import { RISK_LEVEL_MAP, USER_INFO_KEY } from '@/config/index.uts'
+	
+	interface AdvisorInfo {
+		advisorId: number
+		realName: string
+		avatar: string
+		title: string
+	}
+	
+	interface Stats {
+		clientCount: number
+		totalAssets: number
+		monthOrders: number
+	}
+	
+	interface Task {
+		id: number
+		type: string
+		title: string
+		description: string
+		time: string
+	}
+	
+	interface Client {
+		userId: number
+		realName: string
+		avatar: string
+		totalAssets: number
+		riskLevel: number
+	}
+	
+	export default {
+		data() {
+			return {
+				advisorInfo: {} as AdvisorInfo,
+				stats: {
+					clientCount: 128,
+					totalAssets: 5680,
+					monthOrders: 36
+				} as Stats,
+				unreadCount: 5,
+				alertCount: 3,
+				pendingTasks: [] as Task[],
+				focusClients: [] as Client[]
+			}
+		},
+		onLoad() {
+			this.loadAdvisorInfo()
+			this.loadPendingTasks()
+			this.loadFocusClients()
+		},
+		methods: {
+			loadAdvisorInfo() {
+				const userInfo = getStorage<any>(USER_INFO_KEY)
+				if (userInfo) {
+					this.advisorInfo = {
+						advisorId: userInfo.userId,
+						realName: userInfo.realName || '顾问',
+						avatar: userInfo.avatar,
+						title: '高级理财顾问'
+					}
+				}
+			},
+			
+			loadPendingTasks() {
+				this.pendingTasks = [
+					{ id: 1, type: 'rebalance', title: '资产再平衡提醒', description: '客户张三的资产配置偏离目标', time: '10分钟前' },
+					{ id: 2, type: 'expiring', title: '产品到期提醒', description: '3位客户的理财产品将于本周到期', time: '30分钟前' },
+					{ id: 3, type: 'consult', title: '咨询预约', description: '李四预约了下午3点的视频咨询', time: '1小时前' }
+				]
+			},
+			
+			loadFocusClients() {
+				this.focusClients = [
+					{ userId: 1, realName: '张三', avatar: '', totalAssets: 1500000, riskLevel: 3 },
+					{ userId: 2, realName: '李四', avatar: '', totalAssets: 800000, riskLevel: 2 },
+					{ userId: 3, realName: '王五', avatar: '', totalAssets: 2300000, riskLevel: 4 }
+				]
+			},
+			
+			formatMoney(num: number): string {
+				return (num / 10000).toFixed(0)
+			},
+			
+			formatAssets(num: number): string {
+				if (num >= 10000) {
+					return (num / 10000).toFixed(1) + '万'
+				}
+				return num.toString()
+			},
+			
+			getRiskText(level: number): string {
+				return RISK_LEVEL_MAP[level] || '未知'
+			},
+			
+			getTaskIcon(type: string): string {
+				const iconMap: Record<string, string> = {
+					'rebalance': '⚖️',
+					'expiring': '⏰',
+					'consult': '📞',
+					'alert': '⚠️'
+				}
+				return iconMap[type] || '📋'
+			},
+			
+			getTaskClass(type: string): string {
+				return `advisor-task-icon--${type}`
+			},
+			
+			getClientTagClass(level: number): string {
+				const classMap: Record<number, string> = {
+					1: 'advisor-client-tag--low',
+					2: 'advisor-client-tag--low',
+					3: 'advisor-client-tag--mid',
+					4: 'advisor-client-tag--high',
+					5: 'advisor-client-tag--high'
+				}
+				return classMap[level] || ''
+			},
+			
+			handleTask(task: Task) {
+				uni.showToast({ title: '任务处理功能开发中', icon: 'none' })
+			},
+			
+			goToNotification() {
+				uni.navigateTo({ url: '/pages/advisor/advisor-notification/advisor-notification' })
+			},
+			
+			goToClients() {
+				uni.navigateTo({ url: '/pages/advisor/advisor-clients/advisor-clients' })
+			},
+			
+			goToAlerts() {
+				uni.navigateTo({ url: '/pages/advisor/advisor-alerts/advisor-alerts' })
+			},
+			
+			goToPlans() {
+				uni.navigateTo({ url: '/pages/advisor/advisor-plans/advisor-plans' })
+			},
+			
+			goToPerformance() {
+				uni.navigateTo({ url: '/pages/advisor/advisor-performance/advisor-performance' })
+			},
+			
+			goToTasks() {
+				uni.navigateTo({ url: '/pages/advisor/advisor-tasks/advisor-tasks' })
+			},
+			
+			goToClientDetail(userId: number) {
+				uni.navigateTo({ url: `/pages/advisor/client-detail/client-detail?id=${userId}` })
+			}
+		}
+	}
+</script>

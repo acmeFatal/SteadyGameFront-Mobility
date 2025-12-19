@@ -1,0 +1,158 @@
+<template>
+	<view class="help-page">
+		<sg-navbar title="帮助中心" />
+		
+		<view class="help-search">
+			<view class="help-search-wrap">
+				<text class="help-search-icon">🔍</text>
+				<input 
+					class="help-search-input"
+					v-model="searchKeyword"
+					placeholder="搜索常见问题"
+					@confirm="searchHelp"
+				/>
+			</view>
+		</view>
+		
+		<view class="help-quick">
+			<text class="help-section-title">快捷入口</text>
+			<view class="help-quick-list">
+				<view class="help-quick-item" @click="goToOnlineService">
+					<text class="help-quick-icon">💬</text>
+					<text class="help-quick-text">在线客服</text>
+				</view>
+				<view class="help-quick-item" @click="makePhoneCall">
+					<text class="help-quick-icon">📞</text>
+					<text class="help-quick-text">电话咨询</text>
+				</view>
+				<view class="help-quick-item" @click="goToFeedback">
+					<text class="help-quick-icon">📝</text>
+					<text class="help-quick-text">意见反馈</text>
+				</view>
+			</view>
+		</view>
+		
+		<view class="help-faq">
+			<text class="help-section-title">常见问题</text>
+			<view class="help-category" v-for="(category, cIndex) in faqList" :key="cIndex">
+				<view class="help-category-header" @click="toggleCategory(cIndex)">
+					<text class="help-category-icon">{{ category.icon }}</text>
+					<text class="help-category-title">{{ category.title }}</text>
+					<text class="help-category-arrow" :class="{ 'help-category-arrow--expanded': category.expanded }">›</text>
+				</view>
+				<view v-if="category.expanded" class="help-category-questions">
+					<view 
+						v-for="(question, qIndex) in category.questions" 
+						:key="qIndex"
+						class="help-question-item"
+						@click="goToAnswer(question)"
+					>
+						<text class="help-question-text">{{ question.title }}</text>
+						<text class="help-question-arrow">›</text>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	interface Question {
+		id: number
+		title: string
+		answer: string
+	}
+	
+	interface Category {
+		title: string
+		icon: string
+		expanded: boolean
+		questions: Question[]
+	}
+	
+	export default {
+		data() {
+			return {
+				searchKeyword: '',
+				faqList: [
+					{
+						title: '账户相关',
+						icon: '👤',
+						expanded: true,
+						questions: [
+							{ id: 1, title: '如何注册账户？', answer: '' },
+							{ id: 2, title: '忘记密码怎么办？', answer: '' },
+							{ id: 3, title: '如何修改绑定手机？', answer: '' },
+							{ id: 4, title: '如何实名认证？', answer: '' }
+						]
+					},
+					{
+						title: '交易相关',
+						icon: '💰',
+						expanded: false,
+						questions: [
+							{ id: 5, title: '如何购买理财产品？', answer: '' },
+							{ id: 6, title: '如何赎回理财产品？', answer: '' },
+							{ id: 7, title: '交易密码忘记了怎么办？', answer: '' },
+							{ id: 8, title: '资金到账需要多久？', answer: '' }
+						]
+					},
+					{
+						title: '安全相关',
+						icon: '🔐',
+						expanded: false,
+						questions: [
+							{ id: 9, title: '账户安全如何保障？', answer: '' },
+							{ id: 10, title: '如何开启指纹登录？', answer: '' },
+							{ id: 11, title: '发现异常交易怎么办？', answer: '' }
+						]
+					},
+					{
+						title: '产品相关',
+						icon: '📊',
+						expanded: false,
+						questions: [
+							{ id: 12, title: '什么是风险等级？', answer: '' },
+							{ id: 13, title: '收益是如何计算的？', answer: '' },
+							{ id: 14, title: '产品有保本保息吗？', answer: '' }
+						]
+					}
+				] as Category[]
+			}
+		},
+		methods: {
+			searchHelp() {
+				if (this.searchKeyword.trim()) {
+					uni.showToast({ title: '搜索功能开发中', icon: 'none' })
+				}
+			},
+			
+			toggleCategory(index: number) {
+				this.faqList[index].expanded = !this.faqList[index].expanded
+			},
+			
+			goToAnswer(question: Question) {
+				uni.navigateTo({
+					url: `/pages/help-detail/help-detail?id=${question.id}&title=${encodeURIComponent(question.title)}`
+				})
+			},
+			
+			goToOnlineService() {
+				uni.navigateTo({ url: '/pages/online-service/online-service' })
+			},
+			
+			makePhoneCall() {
+				uni.makePhoneCall({
+					phoneNumber: '400-888-8888',
+					fail: () => {
+						uni.showToast({ title: '客服热线：400-888-8888', icon: 'none' })
+					}
+				})
+			},
+			
+			goToFeedback() {
+				uni.navigateTo({ url: '/pages/feedback/feedback' })
+			}
+		}
+	}
+</script>

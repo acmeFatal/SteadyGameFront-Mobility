@@ -1,0 +1,73 @@
+<template>
+	<view 
+		class="sg-button" 
+		:class="[
+			`sg-button--${type}`,
+			`sg-button--${size}`,
+			{ 'sg-button--plain': plain },
+			{ 'sg-button--round': round },
+			{ 'sg-button--disabled': disabled },
+			{ 'sg-button--loading': loading }
+		]"
+		@click="handleClick"
+	>
+		<view v-if="loading" class="sg-button__loading">
+			<view class="sg-button__loading-icon"></view>
+		</view>
+		<text class="sg-button__text">
+			<slot></slot>
+		</text>
+	</view>
+</template>
+
+<script lang="uts">
+	/**
+	 * sg-button 按钮组件
+	 * @description 通用按钮组件，支持多种类型、尺寸和状态
+	 * @property {String} type - 按钮类型：primary / success / warning / error / default
+	 * @property {String} size - 按钮尺寸：large / default / small / mini
+	 * @property {Boolean} plain - 是否镂空按钮
+	 * @property {Boolean} round - 是否圆角按钮
+	 * @property {Boolean} disabled - 是否禁用
+	 * @property {Boolean} loading - 是否加载中
+	 * @event {Function} click - 点击事件
+	 */
+	export default {
+		name: 'sg-button',
+		props: {
+			type: {
+				type: String,
+				default: 'default'
+			},
+			size: {
+				type: String,
+				default: 'default'
+			},
+			plain: {
+				type: Boolean,
+				default: false
+			},
+			round: {
+				type: Boolean,
+				default: false
+			},
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+			loading: {
+				type: Boolean,
+				default: false
+			}
+		},
+		emits: ['click'],
+		methods: {
+			handleClick(e: any) {
+				if (this.disabled || this.loading) {
+					return
+				}
+				this.$emit('click', e)
+			}
+		}
+	}
+</script>

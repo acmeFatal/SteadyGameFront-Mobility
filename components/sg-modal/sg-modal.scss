@@ -1,0 +1,92 @@
+/**
+ * sg-modal 模态框组件样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.sg-modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: $z-index-modal;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	
+	&__mask {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: $bg-mask;
+	}
+	
+	&__container {
+		position: relative;
+		width: 560rpx;
+		background-color: $bg-white;
+		border-radius: $radius-lg;
+		overflow: hidden;
+	}
+	
+	&__header {
+		padding: $spacing-md $spacing-base $spacing-sm;
+		text-align: center;
+	}
+	
+	&__title {
+		font-size: $font-md;
+		font-weight: bold;
+		color: $text-primary;
+	}
+	
+	&__body {
+		padding: $spacing-base $spacing-md;
+		max-height: 60vh;
+		overflow-y: auto;
+	}
+	
+	&__content {
+		font-size: $font-base;
+		color: $text-regular;
+		text-align: center;
+		line-height: 1.6;
+	}
+	
+	&__footer {
+		display: flex;
+		border-top: 1rpx solid $border-light;
+	}
+	
+	&__btn {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100rpx;
+		
+		&--cancel {
+			border-right: 1rpx solid $border-light;
+		}
+		
+		&:active {
+			background-color: $bg-gray;
+		}
+	}
+	
+	&__btn-text {
+		font-size: $font-md;
+		
+		&--cancel {
+			color: $text-secondary;
+		}
+		
+		&--confirm {
+			color: $primary-color;
+		}
+	}
+}

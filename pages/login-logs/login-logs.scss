@@ -1,0 +1,127 @@
+/**
+ * 登录日志页面样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.logs-page {
+	min-height: 100vh;
+	background-color: $bg-base;
+}
+
+.logs-tips {
+	display: flex;
+	align-items: center;
+	padding: $spacing-sm $spacing-base;
+	background-color: rgba($warning-color, 0.1);
+}
+
+.logs-tips-icon {
+	font-size: $font-base;
+	margin-right: $spacing-xs;
+}
+
+.logs-tips-text {
+	font-size: $font-sm;
+	color: $warning-color;
+}
+
+.logs-list {
+	padding: $spacing-base;
+}
+
+.log-item {
+	display: flex;
+	align-items: center;
+	padding: $spacing-base;
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	margin-bottom: $spacing-sm;
+	
+	&--current {
+		border: 2rpx solid $primary-color;
+	}
+}
+
+.log-icon {
+	width: 80rpx;
+	height: 80rpx;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-right: $spacing-sm;
+	
+	&--ios {
+		background-color: rgba(#007AFF, 0.1);
+	}
+	
+	&--android {
+		background-color: rgba(#3DDC84, 0.1);
+	}
+	
+	&--pc {
+		background-color: rgba($primary-color, 0.1);
+	}
+}
+
+.log-icon-text {
+	font-size: 40rpx;
+}
+
+.log-info {
+	flex: 1;
+}
+
+.log-header {
+	display: flex;
+	align-items: center;
+	margin-bottom: 4rpx;
+}
+
+.log-device {
+	font-size: $font-base;
+	font-weight: bold;
+	color: $text-primary;
+}
+
+.log-current {
+	font-size: $font-xs;
+	color: $primary-color;
+	margin-left: $spacing-xs;
+	padding: 2rpx 8rpx;
+	background-color: rgba($primary-color, 0.1);
+	border-radius: $radius-sm;
+}
+
+.log-ip {
+	display: block;
+	font-size: $font-sm;
+	color: $text-secondary;
+	margin-bottom: 4rpx;
+}
+
+.log-time {
+	font-size: $font-xs;
+	color: $text-placeholder;
+}
+
+.log-status {
+	padding: 8rpx 20rpx;
+	border-radius: $radius-round;
+	
+	&--success {
+		background-color: rgba($success-color, 0.1);
+		.log-status-text { color: $success-color; }
+	}
+	
+	&--fail {
+		background-color: rgba($error-color, 0.1);
+		.log-status-text { color: $error-color; }
+	}
+}
+
+.log-status-text {
+	font-size: $font-sm;
+}

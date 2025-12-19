@@ -1,0 +1,164 @@
+<template>
+	<view class="clients-page">
+		<sg-navbar title="客户管理" />
+		
+		<view class="clients-search">
+			<view class="clients-search-wrap">
+				<text class="clients-search-icon">🔍</text>
+				<input 
+					class="clients-search-input"
+					v-model="keyword"
+					placeholder="搜索客户姓名/手机号"
+					@confirm="searchClients"
+				/>
+			</view>
+		</view>
+		
+		<view class="clients-filter">
+			<view 
+				v-for="(tab, index) in filterTabs" 
+				:key="index"
+				class="clients-filter-tab"
+				:class="{ 'clients-filter-tab--active': currentFilter === tab.value }"
+				@click="filterByTab(tab.value)"
+			>
+				<text class="clients-filter-tab-text">{{ tab.label }}</text>
+				<text v-if="tab.count" class="clients-filter-tab-count">{{ tab.count }}</text>
+			</view>
+		</view>
+		
+		<scroll-view class="clients-list" scroll-y @scrolltolower="loadMore">
+			<view 
+				v-for="(client, index) in clientList" 
+				:key="index"
+				class="client-item"
+				@click="goToDetail(client.userId)"
+			>
+				<image class="client-avatar" :src="client.avatar || '/static/default-avatar.png'" mode="aspectFill"></image>
+				<view class="client-info">
+					<view class="client-header">
+						<text class="client-name">{{ client.realName }}</text>
+						<view class="client-risk-tag" :class="getRiskClass(client.riskLevel)">
+							<text class="client-risk-tag-text">{{ getRiskText(client.riskLevel) }}</text>
+						</view>
+					</view>
+					<text class="client-phone">{{ formatPhone(client.phone) }}</text>
+					<view class="client-stats">
+						<text class="client-stat">资产 ¥{{ formatAssets(client.totalAssets) }}</text>
+						<text class="client-stat">收益 {{ client.returnRate > 0 ? '+' : '' }}{{ (client.returnRate * 100).toFixed(2) }}%</text>
+					</view>
+				</view>
+				<text class="client-arrow">›</text>
+			</view>
+			
+			<sg-empty v-if="clientList.length === 0" text="暂无客户" />
+		</scroll-view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { RISK_LEVEL_MAP } from '@/config/index.uts'
+	import { formatPhone } from '@/utils/format.uts'
+	
+	interface FilterTab {
+		label: string
+		value: string
+		count?: number
+	}
+	
+	interface Client {
+		userId: number
+		realName: string
+		avatar: string
+		phone: string
+		totalAssets: number
+		riskLevel: number
+		returnRate: number
+		assignedAt: string
+	}
+	
+	export default {
+		data() {
+			return {
+				keyword: '',
+				currentFilter: 'all',
+				filterTabs: [
+					{ label: '全部', value: 'all', count: 128 },
+					{ label: '重点客户', value: 'focus', count: 15 },
+					{ label: '新客户', value: 'new', count: 8 },
+					{ label: '预警客户', value: 'alert', count: 3 }
+				] as FilterTab[],
+				clientList: [] as Client[],
+				page: 1,
+				hasMore: true
+			}
+		},
+		onLoad() {
+			this.loadClients()
+		},
+		methods: {
+			searchClients() {
+				this.page = 1
+				this.clientList = []
+				this.loadClients()
+			},
+			
+			filterByTab(value: string) {
+				this.currentFilter = value
+				this.page = 1
+				this.clientList = []
+				this.loadClients()
+			},
+			
+			loadClients() {
+				// 模拟数据
+				const mockClients: Client[] = [
+					{ userId: 1, realName: '张三', avatar: '', phone: '13800138001', totalAssets: 1500000, riskLevel: 3, returnRate: 0.086, assignedAt: '2024-01-15' },
+					{ userId: 2, realName: '李四', avatar: '', phone: '13800138002', totalAssets: 800000, riskLevel: 2, returnRate: 0.052, assignedAt: '2024-02-20' },
+					{ userId: 3, realName: '王五', avatar: '', phone: '13800138003', totalAssets: 2300000, riskLevel: 4, returnRate: 0.125, assignedAt: '2023-11-08' },
+					{ userId: 4, realName: '赵六', avatar: '', phone: '13800138004', totalAssets: 500000, riskLevel: 1, returnRate: 0.038, assignedAt: '2024-03-01' },
+					{ userId: 5, realName: '钱七', avatar: '', phone: '13800138005', totalAssets: 3500000, riskLevel: 5, returnRate: -0.025, assignedAt: '2023-09-15' }
+				]
+				
+				if (this.keyword) {
+					this.clientList = mockClients.filter(c => 
+						c.realName.includes(this.keyword) || c.phone.includes(this.keyword)
+					)
+				} else {
+					this.clientList = mockClients
+				}
+			},
+			
+			loadMore() {
+				if (this.hasMore) {
+					this.page++
+				}
+			},
+			
+			formatPhone(phone: string): string {
+				return formatPhone(phone)
+			},
+			
+			formatAssets(num: number): string {
+				if (num >= 10000) {
+					return (num / 10000).toFixed(1) + '万'
+				}
+				return num.toString()
+			},
+			
+			getRiskText(level: number): string {
+				return RISK_LEVEL_MAP[level] || '未知'
+			},
+			
+			getRiskClass(level: number): string {
+				if (level <= 2) return 'client-risk-tag--low'
+				if (level <= 3) return 'client-risk-tag--mid'
+				return 'client-risk-tag--high'
+			},
+			
+			goToDetail(userId: number) {
+				uni.navigateTo({ url: `/pages/advisor/client-detail/client-detail?id=${userId}` })
+			}
+		}
+	}
+</script>

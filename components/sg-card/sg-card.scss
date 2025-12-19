@@ -1,0 +1,58 @@
+/**
+ * sg-card 卡片组件样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.sg-card {
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	padding: $spacing-base;
+	margin-bottom: $spacing-base;
+	
+	&--shadow {
+		box-shadow: $shadow-light;
+	}
+	
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding-bottom: $spacing-sm;
+		margin-bottom: $spacing-sm;
+		border-bottom: 1rpx solid $border-light;
+	}
+	
+	&__title {
+		font-size: $font-md;
+		font-weight: bold;
+		color: $text-primary;
+	}
+	
+	&__extra {
+		display: flex;
+		align-items: center;
+	}
+	
+	&__extra-text {
+		font-size: $font-sm;
+		color: $text-secondary;
+	}
+	
+	&__arrow {
+		font-size: $font-md;
+		color: $text-placeholder;
+		margin-left: 4rpx;
+	}
+	
+	&__body {
+		width: 100%;
+	}
+	
+	&__footer {
+		padding-top: $spacing-sm;
+		margin-top: $spacing-sm;
+		border-top: 1rpx solid $border-light;
+	}
+}

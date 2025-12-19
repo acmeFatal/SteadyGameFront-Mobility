@@ -1,0 +1,92 @@
+<template>
+	<view class="agreement-page">
+		<sg-navbar :title="title" />
+		
+		<scroll-view class="agreement-content" scroll-y>
+			<view class="agreement-body">
+				<text class="agreement-title">{{ title }}</text>
+				<text class="agreement-update">更新日期：{{ updateDate }}</text>
+				
+				<view v-if="type === 'user'" class="agreement-text">
+					<text class="agreement-section-title">一、服务条款的确认和接纳</text>
+					<text class="agreement-paragraph">欢迎您使用智能金融理财平台服务！为使用本平台的服务，您应当阅读并遵守《用户协议》（以下简称"本协议"）。请您务必审慎阅读、充分理解各条款内容，特别是免除或者限制责任的条款、争议解决和法律适用条款。</text>
+					
+					<text class="agreement-section-title">二、服务内容</text>
+					<text class="agreement-paragraph">本平台提供的服务包括但不限于：理财产品信息展示、理财产品申购赎回、资产管理、AI智能理财建议、理财顾问服务等。本平台有权根据业务发展需要，增加、变更或终止部分服务。</text>
+					
+					<text class="agreement-section-title">三、用户注册</text>
+					<text class="agreement-paragraph">用户在使用本平台服务前需要注册账户。用户承诺注册时提供真实、准确、完整的个人信息，并及时更新。用户应妥善保管账户信息和密码，因用户原因导致账户被盗用的，责任由用户自行承担。</text>
+					
+					<text class="agreement-section-title">四、用户行为规范</text>
+					<text class="agreement-paragraph">用户在使用本平台服务时，应遵守国家法律法规，不得利用本平台从事违法违规活动。用户不得干扰本平台的正常运行，不得侵犯其他用户或第三方的合法权益。</text>
+					
+					<text class="agreement-section-title">五、知识产权</text>
+					<text class="agreement-paragraph">本平台的所有内容，包括但不限于文字、图片、音频、视频、软件、程序、数据等，均受知识产权法律法规保护。未经授权，用户不得复制、传播、展示或以其他方式使用上述内容。</text>
+					
+					<text class="agreement-section-title">六、免责声明</text>
+					<text class="agreement-paragraph">理财有风险，投资需谨慎。本平台提供的理财建议仅供参考，不构成投资建议。用户的投资决策和收益风险由用户自行承担。</text>
+				</view>
+				
+				<view v-if="type === 'privacy'" class="agreement-text">
+					<text class="agreement-section-title">一、个人信息的收集</text>
+					<text class="agreement-paragraph">为向您提供服务，我们可能收集以下个人信息：基本信息（姓名、身份证号、手机号、邮箱等）、账户信息（用户名、密码等）、交易信息（交易记录、资产信息等）、设备信息（设备型号、操作系统等）。</text>
+					
+					<text class="agreement-section-title">二、个人信息的使用</text>
+					<text class="agreement-paragraph">我们收集的个人信息将用于：提供和改进服务、身份验证、风险控制、客户服务、推送个性化内容等。我们不会将您的个人信息用于上述目的之外的用途。</text>
+					
+					<text class="agreement-section-title">三、个人信息的保护</text>
+					<text class="agreement-paragraph">我们采用业界标准的安全技术和管理措施保护您的个人信息，包括但不限于数据加密、访问控制、安全审计等。我们会定期对安全措施进行评估和改进。</text>
+					
+					<text class="agreement-section-title">四、个人信息的共享</text>
+					<text class="agreement-paragraph">除法律法规要求或经您授权同意外，我们不会向第三方共享您的个人信息。在必要时，我们可能与关联公司、合作伙伴共享信息，但会确保信息安全。</text>
+					
+					<text class="agreement-section-title">五、您的权利</text>
+					<text class="agreement-paragraph">您有权访问、更正、删除您的个人信息，有权撤回授权同意，有权注销账户。如需行使上述权利，请通过本平台提供的渠道联系我们。</text>
+				</view>
+				
+				<view v-if="type === 'risk'" class="agreement-text">
+					<text class="agreement-section-title">一、风险提示</text>
+					<text class="agreement-paragraph">理财非存款，产品有风险，投资需谨慎。您在进行理财投资前，应充分了解产品的风险特征，审慎评估自身的风险承受能力。</text>
+					
+					<text class="agreement-section-title">二、市场风险</text>
+					<text class="agreement-paragraph">理财产品的价值可能受到市场因素的影响而波动，包括但不限于利率变动、汇率变动、股票市场波动等。这些风险可能导致产品收益低于预期或本金损失。</text>
+					
+					<text class="agreement-section-title">三、信用风险</text>
+					<text class="agreement-paragraph">理财产品投资的标的资产可能存在信用风险，如债券发行人违约、交易对手违约等。这些风险可能导致产品收益受损或本金损失。</text>
+					
+					<text class="agreement-section-title">四、流动性风险</text>
+					<text class="agreement-paragraph">部分理财产品存在封闭期或赎回限制，在特定情况下可能无法及时变现。请您在投资前充分了解产品的流动性安排。</text>
+					
+					<text class="agreement-section-title">五、风险承诺</text>
+					<text class="agreement-paragraph">本人已充分了解理财产品的风险特征，愿意承担相应的投资风险。本人的投资决策完全基于本人的独立判断，并自行承担投资结果。</text>
+				</view>
+			</view>
+		</scroll-view>
+	</view>
+</template>
+
+<script lang="uts">
+	export default {
+		data() {
+			return {
+				type: 'user',
+				updateDate: '2024年1月1日'
+			}
+		},
+		computed: {
+			title(): string {
+				const titleMap: Record<string, string> = {
+					'user': '用户协议',
+					'privacy': '隐私政策',
+					'risk': '风险揭示书'
+				}
+				return titleMap[this.type] || '协议'
+			}
+		},
+		onLoad(options: any) {
+			if (options.type) {
+				this.type = options.type
+			}
+		}
+	}
+</script>

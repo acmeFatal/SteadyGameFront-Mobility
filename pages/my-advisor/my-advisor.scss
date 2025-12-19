@@ -1,0 +1,222 @@
+/**
+ * 我的顾问页面样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.advisor-page {
+	min-height: 100vh;
+	background-color: $bg-base;
+}
+
+.advisor-info {
+	padding: $spacing-base;
+}
+
+.advisor-card {
+	display: flex;
+	align-items: center;
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	padding: $spacing-md;
+	margin-bottom: $spacing-base;
+}
+
+.advisor-avatar {
+	width: 160rpx;
+	height: 160rpx;
+	border-radius: 50%;
+	margin-right: $spacing-base;
+}
+
+.advisor-details {
+	flex: 1;
+}
+
+.advisor-name {
+	display: block;
+	font-size: $font-lg;
+	font-weight: bold;
+	color: $text-primary;
+	margin-bottom: $spacing-xs;
+}
+
+.advisor-title {
+	display: block;
+	font-size: $font-sm;
+	color: $text-secondary;
+	margin-bottom: $spacing-xs;
+}
+
+.advisor-rating {
+	display: flex;
+	align-items: center;
+}
+
+.advisor-rating-star {
+	font-size: $font-base;
+	margin-right: 4rpx;
+}
+
+.advisor-rating-value {
+	font-size: $font-base;
+	color: $warning-color;
+	font-weight: bold;
+}
+
+.advisor-intro,
+.advisor-specialties {
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	padding: $spacing-base;
+	margin-bottom: $spacing-base;
+}
+
+.advisor-intro-title,
+.advisor-specialties-title {
+	display: block;
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-primary;
+	margin-bottom: $spacing-sm;
+}
+
+.advisor-intro-text {
+	font-size: $font-base;
+	color: $text-secondary;
+	line-height: 1.6;
+}
+
+.advisor-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: $spacing-sm;
+}
+
+.advisor-tag {
+	padding: $spacing-xs $spacing-sm;
+	background-color: rgba($primary-color, 0.1);
+	border-radius: $radius-round;
+}
+
+.advisor-tag-text {
+	font-size: $font-sm;
+	color: $primary-color;
+}
+
+.advisor-stats {
+	display: flex;
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	padding: $spacing-base;
+	margin-bottom: $spacing-base;
+}
+
+.advisor-stat {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.advisor-stat-value {
+	font-size: $font-lg;
+	font-weight: bold;
+	color: $primary-color;
+	margin-bottom: 4rpx;
+}
+
+.advisor-stat-label {
+	font-size: $font-sm;
+	color: $text-secondary;
+}
+
+.advisor-actions {
+	display: flex;
+	gap: $spacing-sm;
+	margin-bottom: $spacing-base;
+}
+
+.advisor-btn {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: $spacing-base;
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	
+	&--message { background-color: rgba(#1890ff, 0.1); }
+	&--call { background-color: rgba(#52c41a, 0.1); }
+	&--appointment { background-color: rgba(#722ed1, 0.1); }
+}
+
+.advisor-btn-icon {
+	font-size: 48rpx;
+	margin-bottom: $spacing-xs;
+}
+
+.advisor-btn-text {
+	font-size: $font-sm;
+	color: $text-primary;
+}
+
+.advisor-change {
+	text-align: center;
+	padding: $spacing-base;
+}
+
+.advisor-change-text {
+	font-size: $font-sm;
+	color: $text-placeholder;
+	text-decoration: underline;
+}
+
+.advisor-empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: $spacing-xl * 2;
+}
+
+.advisor-empty-icon {
+	width: 200rpx;
+	height: 200rpx;
+	background-color: $bg-gray;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: $spacing-base;
+}
+
+.advisor-empty-icon-text {
+	font-size: 100rpx;
+}
+
+.advisor-empty-text {
+	font-size: $font-md;
+	color: $text-primary;
+	margin-bottom: $spacing-xs;
+}
+
+.advisor-empty-desc {
+	font-size: $font-sm;
+	color: $text-secondary;
+	margin-bottom: $spacing-md;
+	text-align: center;
+}
+
+.advisor-empty-btn {
+	padding: $spacing-sm $spacing-lg;
+	background: linear-gradient(90deg, $primary-color 0%, $primary-light 100%);
+	border-radius: $radius-round;
+}
+
+.advisor-empty-btn-text {
+	font-size: $font-base;
+	color: $text-inverse;
+}

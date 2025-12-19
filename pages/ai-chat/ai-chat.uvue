@@ -1,0 +1,185 @@
+<template>
+	<view class="chat-page">
+		<sg-navbar title="AI智能问答" />
+		
+		<scroll-view 
+			class="chat-messages" 
+			scroll-y 
+			:scroll-into-view="scrollToId"
+			@scrolltoupper="loadMoreHistory"
+		>
+			<view class="chat-messages-inner">
+				<view 
+					v-for="(msg, index) in messages" 
+					:key="index"
+					:id="'msg-' + index"
+					class="chat-message"
+					:class="msg.role === 'user' ? 'chat-message--user' : 'chat-message--ai'"
+				>
+					<view class="chat-avatar">
+						<text class="chat-avatar-icon">{{ msg.role === 'user' ? '👤' : '🤖' }}</text>
+					</view>
+					<view class="chat-bubble">
+						<text class="chat-bubble-text">{{ msg.content }}</text>
+					</view>
+				</view>
+				
+				<view v-if="isTyping" class="chat-message chat-message--ai">
+					<view class="chat-avatar">
+						<text class="chat-avatar-icon">🤖</text>
+					</view>
+					<view class="chat-bubble chat-bubble--typing">
+						<view class="chat-typing">
+							<view class="chat-typing-dot"></view>
+							<view class="chat-typing-dot"></view>
+							<view class="chat-typing-dot"></view>
+						</view>
+					</view>
+				</view>
+			</view>
+		</scroll-view>
+		
+		<view class="chat-input-bar">
+			<input 
+				class="chat-input"
+				v-model="inputText"
+				placeholder="输入您的问题..."
+				:disabled="isTyping"
+				@confirm="sendMessage"
+			/>
+			<view class="chat-voice-btn" @click="startVoiceInput">
+				<text class="chat-voice-icon">🎤</text>
+			</view>
+			<view 
+				class="chat-send-btn" 
+				:class="{ 'chat-send-btn--disabled': !canSend }"
+				@click="sendMessage"
+			>
+				<text class="chat-send-icon">➤</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { createChatSession, getChatHistory } from '@/api/ai.uts'
+	import { BASE_URL, TOKEN_KEY } from '@/config/index.uts'
+	import { getStorage } from '@/utils/storage.uts'
+	import type { ChatMessage } from '@/api/ai.uts'
+	
+	export default {
+		data() {
+			return {
+				sessionId: '',
+				inputText: '',
+				messages: [] as ChatMessage[],
+				isTyping: false,
+				scrollToId: ''
+			}
+		},
+		computed: {
+			canSend(): boolean {
+				return this.inputText.trim().length > 0 && !this.isTyping
+			}
+		},
+		onLoad(options: any) {
+			if (options.sessionId) {
+				this.sessionId = options.sessionId
+				this.loadChatHistory()
+			} else {
+				this.createSession()
+			}
+			
+			if (options.question) {
+				this.inputText = decodeURIComponent(options.question)
+				setTimeout(() => {
+					this.sendMessage()
+				}, 500)
+			}
+		},
+		methods: {
+			async createSession() {
+				try {
+					const res = await createChatSession()
+					this.sessionId = res.data.sessionId
+				} catch (e) {
+					console.error('创建会话失败:', e)
+				}
+			},
+			
+			async loadChatHistory() {
+				try {
+					const res = await getChatHistory(this.sessionId)
+					this.messages = res.data
+					this.scrollToBottom()
+				} catch (e) {
+					console.error('加载历史消息失败:', e)
+				}
+			},
+			
+			loadMoreHistory() {
+				// 加载更多历史消息
+			},
+			
+			async sendMessage() {
+				if (!this.canSend) return
+				
+				const question = this.inputText.trim()
+				this.inputText = ''
+				
+				// 添加用户消息
+				this.messages.push({
+					role: 'user',
+					content: question
+				})
+				this.scrollToBottom()
+				
+				// 显示正在输入状态
+				this.isTyping = true
+				
+				try {
+					// 模拟AI响应（实际应使用SSE流式接口）
+					await this.simulateAIResponse(question)
+				} catch (e) {
+					console.error('发送消息失败:', e)
+					this.messages.push({
+						role: 'assistant',
+						content: '抱歉，服务暂时不可用，请稍后重试。'
+					})
+				} finally {
+					this.isTyping = false
+					this.scrollToBottom()
+				}
+			},
+			
+			async simulateAIResponse(question: string) {
+				// 模拟延迟
+				await new Promise(resolve => setTimeout(resolve, 1500))
+				
+				// 模拟AI回答
+				const responses: Record<string, string> = {
+					'如何开始理财？': '理财的第一步是了解自己的财务状况，包括收入、支出、资产和负债。建议您：\n\n1. 记录每月收支，了解资金流向\n2. 建立3-6个月的应急基金\n3. 根据自身风险承受能力选择合适的理财产品\n4. 分散投资，不要把所有鸡蛋放在一个篮子里\n5. 持续学习理财知识，定期检视投资组合',
+					'基金和股票哪个风险更低？': '一般来说，基金的风险比直接投资股票要低，原因如下：\n\n1. **分散投资**：基金通常投资多只股票，分散了单一股票的风险\n2. **专业管理**：由专业基金经理进行投资决策\n3. **门槛较低**：适合普通投资者\n\n但需要注意的是，不同类型的基金风险等级也不同：\n- 货币基金：风险最低\n- 债券基金：风险较低\n- 混合基金：中等风险\n- 股票基金：风险较高'
+				}
+				
+				const answer = responses[question] || 
+					`关于"${question}"，我的建议是：理财需要根据个人的风险承受能力、投资期限和财务目标来制定合适的方案。建议您先完成风险评估，系统会为您推荐匹配的产品。如需更专业的建议，可以联系您的专属理财顾问。`
+				
+				this.messages.push({
+					role: 'assistant',
+					content: answer
+				})
+			},
+			
+			startVoiceInput() {
+				uni.showToast({ title: '语音输入开发中', icon: 'none' })
+			},
+			
+			scrollToBottom() {
+				setTimeout(() => {
+					this.scrollToId = 'msg-' + (this.messages.length - 1)
+				}, 100)
+			}
+		}
+	}
+</script>

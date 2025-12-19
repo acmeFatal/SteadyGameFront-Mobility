@@ -1,0 +1,234 @@
+/**
+ * 风险评估页面样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.risk-page {
+	min-height: 100vh;
+	background-color: $bg-base;
+}
+
+.risk-questions {
+	padding: $spacing-base;
+}
+
+.risk-progress {
+	display: flex;
+	align-items: center;
+	margin-bottom: $spacing-md;
+}
+
+.risk-progress-bar {
+	flex: 1;
+	height: 12rpx;
+	background-color: $border-light;
+	border-radius: $radius-round;
+	overflow: hidden;
+	margin-right: $spacing-sm;
+}
+
+.risk-progress-fill {
+	height: 100%;
+	background: linear-gradient(90deg, $primary-color 0%, $primary-light 100%);
+	border-radius: $radius-round;
+	transition: width $transition-base;
+}
+
+.risk-progress-text {
+	font-size: $font-sm;
+	color: $text-secondary;
+}
+
+.risk-question {
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	padding: $spacing-md;
+	margin-bottom: $spacing-base;
+}
+
+.risk-question-title {
+	display: block;
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-primary;
+	margin-bottom: $spacing-md;
+	line-height: 1.5;
+}
+
+.risk-options {
+	display: flex;
+	flex-direction: column;
+}
+
+.risk-option {
+	display: flex;
+	align-items: center;
+	padding: $spacing-base;
+	background-color: $bg-gray;
+	border-radius: $radius-base;
+	margin-bottom: $spacing-sm;
+	border: 2rpx solid transparent;
+	transition: all $transition-base;
+	
+	&:last-child {
+		margin-bottom: 0;
+	}
+	
+	&--selected {
+		background-color: rgba($primary-color, 0.1);
+		border-color: $primary-color;
+	}
+}
+
+.risk-option-radio {
+	width: 40rpx;
+	height: 40rpx;
+	border: 2rpx solid $border-dark;
+	border-radius: 50%;
+	margin-right: $spacing-sm;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	
+	.risk-option--selected & {
+		border-color: $primary-color;
+	}
+}
+
+.risk-option-radio-inner {
+	width: 24rpx;
+	height: 24rpx;
+	background-color: $primary-color;
+	border-radius: 50%;
+}
+
+.risk-option-text {
+	font-size: $font-base;
+	color: $text-primary;
+}
+
+.risk-actions {
+	display: flex;
+	gap: $spacing-base;
+}
+
+.risk-btn {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 96rpx;
+	border-radius: $radius-round;
+	
+	&--prev {
+		background-color: $bg-white;
+		border: 2rpx solid $border-dark;
+		
+		.risk-btn-text {
+			color: $text-secondary;
+		}
+	}
+	
+	&--next {
+		background: linear-gradient(90deg, $primary-color 0%, $primary-light 100%);
+	}
+	
+	&--disabled {
+		opacity: 0.5;
+	}
+	
+	&--retest {
+		background-color: $bg-white;
+		border: 2rpx solid $primary-color;
+		
+		.risk-btn-text {
+			color: $primary-color;
+		}
+	}
+	
+	&--confirm {
+		background: linear-gradient(90deg, $primary-color 0%, $primary-light 100%);
+	}
+}
+
+.risk-btn-text {
+	font-size: $font-md;
+	color: $text-inverse;
+}
+
+.risk-result {
+	padding: $spacing-base;
+}
+
+.risk-result-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background: linear-gradient(135deg, $primary-color 0%, $primary-light 100%);
+	border-radius: $radius-xl;
+	padding: $spacing-xl $spacing-base;
+	margin-bottom: $spacing-base;
+}
+
+.risk-result-icon {
+	width: 160rpx;
+	height: 160rpx;
+	background-color: rgba(255, 255, 255, 0.2);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: $spacing-base;
+}
+
+.risk-result-icon-text {
+	font-size: 80rpx;
+}
+
+.risk-result-level {
+	font-size: $font-xxl;
+	font-weight: bold;
+	color: $text-inverse;
+	margin-bottom: $spacing-xs;
+}
+
+.risk-result-score {
+	font-size: $font-md;
+	color: rgba(255, 255, 255, 0.8);
+	margin-bottom: $spacing-sm;
+}
+
+.risk-result-desc {
+	font-size: $font-base;
+	color: rgba(255, 255, 255, 0.9);
+	text-align: center;
+	line-height: 1.6;
+}
+
+.risk-result-detail {
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	padding: $spacing-base;
+	margin-bottom: $spacing-base;
+}
+
+.risk-result-detail-title {
+	display: block;
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-primary;
+	margin-bottom: $spacing-sm;
+}
+
+.risk-result-detail-text {
+	font-size: $font-base;
+	color: $text-secondary;
+	line-height: 1.8;
+}
+
+.risk-result-actions {
+	display: flex;
+	gap: $spacing-base;
+}

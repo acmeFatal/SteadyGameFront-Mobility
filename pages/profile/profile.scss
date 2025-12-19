@@ -1,0 +1,83 @@
+/**
+ * 个人资料页面样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.profile-page {
+	min-height: 100vh;
+	background-color: $bg-base;
+}
+
+.profile-avatar-section {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: $spacing-base;
+	background-color: $bg-white;
+	margin-bottom: $spacing-sm;
+}
+
+.profile-label {
+	font-size: $font-base;
+	color: $text-primary;
+}
+
+.profile-avatar-wrap {
+	display: flex;
+	align-items: center;
+}
+
+.profile-avatar {
+	width: 120rpx;
+	height: 120rpx;
+	border-radius: 50%;
+	margin-right: $spacing-sm;
+}
+
+.profile-arrow {
+	font-size: $font-lg;
+	color: $text-placeholder;
+}
+
+.profile-form {
+	background-color: $bg-white;
+	margin-bottom: $spacing-sm;
+}
+
+.profile-item {
+	display: flex;
+	align-items: center;
+	padding: $spacing-base;
+	border-bottom: 1rpx solid $border-light;
+	
+	&:last-child {
+		border-bottom: none;
+	}
+}
+
+.profile-item-label {
+	width: 180rpx;
+	font-size: $font-base;
+	color: $text-primary;
+}
+
+.profile-item-value {
+	flex: 1;
+	font-size: $font-base;
+	color: $text-secondary;
+	text-align: right;
+}
+
+.profile-verified {
+	margin-left: $spacing-sm;
+	padding: 4rpx 12rpx;
+	background-color: rgba($success-color, 0.1);
+	border-radius: $radius-sm;
+}
+
+.profile-verified-text {
+	font-size: $font-xs;
+	color: $success-color;
+}

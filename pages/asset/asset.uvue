@@ -1,0 +1,193 @@
+<template>
+	<view class="asset-page">
+		<view class="asset-header">
+			<sg-asset-card
+				label="总资产（元）"
+				:amount="assetOverview.totalAssets"
+				:earnings="assetOverview.dailyEarnings"
+				earningsLabel="昨日收益"
+			>
+				<view class="asset-stats">
+					<view class="asset-stat-item">
+						<text class="asset-stat-value">{{ formatMoney(assetOverview.totalEarnings) }}</text>
+						<text class="asset-stat-label">累计收益</text>
+					</view>
+					<view class="asset-stat-divider"></view>
+					<view class="asset-stat-item">
+						<text class="asset-stat-value">{{ formatMoney(assetOverview.netAssets) }}</text>
+						<text class="asset-stat-label">净资产</text>
+					</view>
+				</view>
+			</sg-asset-card>
+		</view>
+		
+		<sg-card title="资产分布" class="asset-chart-card">
+			<view class="asset-chart">
+				<view class="asset-pie-chart">
+					<view 
+						v-for="(item, index) in typeShareData" 
+						:key="index"
+						class="asset-pie-segment"
+						:style="getPieStyle(item, index)"
+					></view>
+					<view class="asset-pie-center">
+						<text class="asset-pie-center-value">{{ typeShareData.length }}</text>
+						<text class="asset-pie-center-label">类资产</text>
+					</view>
+				</view>
+				<view class="asset-legend">
+					<view 
+						v-for="(item, index) in typeShareData" 
+						:key="index"
+						class="asset-legend-item"
+					>
+						<view class="asset-legend-dot" :style="{ backgroundColor: getColor(index) }"></view>
+						<text class="asset-legend-name">{{ item.typeName }}</text>
+						<text class="asset-legend-percent">{{ item.percentage.toFixed(1) }}%</text>
+					</view>
+				</view>
+			</view>
+		</sg-card>
+		
+		<sg-card title="持仓明细" extra="全部" @extraClick="goToAssetDetail">
+			<view class="asset-list">
+				<view 
+					v-for="(item, index) in assetDetails" 
+					:key="index"
+					class="asset-item"
+					@click="goToHoldingDetail(item.id)"
+				>
+					<view class="asset-item-left">
+						<text class="asset-item-name">{{ item.assetName }}</text>
+						<text class="asset-item-code">{{ item.productCode }}</text>
+					</view>
+					<view class="asset-item-right">
+						<text class="asset-item-value">¥{{ formatNumber(item.marketValue) }}</text>
+						<text 
+							class="asset-item-rate"
+							:class="item.earningsRate >= 0 ? 'text-rise' : 'text-fall'"
+						>{{ item.earningsRate >= 0 ? '+' : '' }}{{ item.earningsRate.toFixed(2) }}%</text>
+					</view>
+				</view>
+				<sg-empty v-if="assetDetails.length === 0" text="暂无持仓" />
+			</view>
+		</sg-card>
+		
+		<sg-tabbar :current="1" :list="tabList" />
+	</view>
+</template>
+
+<script lang="uts">
+	import { getAssetOverview, getAssetTypeShare, getAssetDetails } from '@/api/asset.uts'
+	import type { AssetOverview, AssetTypeShare, AssetDetail } from '@/api/asset.uts'
+	
+	interface TabBarItem {
+		pagePath: string
+		text: string
+		iconPath: string
+		selectedIconPath: string
+	}
+	
+	const CHART_COLORS = ['#1890FF', '#52C41A', '#FAAD14', '#F5222D', '#722ED1', '#13C2C2']
+	
+	export default {
+		data() {
+			return {
+				assetOverview: {
+					totalAssets: 0,
+					totalLiabilities: 0,
+					netAssets: 0,
+					totalEarnings: 0,
+					dailyEarnings: 0
+				} as AssetOverview,
+				typeShareData: [] as AssetTypeShare[],
+				assetDetails: [] as AssetDetail[],
+				tabList: [
+					{ pagePath: '/pages/home/home', text: '首页', iconPath: '/static/tabbar/home.png', selectedIconPath: '/static/tabbar/home-active.png' },
+					{ pagePath: '/pages/asset/asset', text: '资产', iconPath: '/static/tabbar/asset.png', selectedIconPath: '/static/tabbar/asset-active.png' },
+					{ pagePath: '/pages/ai/ai', text: 'AI助手', iconPath: '/static/tabbar/ai.png', selectedIconPath: '/static/tabbar/ai-active.png' },
+					{ pagePath: '/pages/mine/mine', text: '我的', iconPath: '/static/tabbar/mine.png', selectedIconPath: '/static/tabbar/mine-active.png' }
+				] as TabBarItem[]
+			}
+		},
+		onLoad() {
+			this.loadData()
+		},
+		onShow() {
+			this.loadData()
+		},
+		onPullDownRefresh() {
+			this.loadData().then(() => {
+				uni.stopPullDownRefresh()
+			})
+		},
+		methods: {
+			async loadData() {
+				await Promise.all([
+					this.loadAssetOverview(),
+					this.loadTypeShare(),
+					this.loadAssetDetails()
+				])
+			},
+			
+			async loadAssetOverview() {
+				try {
+					const res = await getAssetOverview()
+					this.assetOverview = res.data
+				} catch (e) {
+					console.error('获取资产概览失败:', e)
+				}
+			},
+			
+			async loadTypeShare() {
+				try {
+					const res = await getAssetTypeShare()
+					this.typeShareData = res.data
+				} catch (e) {
+					console.error('获取资产占比失败:', e)
+				}
+			},
+			
+			async loadAssetDetails() {
+				try {
+					const res = await getAssetDetails()
+					this.assetDetails = res.data.slice(0, 5)
+				} catch (e) {
+					console.error('获取资产明细失败:', e)
+				}
+			},
+			
+			formatMoney(num: number): string {
+				return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+			},
+			
+			formatNumber(num: number): string {
+				return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+			},
+			
+			getColor(index: number): string {
+				return CHART_COLORS[index % CHART_COLORS.length]
+			},
+			
+			getPieStyle(item: AssetTypeShare, index: number): object {
+				let rotation = 0
+				for (let i = 0; i < index; i++) {
+					rotation += this.typeShareData[i].percentage * 3.6
+				}
+				return {
+					backgroundColor: this.getColor(index),
+					transform: `rotate(${rotation}deg)`,
+					clipPath: `polygon(50% 50%, 50% 0%, ${50 + item.percentage * 0.5}% 0%)`
+				}
+			},
+			
+			goToAssetDetail() {
+				uni.navigateTo({ url: '/pages/asset-detail/asset-detail' })
+			},
+			
+			goToHoldingDetail(id: number) {
+				uni.navigateTo({ url: `/pages/holding-detail/holding-detail?id=${id}` })
+			}
+		}
+	}
+</script>

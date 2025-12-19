@@ -1,0 +1,133 @@
+/**
+ * 注册页面样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.register-page {
+	min-height: 100vh;
+	background-color: $bg-base;
+}
+
+.register-form {
+	padding: $spacing-base;
+}
+
+.register-section {
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	padding: $spacing-base;
+	margin-bottom: $spacing-base;
+}
+
+.register-section-title {
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-primary;
+	margin-bottom: $spacing-base;
+}
+
+.register-field {
+	margin-bottom: $spacing-base;
+	
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+.register-label {
+	display: block;
+	font-size: $font-sm;
+	color: $text-secondary;
+	margin-bottom: $spacing-xs;
+}
+
+.register-input {
+	width: 100%;
+	height: 88rpx;
+	padding: 0 $spacing-base;
+	background-color: $bg-gray;
+	border-radius: $radius-base;
+	font-size: $font-base;
+	color: $text-primary;
+}
+
+.register-agreement {
+	display: flex;
+	align-items: center;
+	padding: $spacing-base 0;
+}
+
+.register-checkbox {
+	width: 40rpx;
+	height: 40rpx;
+	border: 2rpx solid $border-dark;
+	border-radius: $radius-sm;
+	margin-right: $spacing-sm;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	
+	&--checked {
+		background-color: $primary-color;
+		border-color: $primary-color;
+	}
+}
+
+.register-checkbox-icon {
+	font-size: $font-sm;
+	color: $text-inverse;
+}
+
+.register-agreement-text {
+	font-size: $font-sm;
+	color: $text-secondary;
+}
+
+.register-actions {
+	margin-bottom: $spacing-base;
+}
+
+.register-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 96rpx;
+	background: linear-gradient(90deg, $primary-color 0%, $primary-light 100%);
+	border-radius: $radius-round;
+	
+	&--disabled {
+		background: $bg-gray;
+		
+		.register-btn-text {
+			color: $text-placeholder;
+		}
+	}
+	
+	&:active {
+		opacity: 0.9;
+	}
+}
+
+.register-btn-text {
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-inverse;
+}
+
+.register-login {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.register-login-text {
+	font-size: $font-sm;
+	color: $text-secondary;
+}
+
+.register-login-link {
+	font-size: $font-sm;
+	color: $primary-color;
+}

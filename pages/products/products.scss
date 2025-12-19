@@ -1,0 +1,196 @@
+/**
+ * 理财产品列表页面样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.products-page {
+	min-height: 100vh;
+	background-color: $bg-base;
+	display: flex;
+	flex-direction: column;
+}
+
+.products-filter {
+	background-color: $bg-white;
+	padding: $spacing-sm 0;
+}
+
+.filter-tabs {
+	display: flex;
+	overflow-x: auto;
+	padding: 0 $spacing-base;
+	-webkit-overflow-scrolling: touch;
+	
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+
+.filter-tab {
+	flex-shrink: 0;
+	padding: $spacing-xs $spacing-sm;
+	margin-right: $spacing-sm;
+	background-color: $bg-gray;
+	border-radius: $radius-round;
+	
+	&--active {
+		background-color: $primary-color;
+		
+		.filter-tab-text {
+			color: $text-inverse;
+		}
+	}
+}
+
+.filter-tab-text {
+	font-size: $font-sm;
+	color: $text-secondary;
+	white-space: nowrap;
+}
+
+.products-list {
+	flex: 1;
+	padding: $spacing-base;
+}
+
+.product-item {
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	padding: $spacing-base;
+	margin-bottom: $spacing-base;
+}
+
+.product-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: $spacing-sm;
+}
+
+.product-name {
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-primary;
+	flex: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.product-risk {
+	padding: 4rpx 16rpx;
+	border-radius: $radius-sm;
+	margin-left: $spacing-sm;
+	
+	&--low {
+		background-color: rgba($success-color, 0.1);
+		.product-risk-text { color: $success-color; }
+	}
+	
+	&--low-mid {
+		background-color: rgba(#52c41a, 0.1);
+		.product-risk-text { color: #52c41a; }
+	}
+	
+	&--mid {
+		background-color: rgba($warning-color, 0.1);
+		.product-risk-text { color: $warning-color; }
+	}
+	
+	&--mid-high {
+		background-color: rgba(#fa8c16, 0.1);
+		.product-risk-text { color: #fa8c16; }
+	}
+	
+	&--high {
+		background-color: rgba($error-color, 0.1);
+		.product-risk-text { color: $error-color; }
+	}
+}
+
+.product-risk-text {
+	font-size: $font-xs;
+}
+
+.product-body {
+	display: flex;
+	align-items: flex-end;
+	padding: $spacing-sm 0;
+	border-bottom: 1rpx solid $border-light;
+}
+
+.product-rate {
+	display: flex;
+	align-items: baseline;
+	margin-right: $spacing-lg;
+}
+
+.product-rate-value {
+	font-size: 72rpx;
+	font-weight: bold;
+	color: $rise-color;
+	line-height: 1;
+}
+
+.product-rate-unit {
+	font-size: $font-lg;
+	color: $rise-color;
+	margin-left: 4rpx;
+}
+
+.product-info {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.product-info-item {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: $spacing-xs;
+	
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+.product-info-label {
+	font-size: $font-sm;
+	color: $text-placeholder;
+}
+
+.product-info-value {
+	font-size: $font-sm;
+	color: $text-secondary;
+}
+
+.product-footer {
+	display: flex;
+	justify-content: flex-end;
+	padding-top: $spacing-sm;
+}
+
+.product-btn {
+	padding: $spacing-sm $spacing-md;
+	background: linear-gradient(90deg, $primary-color 0%, $primary-light 100%);
+	border-radius: $radius-round;
+}
+
+.product-btn-text {
+	font-size: $font-base;
+	color: $text-inverse;
+}
+
+.products-loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: $spacing-base;
+}
+
+.products-loading-text {
+	font-size: $font-sm;
+	color: $text-placeholder;
+}

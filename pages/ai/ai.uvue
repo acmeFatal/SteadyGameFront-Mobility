@@ -1,0 +1,200 @@
+<template>
+	<view class="ai-page">
+		<view class="ai-header">
+			<text class="ai-title">AI智能助手</text>
+			<text class="ai-subtitle">为您提供专业的理财建议</text>
+		</view>
+		
+		<view class="ai-features">
+			<view class="ai-feature" @click="goToChat">
+				<view class="ai-feature-icon-wrap">
+					<text class="ai-feature-icon">💬</text>
+				</view>
+				<view class="ai-feature-info">
+					<text class="ai-feature-title">智能问答</text>
+					<text class="ai-feature-desc">有问必答，理财知识随时问</text>
+				</view>
+				<text class="ai-feature-arrow">›</text>
+			</view>
+			
+			<view class="ai-feature" @click="goToPlan">
+				<view class="ai-feature-icon-wrap">
+					<text class="ai-feature-icon">📋</text>
+				</view>
+				<view class="ai-feature-info">
+					<text class="ai-feature-title">理财规划</text>
+					<text class="ai-feature-desc">根据您的目标生成专属方案</text>
+				</view>
+				<text class="ai-feature-arrow">›</text>
+			</view>
+			
+			<view class="ai-feature" @click="goToRecommend">
+				<view class="ai-feature-icon-wrap">
+					<text class="ai-feature-icon">⭐</text>
+				</view>
+				<view class="ai-feature-info">
+					<text class="ai-feature-title">智能推荐</text>
+					<text class="ai-feature-desc">个性化产品匹配推荐</text>
+				</view>
+				<text class="ai-feature-arrow">›</text>
+			</view>
+			
+			<view class="ai-feature" @click="goToRiskAssess">
+				<view class="ai-feature-icon-wrap">
+					<text class="ai-feature-icon">📊</text>
+				</view>
+				<view class="ai-feature-info">
+					<text class="ai-feature-title">风险评估</text>
+					<text class="ai-feature-desc">测评您的风险承受能力</text>
+				</view>
+				<text class="ai-feature-arrow">›</text>
+			</view>
+		</view>
+		
+		<sg-card title="最近对话" extra="全部" @extraClick="goToChatHistory">
+			<view class="ai-history">
+				<view 
+					v-for="(item, index) in chatSessions" 
+					:key="index"
+					class="ai-history-item"
+					@click="goToChatDetail(item.sessionId)"
+				>
+					<text class="ai-history-title">{{ item.title || '新对话' }}</text>
+					<text class="ai-history-time">{{ formatTime(item.updatedAt) }}</text>
+				</view>
+				<sg-empty v-if="chatSessions.length === 0" text="暂无对话记录" />
+			</view>
+		</sg-card>
+		
+		<view class="ai-quick-ask">
+			<text class="ai-quick-title">快捷提问</text>
+			<view class="ai-quick-tags">
+				<view 
+					v-for="(item, index) in quickQuestions" 
+					:key="index"
+					class="ai-quick-tag"
+					@click="askQuestion(item)"
+				>
+					<text class="ai-quick-tag-text">{{ item }}</text>
+				</view>
+			</view>
+		</view>
+		
+		<view class="ai-input-bar">
+			<input 
+				class="ai-input"
+				v-model="inputText"
+				placeholder="输入您想问的问题..."
+				@confirm="startChat"
+			/>
+			<view class="ai-voice-btn" @click="startVoiceInput">
+				<text class="ai-voice-icon">🎤</text>
+			</view>
+			<view class="ai-send-btn" @click="startChat">
+				<text class="ai-send-icon">➤</text>
+			</view>
+		</view>
+		
+		<sg-tabbar :current="2" :list="tabList" />
+	</view>
+</template>
+
+<script lang="uts">
+	import { getChatSessions } from '@/api/ai.uts'
+	import { getRelativeTime } from '@/utils/date.uts'
+	import type { ChatSession } from '@/api/ai.uts'
+	
+	interface TabBarItem {
+		pagePath: string
+		text: string
+		iconPath: string
+		selectedIconPath: string
+	}
+	
+	export default {
+		data() {
+			return {
+				inputText: '',
+				chatSessions: [] as ChatSession[],
+				quickQuestions: [
+					'如何开始理财？',
+					'基金和股票哪个风险更低？',
+					'什么是复利？',
+					'如何做资产配置？',
+					'定投适合我吗？'
+				],
+				tabList: [
+					{ pagePath: '/pages/home/home', text: '首页', iconPath: '/static/tabbar/home.png', selectedIconPath: '/static/tabbar/home-active.png' },
+					{ pagePath: '/pages/asset/asset', text: '资产', iconPath: '/static/tabbar/asset.png', selectedIconPath: '/static/tabbar/asset-active.png' },
+					{ pagePath: '/pages/ai/ai', text: 'AI助手', iconPath: '/static/tabbar/ai.png', selectedIconPath: '/static/tabbar/ai-active.png' },
+					{ pagePath: '/pages/mine/mine', text: '我的', iconPath: '/static/tabbar/mine.png', selectedIconPath: '/static/tabbar/mine-active.png' }
+				] as TabBarItem[]
+			}
+		},
+		onLoad() {
+			this.loadChatSessions()
+		},
+		onShow() {
+			this.loadChatSessions()
+		},
+		methods: {
+			async loadChatSessions() {
+				try {
+					const res = await getChatSessions()
+					this.chatSessions = res.data.slice(0, 3)
+				} catch (e) {
+					console.error('获取对话列表失败:', e)
+				}
+			},
+			
+			formatTime(time: string): string {
+				return getRelativeTime(time)
+			},
+			
+			startChat() {
+				if (!this.inputText.trim()) {
+					uni.showToast({ title: '请输入问题', icon: 'none' })
+					return
+				}
+				uni.navigateTo({
+					url: `/pages/ai-chat/ai-chat?question=${encodeURIComponent(this.inputText)}`
+				})
+				this.inputText = ''
+			},
+			
+			askQuestion(question: string) {
+				uni.navigateTo({
+					url: `/pages/ai-chat/ai-chat?question=${encodeURIComponent(question)}`
+				})
+			},
+			
+			startVoiceInput() {
+				uni.showToast({ title: '语音输入开发中', icon: 'none' })
+			},
+			
+			goToChat() {
+				uni.navigateTo({ url: '/pages/ai-chat/ai-chat' })
+			},
+			
+			goToPlan() {
+				uni.navigateTo({ url: '/pages/finance-plan/finance-plan' })
+			},
+			
+			goToRecommend() {
+				uni.navigateTo({ url: '/pages/recommend/recommend' })
+			},
+			
+			goToRiskAssess() {
+				uni.navigateTo({ url: '/pages/risk-assess/risk-assess' })
+			},
+			
+			goToChatHistory() {
+				uni.navigateTo({ url: '/pages/chat-history/chat-history' })
+			},
+			
+			goToChatDetail(sessionId: string) {
+				uni.navigateTo({ url: `/pages/ai-chat/ai-chat?sessionId=${sessionId}` })
+			}
+		}
+	}
+</script>

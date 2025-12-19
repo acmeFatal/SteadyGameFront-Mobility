@@ -1,0 +1,406 @@
+/**
+ * 全局通用样式
+ * @author SteadyGame Team
+ * @version 1.0.0
+ */
+
+@import './variables.scss';
+
+/* ==================== 布局类 ==================== */
+.flex {
+	display: flex;
+}
+
+.flex-row {
+	display: flex;
+	flex-direction: row;
+}
+
+.flex-col {
+	display: flex;
+	flex-direction: column;
+}
+
+.flex-wrap {
+	flex-wrap: wrap;
+}
+
+.flex-1 {
+	flex: 1;
+}
+
+.flex-shrink-0 {
+	flex-shrink: 0;
+}
+
+.justify-start {
+	justify-content: flex-start;
+}
+
+.justify-center {
+	justify-content: center;
+}
+
+.justify-end {
+	justify-content: flex-end;
+}
+
+.justify-between {
+	justify-content: space-between;
+}
+
+.justify-around {
+	justify-content: space-around;
+}
+
+.align-start {
+	align-items: flex-start;
+}
+
+.align-center {
+	align-items: center;
+}
+
+.align-end {
+	align-items: flex-end;
+}
+
+.align-stretch {
+	align-items: stretch;
+}
+
+/* ==================== 文字类 ==================== */
+.text-left {
+	text-align: left;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.text-xs {
+	font-size: $font-xs;
+}
+
+.text-sm {
+	font-size: $font-sm;
+}
+
+.text-base {
+	font-size: $font-base;
+}
+
+.text-md {
+	font-size: $font-md;
+}
+
+.text-lg {
+	font-size: $font-lg;
+}
+
+.text-xl {
+	font-size: $font-xl;
+}
+
+.text-xxl {
+	font-size: $font-xxl;
+}
+
+.text-bold {
+	font-weight: bold;
+}
+
+.text-normal {
+	font-weight: normal;
+}
+
+.text-primary {
+	color: $text-primary;
+}
+
+.text-regular {
+	color: $text-regular;
+}
+
+.text-secondary {
+	color: $text-secondary;
+}
+
+.text-placeholder {
+	color: $text-placeholder;
+}
+
+.text-disabled {
+	color: $text-disabled;
+}
+
+.text-inverse {
+	color: $text-inverse;
+}
+
+.text-theme {
+	color: $primary-color;
+}
+
+.text-success {
+	color: $success-color;
+}
+
+.text-warning {
+	color: $warning-color;
+}
+
+.text-error {
+	color: $error-color;
+}
+
+.text-rise {
+	color: $rise-color;
+}
+
+.text-fall {
+	color: $fall-color;
+}
+
+.text-ellipsis {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.text-ellipsis-2 {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
+	overflow: hidden;
+}
+
+/* ==================== 背景类 ==================== */
+.bg-base {
+	background-color: $bg-base;
+}
+
+.bg-white {
+	background-color: $bg-white;
+}
+
+.bg-gray {
+	background-color: $bg-gray;
+}
+
+.bg-primary {
+	background-color: $primary-color;
+}
+
+.bg-success {
+	background-color: $success-color;
+}
+
+.bg-warning {
+	background-color: $warning-color;
+}
+
+.bg-error {
+	background-color: $error-color;
+}
+
+/* ==================== 间距类 ==================== */
+.m-0 { margin: 0; }
+.m-xs { margin: $spacing-xs; }
+.m-sm { margin: $spacing-sm; }
+.m-base { margin: $spacing-base; }
+.m-md { margin: $spacing-md; }
+.m-lg { margin: $spacing-lg; }
+
+.mt-0 { margin-top: 0; }
+.mt-xs { margin-top: $spacing-xs; }
+.mt-sm { margin-top: $spacing-sm; }
+.mt-base { margin-top: $spacing-base; }
+.mt-md { margin-top: $spacing-md; }
+.mt-lg { margin-top: $spacing-lg; }
+
+.mb-0 { margin-bottom: 0; }
+.mb-xs { margin-bottom: $spacing-xs; }
+.mb-sm { margin-bottom: $spacing-sm; }
+.mb-base { margin-bottom: $spacing-base; }
+.mb-md { margin-bottom: $spacing-md; }
+.mb-lg { margin-bottom: $spacing-lg; }
+
+.ml-0 { margin-left: 0; }
+.ml-xs { margin-left: $spacing-xs; }
+.ml-sm { margin-left: $spacing-sm; }
+.ml-base { margin-left: $spacing-base; }
+.ml-md { margin-left: $spacing-md; }
+.ml-lg { margin-left: $spacing-lg; }
+
+.mr-0 { margin-right: 0; }
+.mr-xs { margin-right: $spacing-xs; }
+.mr-sm { margin-right: $spacing-sm; }
+.mr-base { margin-right: $spacing-base; }
+.mr-md { margin-right: $spacing-md; }
+.mr-lg { margin-right: $spacing-lg; }
+
+.p-0 { padding: 0; }
+.p-xs { padding: $spacing-xs; }
+.p-sm { padding: $spacing-sm; }
+.p-base { padding: $spacing-base; }
+.p-md { padding: $spacing-md; }
+.p-lg { padding: $spacing-lg; }
+
+.pt-0 { padding-top: 0; }
+.pt-xs { padding-top: $spacing-xs; }
+.pt-sm { padding-top: $spacing-sm; }
+.pt-base { padding-top: $spacing-base; }
+.pt-md { padding-top: $spacing-md; }
+.pt-lg { padding-top: $spacing-lg; }
+
+.pb-0 { padding-bottom: 0; }
+.pb-xs { padding-bottom: $spacing-xs; }
+.pb-sm { padding-bottom: $spacing-sm; }
+.pb-base { padding-bottom: $spacing-base; }
+.pb-md { padding-bottom: $spacing-md; }
+.pb-lg { padding-bottom: $spacing-lg; }
+
+.pl-0 { padding-left: 0; }
+.pl-xs { padding-left: $spacing-xs; }
+.pl-sm { padding-left: $spacing-sm; }
+.pl-base { padding-left: $spacing-base; }
+.pl-md { padding-left: $spacing-md; }
+.pl-lg { padding-left: $spacing-lg; }
+
+.pr-0 { padding-right: 0; }
+.pr-xs { padding-right: $spacing-xs; }
+.pr-sm { padding-right: $spacing-sm; }
+.pr-base { padding-right: $spacing-base; }
+.pr-md { padding-right: $spacing-md; }
+.pr-lg { padding-right: $spacing-lg; }
+
+/* ==================== 圆角类 ==================== */
+.radius-sm { border-radius: $radius-sm; }
+.radius-base { border-radius: $radius-base; }
+.radius-md { border-radius: $radius-md; }
+.radius-lg { border-radius: $radius-lg; }
+.radius-xl { border-radius: $radius-xl; }
+.radius-round { border-radius: $radius-round; }
+
+/* ==================== 阴影类 ==================== */
+.shadow-light { box-shadow: $shadow-light; }
+.shadow-base { box-shadow: $shadow-base; }
+.shadow-dark { box-shadow: $shadow-dark; }
+
+/* ==================== 边框类 ==================== */
+.border {
+	border: 1rpx solid $border-base;
+}
+
+.border-top {
+	border-top: 1rpx solid $border-base;
+}
+
+.border-bottom {
+	border-bottom: 1rpx solid $border-base;
+}
+
+.border-left {
+	border-left: 1rpx solid $border-base;
+}
+
+.border-right {
+	border-right: 1rpx solid $border-base;
+}
+
+/* ==================== 宽高类 ==================== */
+.w-full {
+	width: 100%;
+}
+
+.h-full {
+	height: 100%;
+}
+
+/* ==================== 定位类 ==================== */
+.relative {
+	position: relative;
+}
+
+.absolute {
+	position: absolute;
+}
+
+.fixed {
+	position: fixed;
+}
+
+.sticky {
+	position: sticky;
+}
+
+/* ==================== 安全区域 ==================== */
+.safe-area-bottom {
+	padding-bottom: $safe-area-bottom;
+}
+
+.safe-area-top {
+	padding-top: $safe-area-top;
+}
+
+/* ==================== 卡片样式 ==================== */
+.card {
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	padding: $spacing-base;
+	box-shadow: $shadow-light;
+}
+
+.card-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-bottom: $spacing-sm;
+	border-bottom: 1rpx solid $border-light;
+	margin-bottom: $spacing-sm;
+}
+
+.card-title {
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-primary;
+}
+
+/* ==================== 分割线 ==================== */
+.divider {
+	height: 1rpx;
+	background-color: $border-light;
+	width: 100%;
+}
+
+.divider-vertical {
+	width: 1rpx;
+	height: 100%;
+	background-color: $border-light;
+}
+
+/* ==================== 空状态 ==================== */
+.empty-state {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: $spacing-xl 0;
+}
+
+.empty-icon {
+	width: 200rpx;
+	height: 200rpx;
+	margin-bottom: $spacing-base;
+}
+
+.empty-text {
+	font-size: $font-base;
+	color: $text-placeholder;
+}

@@ -1,0 +1,193 @@
+/**
+ * @description 资产相关API
+ * @author SteadyGame Team
+ * @version 1.0.0
+ */
+
+import { get, post, put, del } from '@/utils/request.uts'
+import type { ResponseData, PageResponseData } from '@/utils/request.uts'
+
+/**
+ * 资产总览
+ */
+export interface AssetOverview {
+	id: number
+	userId: number
+	totalAssets: number
+	totalLiabilities: number
+	netAssets: number
+	totalEarnings: number
+	dailyEarnings: number
+	lastUpdateTime: string
+}
+
+/**
+ * 资产类型占比
+ */
+export interface AssetTypeShare {
+	assetType: number
+	typeName: string
+	amount: number
+	percentage: number
+}
+
+/**
+ * 资产趋势数据
+ */
+export interface AssetTrend {
+	snapshotDate: string
+	totalAssets: number
+}
+
+/**
+ * 资产明细
+ */
+export interface AssetDetail {
+	id: number
+	userId: number
+	assetType: number
+	assetName: string
+	productCode: string
+	holdingAmount: number
+	holdingShares: number
+	costPrice: number
+	currentPrice: number
+	marketValue: number
+	earnings: number
+	earningsRate: number
+}
+
+/**
+ * 资产交易流水
+ */
+export interface AssetTransaction {
+	id: number
+	userId: number
+	assetType: number
+	transactionType: number
+	amount: number
+	transactionTime: string
+	description: string
+}
+
+/**
+ * 收益趋势数据
+ */
+export interface EarningsTrend {
+	id: number
+	userId: number
+	assetType: number
+	earningDate: string
+	earningAmount: number
+	earningRate: number
+}
+
+/**
+ * 新增资产参数
+ */
+export interface AddAssetParams {
+	assetType: number
+	assetName: string
+	assetCode?: string
+	quantity: number
+	costPrice: number
+	marketPrice: number
+	totalValue: number
+	currency?: string
+}
+
+/**
+ * 获取资产总览
+ */
+export function getAssetOverview(): Promise<ResponseData<AssetOverview>> {
+	return get<AssetOverview>('/asset/overview')
+}
+
+/**
+ * 获取资产类型占比
+ */
+export function getAssetTypeShare(): Promise<ResponseData<AssetTypeShare[]>> {
+	return get<AssetTypeShare[]>('/asset/overview/type-share')
+}
+
+/**
+ * 获取资产趋势
+ * @param days 天数
+ */
+export function getAssetTrend(days: number = 30): Promise<ResponseData<AssetTrend[]>> {
+	return get<AssetTrend[]>(`/asset/overview/trend?days=${days}`)
+}
+
+/**
+ * 获取资产明细列表
+ * @param assetType 资产类型
+ */
+export function getAssetDetails(assetType?: number): Promise<ResponseData<AssetDetail[]>> {
+	const url = assetType ? `/asset/details?assetType=${assetType}` : '/asset/details'
+	return get<AssetDetail[]>(url)
+}
+
+/**
+ * 新增资产明细
+ * @param params 资产参数
+ */
+export function addAssetDetail(params: AddAssetParams): Promise<ResponseData<AssetDetail>> {
+	return post<AssetDetail>('/asset/details', params)
+}
+
+/**
+ * 更新资产明细
+ * @param detailId 明细ID
+ * @param params 更新参数
+ */
+export function updateAssetDetail(detailId: number, params: Partial<AddAssetParams>): Promise<ResponseData<AssetDetail>> {
+	return put<AssetDetail>(`/asset/details/${detailId}`, params)
+}
+
+/**
+ * 删除资产明细
+ * @param detailId 明细ID
+ */
+export function deleteAssetDetail(detailId: number): Promise<ResponseData<boolean>> {
+	return del<boolean>(`/asset/details/${detailId}`)
+}
+
+/**
+ * 记录资产快照
+ */
+export function recordAssetSnapshot(): Promise<ResponseData<any>> {
+	return post<any>('/asset/overview/snapshot')
+}
+
+/**
+ * 分页查询资产交易流水
+ * @param params 查询参数
+ */
+export function getAssetTransactions(params: {
+	assetType?: number
+	startDate?: string
+	endDate?: string
+	page?: number
+	size?: number
+}): Promise<ResponseData<PageResponseData<AssetTransaction>>> {
+	const queryParams = new URLSearchParams()
+	if (params.assetType) queryParams.append('assetType', String(params.assetType))
+	if (params.startDate) queryParams.append('startDate', params.startDate)
+	if (params.endDate) queryParams.append('endDate', params.endDate)
+	if (params.page) queryParams.append('page', String(params.page))
+	if (params.size) queryParams.append('size', String(params.size))
+	
+	return get<PageResponseData<AssetTransaction>>(`/asset/transactions?${queryParams.toString()}`)
+}
+
+/**
+ * 查询资产收益趋势
+ * @param assetType 资产类型
+ * @param days 天数
+ */
+export function getEarningsTrend(assetType?: number, days: number = 30): Promise<ResponseData<EarningsTrend[]>> {
+	const url = assetType 
+		? `/asset/earnings/trend?assetType=${assetType}&days=${days}`
+		: `/asset/earnings/trend?days=${days}`
+	return get<EarningsTrend[]>(url)
+}

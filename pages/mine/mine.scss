@@ -1,0 +1,122 @@
+/**
+ * 我的页面样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.mine-page {
+	min-height: 100vh;
+	background-color: $bg-base;
+	padding-bottom: 120rpx;
+}
+
+.mine-header {
+	padding: $spacing-base;
+	padding-top: calc(env(safe-area-inset-top) + $spacing-lg);
+	background: linear-gradient(135deg, $primary-color 0%, $primary-light 100%);
+}
+
+.mine-user {
+	display: flex;
+	align-items: center;
+	margin-bottom: $spacing-md;
+}
+
+.mine-avatar {
+	width: 128rpx;
+	height: 128rpx;
+	border-radius: 50%;
+	border: 4rpx solid rgba(255, 255, 255, 0.5);
+	margin-right: $spacing-base;
+}
+
+.mine-user-info {
+	flex: 1;
+}
+
+.mine-username {
+	display: block;
+	font-size: $font-lg;
+	font-weight: bold;
+	color: $text-inverse;
+	margin-bottom: $spacing-xs;
+}
+
+.mine-verify {
+	display: flex;
+	align-items: center;
+}
+
+.mine-verify-tag {
+	font-size: $font-xs;
+	color: rgba(255, 255, 255, 0.7);
+	padding: 4rpx 12rpx;
+	background-color: rgba(255, 255, 255, 0.2);
+	border-radius: $radius-round;
+	
+	&--success {
+		background-color: rgba($success-color, 0.3);
+		color: $text-inverse;
+	}
+}
+
+.mine-arrow {
+	font-size: $font-xl;
+	color: $text-inverse;
+}
+
+.mine-stats {
+	display: flex;
+	background-color: rgba(255, 255, 255, 0.15);
+	border-radius: $radius-lg;
+	padding: $spacing-base 0;
+}
+
+.mine-stat {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	border-right: 1rpx solid rgba(255, 255, 255, 0.2);
+	
+	&:last-child {
+		border-right: none;
+	}
+}
+
+.mine-stat-value {
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-inverse;
+	margin-bottom: 4rpx;
+}
+
+.mine-stat-label {
+	font-size: $font-xs;
+	color: rgba(255, 255, 255, 0.8);
+}
+
+.mine-menu {
+	padding: $spacing-base;
+}
+
+.mine-menu-group {
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	overflow: hidden;
+	margin-bottom: $spacing-base;
+}
+
+.mine-logout {
+	margin: $spacing-base;
+	padding: $spacing-base;
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	text-align: center;
+}
+
+.mine-logout-text {
+	font-size: $font-md;
+	color: $error-color;
+}

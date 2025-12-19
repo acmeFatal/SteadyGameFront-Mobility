@@ -1,0 +1,394 @@
+/**
+ * @description 用户相关API
+ * @author SteadyGame Team
+ * @version 1.0.0
+ */
+
+import { get, post, put } from '@/utils/request.uts'
+import type { ResponseData } from '@/utils/request.uts'
+
+/**
+ * 用户基本信息
+ */
+export interface UserInfo {
+	id: number
+	username: string
+	realName: string
+	email: string
+	emailVerified: boolean
+	phone: string
+	phoneVerified: boolean
+	avatar: string
+	gender: number
+	birthDate: string
+	createTime: string
+	lastLoginTime: string
+}
+
+/**
+ * 用户画像信息
+ */
+export interface UserProfile {
+	id: number
+	userId: number
+	riskPreference: number
+	financialGoal: string
+	annualIncome: number
+	occupation: string
+	educationLevel: string
+	investmentExperience: number
+	familyStatus: number
+}
+
+/**
+ * 风险评估结果
+ */
+export interface RiskAssessment {
+	id: number
+	userId: number
+	riskLevel: number
+	score: number
+	assessmentDetails?: string
+	assessmentDate?: string
+	assessmentTime?: string
+	validUntil?: string
+}
+
+/**
+ * 更新用户信息参数
+ */
+export interface UpdateUserInfoParams {
+	realName?: string
+	gender?: number
+	birthDate?: string
+	avatarUrl?: string
+}
+
+/**
+ * 更新用户画像参数
+ */
+export interface UpdateProfileParams {
+	riskPreference?: number
+	financialGoal?: string
+	annualIncome?: number
+	occupation?: string
+	educationLevel?: string
+	investmentExperience?: number
+	familyStatus?: number
+}
+
+/**
+ * 风险评估提交参数
+ */
+export interface RiskAssessmentParams {
+	score: number
+	riskLevel: number
+}
+
+/**
+ * 登录日志
+ */
+export interface LoginLog {
+	logId: number
+	userId: number
+	ipAddress: string
+	userAgent: string
+	deviceInfo: string
+	loginTime: string
+	logoutTime: string
+	status: number
+}
+
+/**
+ * 获取用户基本信息
+ */
+export function getUserInfo(): Promise<ResponseData<UserInfo>> {
+	return get<UserInfo>('/user/info')
+}
+
+/**
+ * 更新用户基本信息
+ * @param params 更新参数
+ */
+export function updateUserInfo(params: UpdateUserInfoParams): Promise<ResponseData<UserInfo>> {
+	return put<UserInfo>('/user/info', params)
+}
+
+/**
+ * 更新用户头像
+ * @param avatarUrl 头像URL
+ */
+export function updateAvatar(avatarUrl: string): Promise<ResponseData<string>> {
+	return put<string>('/user/avatar', { avatarUrl })
+}
+
+/**
+ * 获取用户画像
+ */
+export function getUserProfile(): Promise<ResponseData<UserProfile>> {
+	return get<UserProfile>('/user/profile')
+}
+
+/**
+ * 保存/更新用户画像
+ * @param params 画像参数
+ */
+export function saveUserProfile(params: UpdateProfileParams): Promise<ResponseData<UserProfile>> {
+	return post<UserProfile>('/user/profile', params)
+}
+
+/**
+ * 提交风险评估
+ * @param params 评估参数
+ */
+export function submitRiskAssessment(params: RiskAssessmentParams): Promise<ResponseData<RiskAssessment>> {
+	return post<RiskAssessment>('/user/risk-assessment', params)
+}
+
+/**
+ * 自动风险评估（基于画像）
+ */
+export function autoRiskAssessment(): Promise<ResponseData<RiskAssessment>> {
+	return post<RiskAssessment>('/user/risk-assessment/auto')
+}
+
+/**
+ * 获取最新风险评估
+ */
+export function getLatestRiskAssessment(): Promise<ResponseData<RiskAssessment>> {
+	return get<RiskAssessment>('/user/risk-assessment/latest')
+}
+
+/**
+ * 查询登录日志
+ * @param days 查询天数
+ */
+export function getLoginLogs(days: number = 30): Promise<ResponseData<LoginLog[]>> {
+	return get<LoginLog[]>(`/user/security/login-logs?days=${days}`)
+}
+
+/**
+ * 设置交易密码
+ * @param tradePassword 交易密码
+ * @param confirmPassword 确认密码
+ */
+export function setTradePassword(tradePassword: string, confirmPassword: string): Promise<ResponseData<null>> {
+	return post<null>('/user/security/trade-password/set', { tradePassword, confirmPassword })
+}
+
+/**
+ * 修改交易密码
+ * @param oldPassword 旧密码
+ * @param newPassword 新密码
+ * @param confirmPassword 确认密码
+ */
+export function changeTradePassword(oldPassword: string, newPassword: string, confirmPassword: string): Promise<ResponseData<null>> {
+	return post<null>('/user/security/trade-password/change', { oldPassword, newPassword, confirmPassword })
+}
+
+/**
+ * 发送大额交易验证码
+ */
+export function sendLargeTradeCode(): Promise<ResponseData<null>> {
+	return post<null>('/user/security/large-trade/code')
+}
+
+/**
+ * 发送绑定手机验证码
+ * @param phone 手机号
+ */
+export function sendBindPhoneCode(phone: string): Promise<ResponseData<null>> {
+	return post<null>(`/user/security/bind-phone/code?phone=${phone}`)
+}
+
+/**
+ * 绑定手机号
+ * @param phone 手机号
+ * @param code 验证码
+ */
+export function bindPhone(phone: string, code: string): Promise<ResponseData<null>> {
+	return post<null>('/user/security/bind-phone', { phone, code })
+}
+
+/**
+ * 发送绑定邮箱验证码
+ * @param email 邮箱
+ */
+export function sendBindEmailCode(email: string): Promise<ResponseData<null>> {
+	return post<null>(`/user/security/bind-email/code?email=${email}`)
+}
+
+/**
+ * 绑定邮箱
+ * @param email 邮箱
+ * @param code 验证码
+ */
+export function bindEmail(email: string, code: string): Promise<ResponseData<null>> {
+	return post<null>('/user/security/bind-email', { email, code })
+}
+
+/**
+ * 冻结账号
+ */
+export function freezeAccount(): Promise<ResponseData<null>> {
+	return post<null>('/user/security/freeze')
+}
+
+/**
+ * 发送解冻验证码
+ * @param verifyType 验证方式：phone | email
+ */
+export function sendUnfreezeCode(verifyType: string): Promise<ResponseData<null>> {
+	return post<null>(`/user/security/unfreeze/code?verifyType=${verifyType}`)
+}
+
+/**
+ * 自助解冻账号
+ * @param code 验证码
+ * @param verifyType 验证方式
+ */
+export function unfreezeAccount(code: string, verifyType: string): Promise<ResponseData<null>> {
+	return post<null>('/user/security/unfreeze', { code, verifyType })
+}
+
+/**
+ * 解绑手机号
+ */
+export function unbindPhone(): Promise<ResponseData<null>> {
+	return post<null>('/user/security/unbind-phone')
+}
+
+/**
+ * 解绑邮箱
+ */
+export function unbindEmail(): Promise<ResponseData<null>> {
+	return post<null>('/user/security/unbind-email')
+}
+
+/**
+ * 我的顾问信息
+ */
+export interface MyAdvisor {
+	advisorId: number
+	advisorName: string
+	realName: string
+	avatar: string
+	phone: string
+	email: string
+	title: string
+	introduction: string
+	specialties: string[]
+	serviceYears: number
+	clientCount: number
+	rating: number
+	assignedAt: string
+}
+
+/**
+ * 顾问消息
+ */
+export interface AdvisorMessage {
+	id: number
+	senderId: number
+	senderType: string
+	content: string
+	messageType: string
+	isRead: boolean
+	createdAt: string
+}
+
+/**
+ * 获取我的顾问信息
+ */
+export function getMyAdvisor(): Promise<ResponseData<MyAdvisor | null>> {
+	return get<MyAdvisor | null>('/user/my-advisor')
+}
+
+/**
+ * 获取与顾问的消息列表
+ * @param page 页码
+ * @param size 每页条数
+ */
+export function getAdvisorMessages(page: number = 1, size: number = 50): Promise<ResponseData<AdvisorMessage[]>> {
+	return get<AdvisorMessage[]>(`/user/my-advisor/messages?page=${page}&size=${size}`)
+}
+
+/**
+ * 发送消息给顾问
+ * @param content 消息内容
+ */
+export function sendMessageToAdvisor(content: string): Promise<ResponseData<AdvisorMessage>> {
+	return post<AdvisorMessage>('/user/my-advisor/messages', { content })
+}
+
+/**
+ * 预约咨询参数
+ */
+export interface BookConsultParams {
+	consultTime: string
+	consultType: string
+	topic: string
+	note?: string
+}
+
+/**
+ * 预约咨询
+ */
+export function bookConsultation(params: BookConsultParams): Promise<ResponseData<any>> {
+	return post<any>('/user/my-advisor/consultations', params)
+}
+
+/**
+ * 获取我的预约列表
+ */
+export function getMyConsultations(): Promise<ResponseData<any[]>> {
+	return get<any[]>('/user/my-advisor/consultations')
+}
+
+/**
+ * 取消预约
+ * @param consultId 预约ID
+ */
+export function cancelConsultation(consultId: number): Promise<ResponseData<boolean>> {
+	return post<boolean>(`/user/my-advisor/consultations/${consultId}/cancel`)
+}
+
+/**
+ * 浏览顾问列表参数
+ */
+export interface BrowseAdvisorsParams {
+	specialty?: string
+	page?: number
+	size?: number
+}
+
+/**
+ * 浏览顾问列表
+ */
+export function browseAdvisors(params?: BrowseAdvisorsParams): Promise<ResponseData<any>> {
+	const queryParams = new URLSearchParams()
+	if (params?.specialty) queryParams.append('specialty', params.specialty)
+	if (params?.page) queryParams.append('page', String(params.page))
+	if (params?.size) queryParams.append('size', String(params.size))
+	
+	const queryString = queryParams.toString()
+	const url = queryString ? `/user/advisors/browse?${queryString}` : '/user/advisors/browse'
+	return get<any>(url)
+}
+
+/**
+ * 申请顾问
+ * @param advisorId 顾问ID
+ */
+export function applyAdvisor(advisorId: number): Promise<ResponseData<any>> {
+	return post<any>('/user/advisors/apply', { advisorId })
+}
+
+/**
+ * 更换顾问申请
+ * @param newAdvisorId 新顾问ID
+ * @param reason 更换原因
+ */
+export function changeAdvisorRequest(newAdvisorId: number, reason?: string): Promise<ResponseData<any>> {
+	return post<any>('/user/advisors/change', { newAdvisorId, reason })
+}

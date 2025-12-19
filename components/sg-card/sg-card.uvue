@@ -1,0 +1,57 @@
+<template>
+	<view class="sg-card" :class="{ 'sg-card--shadow': shadow }" @click="handleClick">
+		<view v-if="title || $slots.header" class="sg-card__header">
+			<slot name="header">
+				<text class="sg-card__title">{{ title }}</text>
+				<view v-if="extra" class="sg-card__extra" @click.stop="handleExtraClick">
+					<text class="sg-card__extra-text">{{ extra }}</text>
+					<text class="sg-card__arrow">›</text>
+				</view>
+			</slot>
+		</view>
+		<view class="sg-card__body">
+			<slot></slot>
+		</view>
+		<view v-if="$slots.footer" class="sg-card__footer">
+			<slot name="footer"></slot>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	/**
+	 * sg-card 卡片组件
+	 * @description 通用卡片容器组件
+	 * @property {String} title - 卡片标题
+	 * @property {String} extra - 右侧额外内容
+	 * @property {Boolean} shadow - 是否显示阴影
+	 * @event {Function} click - 点击事件
+	 * @event {Function} extraClick - 额外内容点击事件
+	 */
+	export default {
+		name: 'sg-card',
+		props: {
+			title: {
+				type: String,
+				default: ''
+			},
+			extra: {
+				type: String,
+				default: ''
+			},
+			shadow: {
+				type: Boolean,
+				default: true
+			}
+		},
+		emits: ['click', 'extraClick'],
+		methods: {
+			handleClick() {
+				this.$emit('click')
+			},
+			handleExtraClick() {
+				this.$emit('extraClick')
+			}
+		}
+	}
+</script>

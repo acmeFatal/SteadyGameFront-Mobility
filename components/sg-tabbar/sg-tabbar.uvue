@@ -1,0 +1,83 @@
+<template>
+	<view class="sg-tabbar" :style="{ paddingBottom: safeAreaBottom + 'px' }">
+		<view 
+			v-for="(item, index) in list" 
+			:key="index"
+			class="sg-tabbar__item"
+			:class="{ 'sg-tabbar__item--active': current === index }"
+			@click="handleTabClick(index)"
+		>
+			<image 
+				class="sg-tabbar__icon" 
+				:src="current === index ? item.selectedIconPath : item.iconPath"
+			></image>
+			<text class="sg-tabbar__text">{{ item.text }}</text>
+		</view>
+	</view>
+	<view class="sg-tabbar__placeholder" :style="{ height: (100 + safeAreaBottom) + 'px' }"></view>
+</template>
+
+<script lang="uts">
+	/**
+	 * sg-tabbar 底部导航栏组件
+	 * @description 自定义底部TabBar，支持自定义图标和颜色
+	 * @property {Number} current - 当前选中项索引
+	 * @property {Array} list - 导航项列表
+	 * @event {Function} change - 切换事件
+	 */
+	
+	interface TabBarItem {
+		pagePath: string
+		text: string
+		iconPath: string
+		selectedIconPath: string
+	}
+	
+	export default {
+		name: 'sg-tabbar',
+		props: {
+			current: {
+				type: Number,
+				default: 0
+			},
+			list: {
+				type: Array as () => TabBarItem[],
+				default: () => []
+			}
+		},
+		emits: ['change'],
+		data() {
+			return {
+				safeAreaBottom: 0
+			}
+		},
+		created() {
+			this.initSafeArea()
+		},
+		methods: {
+			initSafeArea() {
+				try {
+					const sysInfo = uni.getSystemInfoSync()
+					const safeArea = sysInfo.safeArea
+					if (safeArea) {
+						this.safeAreaBottom = sysInfo.screenHeight - safeArea.bottom
+					}
+				} catch (e) {
+					this.safeAreaBottom = 0
+				}
+			},
+			handleTabClick(index: number) {
+				if (index === this.current) {
+					return
+				}
+				this.$emit('change', index)
+				const item = this.list[index] as TabBarItem
+				if (item && item.pagePath) {
+					uni.switchTab({
+						url: item.pagePath
+					})
+				}
+			}
+		}
+	}
+</script>

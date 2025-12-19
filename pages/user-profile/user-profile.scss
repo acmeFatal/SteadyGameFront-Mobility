@@ -1,0 +1,145 @@
+/**
+ * 用户画像页面样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.user-profile-page {
+	min-height: 100vh;
+	background-color: $bg-base;
+	padding-bottom: $spacing-xl;
+}
+
+.profile-header {
+	padding: $spacing-md $spacing-base;
+	background: linear-gradient(135deg, $primary-color 0%, $primary-light 100%);
+}
+
+.profile-header-title {
+	display: block;
+	font-size: $font-lg;
+	font-weight: bold;
+	color: $text-inverse;
+	margin-bottom: $spacing-xs;
+}
+
+.profile-header-desc {
+	font-size: $font-sm;
+	color: rgba(255, 255, 255, 0.8);
+}
+
+.profile-form {
+	padding: $spacing-base;
+}
+
+.profile-section {
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	padding: $spacing-base;
+	margin-bottom: $spacing-base;
+}
+
+.profile-section-title {
+	display: block;
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-primary;
+	margin-bottom: $spacing-base;
+}
+
+.profile-field {
+	margin-bottom: $spacing-base;
+	
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+.profile-field-label {
+	display: block;
+	font-size: $font-sm;
+	color: $text-secondary;
+	margin-bottom: $spacing-xs;
+}
+
+.profile-field-input {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: 88rpx;
+	padding: 0 $spacing-base;
+	background-color: $bg-gray;
+	border-radius: $radius-base;
+}
+
+.profile-field-value {
+	font-size: $font-base;
+	color: $text-primary;
+}
+
+.profile-field-placeholder {
+	color: $text-placeholder;
+}
+
+.profile-field-arrow {
+	font-size: $font-lg;
+	color: $text-placeholder;
+}
+
+.profile-risk-options {
+	display: flex;
+	gap: $spacing-sm;
+}
+
+.profile-risk-option {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 72rpx;
+	background-color: $bg-gray;
+	border-radius: $radius-base;
+	border: 2rpx solid transparent;
+	
+	&--active {
+		background-color: rgba($primary-color, 0.1);
+		border-color: $primary-color;
+		
+		.profile-risk-option-text {
+			color: $primary-color;
+		}
+	}
+}
+
+.profile-risk-option-text {
+	font-size: $font-sm;
+	color: $text-secondary;
+}
+
+.profile-textarea {
+	width: 100%;
+	height: 200rpx;
+	padding: $spacing-sm;
+	background-color: $bg-gray;
+	border-radius: $radius-base;
+	font-size: $font-base;
+	color: $text-primary;
+	line-height: 1.6;
+}
+
+.profile-submit {
+	margin: 0 $spacing-base;
+	height: 96rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(90deg, $primary-color 0%, $primary-light 100%);
+	border-radius: $radius-round;
+}
+
+.profile-submit-text {
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-inverse;
+}

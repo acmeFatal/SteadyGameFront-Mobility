@@ -1,0 +1,60 @@
+/**
+ * 协议页面样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.agreement-page {
+	min-height: 100vh;
+	background-color: $bg-white;
+	display: flex;
+	flex-direction: column;
+}
+
+.agreement-content {
+	flex: 1;
+}
+
+.agreement-body {
+	padding: $spacing-base;
+}
+
+.agreement-title {
+	display: block;
+	font-size: $font-xl;
+	font-weight: bold;
+	color: $text-primary;
+	text-align: center;
+	margin-bottom: $spacing-xs;
+}
+
+.agreement-update {
+	display: block;
+	font-size: $font-sm;
+	color: $text-placeholder;
+	text-align: center;
+	margin-bottom: $spacing-lg;
+}
+
+.agreement-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.agreement-section-title {
+	display: block;
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-primary;
+	margin-top: $spacing-base;
+	margin-bottom: $spacing-sm;
+}
+
+.agreement-paragraph {
+	display: block;
+	font-size: $font-base;
+	color: $text-secondary;
+	line-height: 1.8;
+	text-align: justify;
+}

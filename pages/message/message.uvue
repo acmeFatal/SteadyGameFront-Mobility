@@ -1,0 +1,185 @@
+<template>
+	<view class="message-page">
+		<sg-navbar title="消息中心" />
+		
+		<view class="message-tabs">
+			<view 
+				v-for="(tab, index) in tabs" 
+				:key="index"
+				class="message-tab"
+				:class="{ 'message-tab--active': currentTab === index }"
+				@click="switchTab(index)"
+			>
+				<text class="message-tab-text">{{ tab.name }}</text>
+				<view v-if="tab.unread > 0" class="message-tab-badge">
+					<text class="message-tab-badge-text">{{ tab.unread }}</text>
+				</view>
+			</view>
+		</view>
+		
+		<scroll-view class="message-list" scroll-y @scrolltolower="loadMore">
+			<view 
+				v-for="(item, index) in messageList" 
+				:key="index"
+				class="message-item"
+				:class="{ 'message-item--unread': !item.isRead }"
+				@click="goToDetail(item)"
+			>
+				<view class="message-icon" :class="getIconClass(item.type)">
+					<text class="message-icon-text">{{ getIcon(item.type) }}</text>
+				</view>
+				<view class="message-content">
+					<view class="message-header">
+						<text class="message-title">{{ item.title }}</text>
+						<text class="message-time">{{ formatTime(item.createTime) }}</text>
+					</view>
+					<text class="message-summary">{{ item.content }}</text>
+				</view>
+			</view>
+			
+			<sg-empty v-if="messageList.length === 0" text="暂无消息" />
+		</scroll-view>
+		
+		<view v-if="hasUnread" class="message-footer" @click="markAllRead">
+			<text class="message-footer-text">全部标记为已读</text>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { getRelativeTime } from '@/utils/date.uts'
+	
+	interface Tab {
+		name: string
+		type: string
+		unread: number
+	}
+	
+	interface Message {
+		id: number
+		type: string
+		title: string
+		content: string
+		createTime: string
+		isRead: boolean
+	}
+	
+	export default {
+		data() {
+			return {
+				currentTab: 0,
+				tabs: [
+					{ name: '全部', type: 'all', unread: 5 },
+					{ name: '系统通知', type: 'system', unread: 2 },
+					{ name: '交易提醒', type: 'trade', unread: 3 },
+					{ name: '活动推送', type: 'activity', unread: 0 }
+				] as Tab[],
+				messageList: [] as Message[],
+				page: 1,
+				hasMore: true
+			}
+		},
+		computed: {
+			hasUnread(): boolean {
+				return this.messageList.some(item => !item.isRead)
+			}
+		},
+		onLoad() {
+			this.loadMessages()
+		},
+		methods: {
+			switchTab(index: number) {
+				this.currentTab = index
+				this.page = 1
+				this.messageList = []
+				this.loadMessages()
+			},
+			
+			loadMessages() {
+				// 模拟消息数据
+				const mockMessages: Message[] = [
+					{
+						id: 1,
+						type: 'system',
+						title: '系统升级通知',
+						content: '平台将于今晚22:00-24:00进行系统维护升级，届时部分功能可能无法使用。',
+						createTime: new Date().toISOString(),
+						isRead: false
+					},
+					{
+						id: 2,
+						type: 'trade',
+						title: '交易成功提醒',
+						content: '您购买的"稳健增值理财产品"已确认成交，金额10,000.00元。',
+						createTime: new Date(Date.now() - 3600000).toISOString(),
+						isRead: false
+					},
+					{
+						id: 3,
+						type: 'trade',
+						title: '收益到账提醒',
+						content: '您的理财产品收益58.00元已到账，请查收。',
+						createTime: new Date(Date.now() - 86400000).toISOString(),
+						isRead: true
+					},
+					{
+						id: 4,
+						type: 'activity',
+						title: '新人专享活动',
+						content: '首次投资满1万元即可获得50元红包奖励，活动时间有限，快来参与！',
+						createTime: new Date(Date.now() - 172800000).toISOString(),
+						isRead: true
+					}
+				]
+				
+				const type = this.tabs[this.currentTab].type
+				if (type === 'all') {
+					this.messageList = mockMessages
+				} else {
+					this.messageList = mockMessages.filter(m => m.type === type)
+				}
+			},
+			
+			loadMore() {
+				if (this.hasMore) {
+					this.page++
+					// 加载更多
+				}
+			},
+			
+			formatTime(time: string): string {
+				return getRelativeTime(time)
+			},
+			
+			getIcon(type: string): string {
+				const iconMap: Record<string, string> = {
+					'system': '📢',
+					'trade': '💰',
+					'activity': '🎁'
+				}
+				return iconMap[type] || '📋'
+			},
+			
+			getIconClass(type: string): string {
+				return `message-icon--${type}`
+			},
+			
+			goToDetail(item: Message) {
+				item.isRead = true
+				uni.navigateTo({
+					url: `/pages/message-detail/message-detail?id=${item.id}`
+				})
+			},
+			
+			markAllRead() {
+				this.messageList.forEach(item => {
+					item.isRead = true
+				})
+				this.tabs.forEach(tab => {
+					tab.unread = 0
+				})
+				uni.showToast({ title: '已全部标记为已读', icon: 'success' })
+			}
+		}
+	}
+</script>

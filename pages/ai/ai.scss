@@ -1,0 +1,205 @@
+/**
+ * AI助手页面样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.ai-page {
+	min-height: 100vh;
+	background-color: $bg-base;
+	padding-bottom: 200rpx;
+}
+
+.ai-header {
+	padding: $spacing-lg $spacing-base;
+	padding-top: calc(env(safe-area-inset-top) + $spacing-lg);
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	text-align: center;
+}
+
+.ai-title {
+	display: block;
+	font-size: $font-xxl;
+	font-weight: bold;
+	color: $text-inverse;
+	margin-bottom: $spacing-xs;
+}
+
+.ai-subtitle {
+	font-size: $font-base;
+	color: rgba(255, 255, 255, 0.8);
+}
+
+.ai-features {
+	margin: $spacing-base;
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	overflow: hidden;
+}
+
+.ai-feature {
+	display: flex;
+	align-items: center;
+	padding: $spacing-base;
+	border-bottom: 1rpx solid $border-light;
+	
+	&:last-child {
+		border-bottom: none;
+	}
+	
+	&:active {
+		background-color: $bg-gray;
+	}
+}
+
+.ai-feature-icon-wrap {
+	width: 88rpx;
+	height: 88rpx;
+	background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+	border-radius: $radius-md;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-right: $spacing-sm;
+}
+
+.ai-feature-icon {
+	font-size: 48rpx;
+}
+
+.ai-feature-info {
+	flex: 1;
+}
+
+.ai-feature-title {
+	display: block;
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-primary;
+	margin-bottom: 4rpx;
+}
+
+.ai-feature-desc {
+	font-size: $font-sm;
+	color: $text-secondary;
+}
+
+.ai-feature-arrow {
+	font-size: $font-lg;
+	color: $text-placeholder;
+}
+
+.ai-history {
+	margin-top: $spacing-sm;
+}
+
+.ai-history-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: $spacing-sm 0;
+	border-bottom: 1rpx solid $border-light;
+	
+	&:last-child {
+		border-bottom: none;
+	}
+}
+
+.ai-history-title {
+	font-size: $font-base;
+	color: $text-primary;
+	flex: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.ai-history-time {
+	font-size: $font-xs;
+	color: $text-placeholder;
+	margin-left: $spacing-sm;
+}
+
+.ai-quick-ask {
+	margin: $spacing-base;
+	padding: $spacing-base;
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+}
+
+.ai-quick-title {
+	display: block;
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-primary;
+	margin-bottom: $spacing-sm;
+}
+
+.ai-quick-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: $spacing-sm;
+}
+
+.ai-quick-tag {
+	padding: $spacing-xs $spacing-sm;
+	background-color: rgba(102, 126, 234, 0.1);
+	border-radius: $radius-round;
+	
+	&:active {
+		background-color: rgba(102, 126, 234, 0.2);
+	}
+}
+
+.ai-quick-tag-text {
+	font-size: $font-sm;
+	color: #667eea;
+}
+
+.ai-input-bar {
+	position: fixed;
+	bottom: 120rpx;
+	left: 0;
+	right: 0;
+	display: flex;
+	align-items: center;
+	padding: $spacing-sm $spacing-base;
+	background-color: $bg-white;
+	border-top: 1rpx solid $border-light;
+	padding-bottom: calc($spacing-sm + env(safe-area-inset-bottom));
+}
+
+.ai-input {
+	flex: 1;
+	height: 80rpx;
+	padding: 0 $spacing-base;
+	background-color: $bg-gray;
+	border-radius: $radius-round;
+	font-size: $font-base;
+}
+
+.ai-voice-btn,
+.ai-send-btn {
+	width: 80rpx;
+	height: 80rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-left: $spacing-sm;
+}
+
+.ai-voice-icon,
+.ai-send-icon {
+	font-size: 48rpx;
+}
+
+.ai-send-btn {
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	border-radius: 50%;
+}
+
+.ai-send-icon {
+	color: $text-inverse;
+	font-size: 40rpx;
+}

@@ -1,0 +1,93 @@
+/**
+ * 全局样式变量
+ * @author SteadyGame Team
+ * @version 1.0.0
+ */
+
+/* ==================== 主题色 ==================== */
+$primary-color: #1890FF;
+$primary-light: #40A9FF;
+$primary-dark: #096DD9;
+
+$success-color: #52C41A;
+$warning-color: #FAAD14;
+$error-color: #FF4D4F;
+$info-color: #1890FF;
+
+/* ==================== 金融专用色 ==================== */
+$rise-color: #F5222D;
+$fall-color: #52C41A;
+$neutral-color: #999999;
+
+/* ==================== 文字颜色 ==================== */
+$text-primary: #1F1F1F;
+$text-regular: #333333;
+$text-secondary: #666666;
+$text-placeholder: #999999;
+$text-disabled: #CCCCCC;
+$text-inverse: #FFFFFF;
+
+/* ==================== 背景颜色 ==================== */
+$bg-base: #F5F6F7;
+$bg-white: #FFFFFF;
+$bg-gray: #F8F8F8;
+$bg-dark: #1F1F1F;
+$bg-mask: rgba(0, 0, 0, 0.5);
+
+/* ==================== 边框颜色 ==================== */
+$border-light: #F0F0F0;
+$border-base: #E8E8E8;
+$border-dark: #D9D9D9;
+
+/* ==================== 阴影 ==================== */
+$shadow-light: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+$shadow-base: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+$shadow-dark: 0 8rpx 24rpx rgba(0, 0, 0, 0.12);
+
+/* ==================== 圆角 ==================== */
+$radius-sm: 4rpx;
+$radius-base: 8rpx;
+$radius-md: 12rpx;
+$radius-lg: 16rpx;
+$radius-xl: 24rpx;
+$radius-round: 999rpx;
+
+/* ==================== 间距 ==================== */
+$spacing-xs: 8rpx;
+$spacing-sm: 16rpx;
+$spacing-base: 24rpx;
+$spacing-md: 32rpx;
+$spacing-lg: 48rpx;
+$spacing-xl: 64rpx;
+
+/* ==================== 字体大小 ==================== */
+$font-xs: 20rpx;
+$font-sm: 24rpx;
+$font-base: 28rpx;
+$font-md: 32rpx;
+$font-lg: 36rpx;
+$font-xl: 40rpx;
+$font-xxl: 48rpx;
+$font-giant: 64rpx;
+
+/* ==================== 行高 ==================== */
+$line-height-tight: 1.2;
+$line-height-base: 1.5;
+$line-height-loose: 1.8;
+
+/* ==================== 动画时间 ==================== */
+$transition-fast: 0.15s;
+$transition-base: 0.25s;
+$transition-slow: 0.35s;
+
+/* ==================== 层级 ==================== */
+$z-index-base: 1;
+$z-index-popup: 100;
+$z-index-mask: 200;
+$z-index-modal: 300;
+$z-index-toast: 400;
+$z-index-loading: 500;
+
+/* ==================== 安全区域 ==================== */
+$safe-area-bottom: env(safe-area-inset-bottom);
+$safe-area-top: env(safe-area-inset-top);

@@ -1,0 +1,188 @@
+<template>
+	<view class="security-page">
+		<sg-navbar title="账号安全" />
+		
+		<view class="security-list">
+			<view class="security-group">
+				<sg-list-item 
+					title="修改登录密码" 
+					icon="🔐"
+					@click="goToChangePassword"
+				/>
+				<sg-list-item 
+					title="交易密码管理" 
+					icon="💳"
+					:value="hasTradePassword ? '已设置' : '未设置'"
+					@click="goToTradePassword"
+				/>
+			</view>
+			
+			<view class="security-group">
+				<sg-list-item 
+					title="绑定手机号" 
+					icon="📱"
+					:value="phoneDisplay"
+					@click="goToBindPhone"
+				/>
+				<sg-list-item 
+					title="绑定邮箱" 
+					icon="📧"
+					:value="emailDisplay"
+					@click="goToBindEmail"
+				/>
+			</view>
+			
+			<view class="security-group">
+				<sg-list-item 
+					title="指纹/面容登录" 
+					icon="👆"
+					@click="toggleBiometric"
+				>
+					<template #right>
+						<switch 
+							:checked="biometricEnabled" 
+							color="#1890FF"
+							@change="onBiometricChange"
+						/>
+					</template>
+				</sg-list-item>
+			</view>
+			
+			<view class="security-group">
+				<sg-list-item 
+					title="登录设备管理" 
+					icon="📱"
+					@click="goToDeviceManage"
+				/>
+				<sg-list-item 
+					title="登录日志" 
+					icon="📋"
+					@click="goToLoginLogs"
+				/>
+			</view>
+			
+			<view class="security-group">
+				<sg-list-item 
+					title="冻结账号" 
+					icon="🔒"
+					:border="false"
+					@click="freezeAccount"
+				/>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { getStorage, setStorage } from '@/utils/storage.uts'
+	import { freezeAccount as apiFreezeAccount } from '@/api/user.uts'
+	import { supportBiometric } from '@/utils/platform.uts'
+	import { USER_INFO_KEY } from '@/config/index.uts'
+	import { formatPhone, formatEmail } from '@/utils/format.uts'
+	
+	interface UserInfo {
+		phone?: string
+		phoneVerified?: boolean
+		email?: string
+		emailVerified?: boolean
+	}
+	
+	export default {
+		data() {
+			return {
+				userInfo: {} as UserInfo,
+				hasTradePassword: false,
+				biometricEnabled: false,
+				supportBiometric: false
+			}
+		},
+		computed: {
+			phoneDisplay(): string {
+				if (!this.userInfo.phone) return '未绑定'
+				return formatPhone(this.userInfo.phone) + (this.userInfo.phoneVerified ? ' 已验证' : ' 未验证')
+			},
+			emailDisplay(): string {
+				if (!this.userInfo.email) return '未绑定'
+				return formatEmail(this.userInfo.email) + (this.userInfo.emailVerified ? ' 已验证' : ' 未验证')
+			}
+		},
+		onLoad() {
+			this.loadUserInfo()
+			this.checkBiometric()
+		},
+		methods: {
+			loadUserInfo() {
+				const userInfo = getStorage<UserInfo>(USER_INFO_KEY)
+				if (userInfo) {
+					this.userInfo = userInfo
+				}
+			},
+			
+			async checkBiometric() {
+				this.supportBiometric = await supportBiometric()
+				this.biometricEnabled = getStorage<boolean>('biometric_enabled') || false
+			},
+			
+			goToChangePassword() {
+				uni.navigateTo({ url: '/pages/change-password/change-password' })
+			},
+			
+			goToTradePassword() {
+				uni.navigateTo({ url: '/pages/trade-password/trade-password' })
+			},
+			
+			goToBindPhone() {
+				uni.navigateTo({ url: '/pages/bind-phone/bind-phone' })
+			},
+			
+			goToBindEmail() {
+				uni.navigateTo({ url: '/pages/bind-email/bind-email' })
+			},
+			
+			toggleBiometric() {
+				if (!this.supportBiometric) {
+					uni.showToast({ title: '设备不支持生物识别', icon: 'none' })
+					return
+				}
+			},
+			
+			onBiometricChange(e: any) {
+				this.biometricEnabled = e.detail.value
+				setStorage('biometric_enabled', this.biometricEnabled)
+				uni.showToast({ 
+					title: this.biometricEnabled ? '已开启' : '已关闭', 
+					icon: 'success' 
+				})
+			},
+			
+			goToDeviceManage() {
+				uni.navigateTo({ url: '/pages/device-manage/device-manage' })
+			},
+			
+			goToLoginLogs() {
+				uni.navigateTo({ url: '/pages/login-logs/login-logs' })
+			},
+			
+			freezeAccount() {
+				uni.showModal({
+					title: '警告',
+					content: '冻结账号后将无法登录，确定要冻结吗？',
+					confirmColor: '#FF4D4F',
+					success: async (res) => {
+						if (res.confirm) {
+							try {
+								await apiFreezeAccount()
+								uni.showToast({ title: '账号已冻结', icon: 'success' })
+								setTimeout(() => {
+									uni.reLaunch({ url: '/pages/login/login' })
+								}, 1500)
+							} catch (e) {
+								console.error('冻结账号失败:', e)
+							}
+						}
+					}
+				})
+			}
+		}
+	}
+</script>

@@ -1,0 +1,157 @@
+/**
+ * 帮助中心页面样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.help-page {
+	min-height: 100vh;
+	background-color: $bg-base;
+}
+
+.help-search {
+	padding: $spacing-base;
+	background-color: $bg-white;
+}
+
+.help-search-wrap {
+	display: flex;
+	align-items: center;
+	height: 80rpx;
+	padding: 0 $spacing-base;
+	background-color: $bg-gray;
+	border-radius: $radius-round;
+}
+
+.help-search-icon {
+	font-size: $font-lg;
+	margin-right: $spacing-sm;
+}
+
+.help-search-input {
+	flex: 1;
+	font-size: $font-base;
+	color: $text-primary;
+}
+
+.help-section-title {
+	display: block;
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-primary;
+	margin-bottom: $spacing-sm;
+}
+
+.help-quick {
+	padding: $spacing-base;
+}
+
+.help-quick-list {
+	display: flex;
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	overflow: hidden;
+}
+
+.help-quick-item {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: $spacing-md 0;
+	border-right: 1rpx solid $border-light;
+	
+	&:last-child {
+		border-right: none;
+	}
+	
+	&:active {
+		background-color: $bg-gray;
+	}
+}
+
+.help-quick-icon {
+	font-size: 48rpx;
+	margin-bottom: $spacing-xs;
+}
+
+.help-quick-text {
+	font-size: $font-sm;
+	color: $text-primary;
+}
+
+.help-faq {
+	padding: 0 $spacing-base $spacing-base;
+}
+
+.help-category {
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	overflow: hidden;
+	margin-bottom: $spacing-sm;
+}
+
+.help-category-header {
+	display: flex;
+	align-items: center;
+	padding: $spacing-base;
+	
+	&:active {
+		background-color: $bg-gray;
+	}
+}
+
+.help-category-icon {
+	font-size: 40rpx;
+	margin-right: $spacing-sm;
+}
+
+.help-category-title {
+	flex: 1;
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-primary;
+}
+
+.help-category-arrow {
+	font-size: $font-lg;
+	color: $text-placeholder;
+	transition: transform $transition-base;
+	
+	&--expanded {
+		transform: rotate(90deg);
+	}
+}
+
+.help-category-questions {
+	border-top: 1rpx solid $border-light;
+}
+
+.help-question-item {
+	display: flex;
+	align-items: center;
+	padding: $spacing-sm $spacing-base;
+	padding-left: 96rpx;
+	border-bottom: 1rpx solid $border-light;
+	
+	&:last-child {
+		border-bottom: none;
+	}
+	
+	&:active {
+		background-color: $bg-gray;
+	}
+}
+
+.help-question-text {
+	flex: 1;
+	font-size: $font-base;
+	color: $text-secondary;
+}
+
+.help-question-arrow {
+	font-size: $font-md;
+	color: $text-placeholder;
+}

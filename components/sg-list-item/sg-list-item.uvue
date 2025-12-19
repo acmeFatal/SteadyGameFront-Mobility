@@ -1,0 +1,70 @@
+<template>
+	<view class="sg-list-item" :class="{ 'sg-list-item--border': border }" @click="handleClick">
+		<view v-if="icon || $slots.icon" class="sg-list-item__icon">
+			<slot name="icon">
+				<text class="sg-list-item__icon-text">{{ icon }}</text>
+			</slot>
+		</view>
+		<view class="sg-list-item__content">
+			<view class="sg-list-item__main">
+				<text class="sg-list-item__title">{{ title }}</text>
+				<text v-if="desc" class="sg-list-item__desc">{{ desc }}</text>
+			</view>
+			<view class="sg-list-item__right">
+				<slot name="right">
+					<text v-if="value" class="sg-list-item__value">{{ value }}</text>
+				</slot>
+				<text v-if="arrow" class="sg-list-item__arrow">›</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	/**
+	 * sg-list-item 列表项组件
+	 * @description 通用列表项组件
+	 * @property {String} title - 标题
+	 * @property {String} desc - 描述
+	 * @property {String} value - 右侧值
+	 * @property {String} icon - 左侧图标
+	 * @property {Boolean} arrow - 是否显示箭头
+	 * @property {Boolean} border - 是否显示下边框
+	 * @event {Function} click - 点击事件
+	 */
+	export default {
+		name: 'sg-list-item',
+		props: {
+			title: {
+				type: String,
+				default: ''
+			},
+			desc: {
+				type: String,
+				default: ''
+			},
+			value: {
+				type: String,
+				default: ''
+			},
+			icon: {
+				type: String,
+				default: ''
+			},
+			arrow: {
+				type: Boolean,
+				default: true
+			},
+			border: {
+				type: Boolean,
+				default: true
+			}
+		},
+		emits: ['click'],
+		methods: {
+			handleClick() {
+				this.$emit('click')
+			}
+		}
+	}
+</script>

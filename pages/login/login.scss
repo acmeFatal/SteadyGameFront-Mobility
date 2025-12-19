@@ -1,0 +1,199 @@
+/**
+ * 登录页面样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.login-page {
+	min-height: 100vh;
+	background: linear-gradient(180deg, $primary-color 0%, $primary-light 50%, $bg-base 50%);
+	padding: $spacing-lg;
+	display: flex;
+	flex-direction: column;
+}
+
+.login-header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding-top: 100rpx;
+	padding-bottom: $spacing-xl;
+}
+
+.login-logo {
+	width: 160rpx;
+	height: 160rpx;
+	margin-bottom: $spacing-base;
+}
+
+.login-title {
+	font-size: $font-xxl;
+	font-weight: bold;
+	color: $text-inverse;
+	margin-bottom: $spacing-xs;
+}
+
+.login-subtitle {
+	font-size: $font-base;
+	color: rgba(255, 255, 255, 0.8);
+}
+
+.login-form {
+	background-color: $bg-white;
+	border-radius: $radius-xl;
+	padding: $spacing-md;
+	box-shadow: $shadow-dark;
+}
+
+.login-tabs {
+	display: flex;
+	margin-bottom: $spacing-md;
+}
+
+.login-tab {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: $spacing-sm 0;
+	border-bottom: 4rpx solid transparent;
+	
+	&--active {
+		border-bottom-color: $primary-color;
+		
+		.login-tab-text {
+			color: $primary-color;
+			font-weight: bold;
+		}
+	}
+}
+
+.login-tab-text {
+	font-size: $font-md;
+	color: $text-secondary;
+}
+
+.login-fields {
+	margin-bottom: $spacing-md;
+}
+
+.login-field {
+	display: flex;
+	align-items: center;
+	height: 100rpx;
+	padding: 0 $spacing-base;
+	background-color: $bg-gray;
+	border-radius: $radius-base;
+	margin-bottom: $spacing-sm;
+}
+
+.login-field-icon {
+	font-size: $font-lg;
+	margin-right: $spacing-sm;
+}
+
+.login-field-input {
+	flex: 1;
+	height: 100%;
+	font-size: $font-base;
+	color: $text-primary;
+	background: transparent;
+	
+	&--code {
+		flex: 0.6;
+	}
+}
+
+.login-field-eye {
+	padding: $spacing-xs;
+}
+
+.login-code-btn {
+	padding: $spacing-xs $spacing-sm;
+	background-color: $primary-light;
+	border-radius: $radius-sm;
+	
+	&--disabled {
+		background-color: $bg-gray;
+		
+		.login-code-btn-text {
+			color: $text-placeholder;
+		}
+	}
+}
+
+.login-code-btn-text {
+	font-size: $font-sm;
+	color: $text-inverse;
+}
+
+.login-actions {
+	margin-bottom: $spacing-base;
+}
+
+.login-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 96rpx;
+	border-radius: $radius-round;
+	
+	&--primary {
+		background: linear-gradient(90deg, $primary-color 0%, $primary-light 100%);
+	}
+	
+	&:active {
+		opacity: 0.9;
+	}
+}
+
+.login-btn-text {
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-inverse;
+	letter-spacing: 8rpx;
+}
+
+.login-links {
+	display: flex;
+	justify-content: space-between;
+	padding: 0 $spacing-sm;
+}
+
+.login-link {
+	font-size: $font-sm;
+	color: $primary-color;
+}
+
+.login-footer {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-end;
+	padding-bottom: $spacing-xl;
+}
+
+.login-biometric {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-bottom: $spacing-lg;
+}
+
+.login-biometric-icon {
+	font-size: 80rpx;
+	margin-bottom: $spacing-xs;
+}
+
+.login-biometric-text {
+	font-size: $font-sm;
+	color: $text-secondary;
+}
+
+.login-agreement {
+	font-size: $font-xs;
+	color: $text-placeholder;
+	text-align: center;
+}

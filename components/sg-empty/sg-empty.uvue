@@ -1,0 +1,56 @@
+<template>
+	<view class="sg-empty">
+		<image 
+			v-if="image" 
+			class="sg-empty__image" 
+			:src="image"
+			mode="aspectFit"
+		></image>
+		<view v-else class="sg-empty__icon">
+			<text class="sg-empty__icon-text">📭</text>
+		</view>
+		<text class="sg-empty__text">{{ text }}</text>
+		<view v-if="showButton" class="sg-empty__button" @click="handleButtonClick">
+			<text class="sg-empty__button-text">{{ buttonText }}</text>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	/**
+	 * sg-empty 空状态组件
+	 * @description 用于展示空数据状态
+	 * @property {String} text - 提示文字
+	 * @property {String} image - 自定义图片
+	 * @property {Boolean} showButton - 是否显示按钮
+	 * @property {String} buttonText - 按钮文字
+	 * @event {Function} buttonClick - 按钮点击事件
+	 */
+	export default {
+		name: 'sg-empty',
+		props: {
+			text: {
+				type: String,
+				default: '暂无数据'
+			},
+			image: {
+				type: String,
+				default: ''
+			},
+			showButton: {
+				type: Boolean,
+				default: false
+			},
+			buttonText: {
+				type: String,
+				default: '刷新'
+			}
+		},
+		emits: ['buttonClick'],
+		methods: {
+			handleButtonClick() {
+				this.$emit('buttonClick')
+			}
+		}
+	}
+</script>

@@ -1,0 +1,109 @@
+/**
+ * @description 日期时间工具类
+ * @author SteadyGame Team
+ * @version 1.0.0
+ */
+
+/**
+ * 格式化日期
+ * @param date 日期对象或时间戳
+ * @param format 格式化模板，默认 'YYYY-MM-DD'
+ * @returns 格式化后的日期字符串
+ */
+export function formatDate(date: Date | number | string, format: string = 'YYYY-MM-DD'): string {
+	const d = new Date(date)
+	
+	if (isNaN(d.getTime())) {
+		return ''
+	}
+	
+	const year = d.getFullYear()
+	const month = d.getMonth() + 1
+	const day = d.getDate()
+	const hour = d.getHours()
+	const minute = d.getMinutes()
+	const second = d.getSeconds()
+	
+	const padZero = (num: number): string => {
+		return num < 10 ? '0' + num : String(num)
+	}
+	
+	return format
+		.replace('YYYY', String(year))
+		.replace('MM', padZero(month))
+		.replace('DD', padZero(day))
+		.replace('HH', padZero(hour))
+		.replace('mm', padZero(minute))
+		.replace('ss', padZero(second))
+}
+
+/**
+ * 格式化日期时间
+ * @param date 日期对象或时间戳
+ * @returns 格式化后的日期时间字符串
+ */
+export function formatDateTime(date: Date | number | string): string {
+	return formatDate(date, 'YYYY-MM-DD HH:mm:ss')
+}
+
+/**
+ * 获取相对时间描述
+ * @param date 日期对象或时间戳
+ * @returns 相对时间描述
+ */
+export function getRelativeTime(date: Date | number | string): string {
+	const d = new Date(date)
+	const now = new Date()
+	const diff = now.getTime() - d.getTime()
+	
+	const seconds = Math.floor(diff / 1000)
+	const minutes = Math.floor(seconds / 60)
+	const hours = Math.floor(minutes / 60)
+	const days = Math.floor(hours / 24)
+	
+	if (seconds < 60) {
+		return '刚刚'
+	} else if (minutes < 60) {
+		return `${minutes}分钟前`
+	} else if (hours < 24) {
+		return `${hours}小时前`
+	} else if (days < 30) {
+		return `${days}天前`
+	} else {
+		return formatDate(date)
+	}
+}
+
+/**
+ * 获取当前日期字符串
+ * @param format 格式化模板
+ * @returns 当前日期字符串
+ */
+export function getCurrentDate(format: string = 'YYYY-MM-DD'): string {
+	return formatDate(new Date(), format)
+}
+
+/**
+ * 获取指定天数前的日期
+ * @param days 天数
+ * @param format 格式化模板
+ * @returns 日期字符串
+ */
+export function getDateBefore(days: number, format: string = 'YYYY-MM-DD'): string {
+	const date = new Date()
+	date.setDate(date.getDate() - days)
+	return formatDate(date, format)
+}
+
+/**
+ * 判断是否为今天
+ * @param date 日期对象或时间戳
+ * @returns 是否为今天
+ */
+export function isToday(date: Date | number | string): boolean {
+	const d = new Date(date)
+	const today = new Date()
+	return d.getFullYear() === today.getFullYear() &&
+		d.getMonth() === today.getMonth() &&
+		d.getDate() === today.getDate()
+}

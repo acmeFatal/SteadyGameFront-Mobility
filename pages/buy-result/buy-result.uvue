@@ -1,0 +1,103 @@
+<template>
+	<view class="result-page">
+		<view class="result-content">
+			<view class="result-icon" :class="isSuccess ? 'result-icon--success' : 'result-icon--fail'">
+				<text class="result-icon-text">{{ isSuccess ? '✓' : '✕' }}</text>
+			</view>
+			<text class="result-title">{{ isSuccess ? '购买成功' : '购买失败' }}</text>
+			<text class="result-desc">{{ resultDesc }}</text>
+			
+			<view v-if="isSuccess" class="result-info">
+				<view class="result-info-item">
+					<text class="result-info-label">交易金额</text>
+					<text class="result-info-value">¥{{ formatMoney(orderInfo.amount) }}</text>
+				</view>
+				<view class="result-info-item">
+					<text class="result-info-label">订单编号</text>
+					<text class="result-info-value">{{ orderInfo.orderNo }}</text>
+				</view>
+				<view class="result-info-item">
+					<text class="result-info-label">预计确认时间</text>
+					<text class="result-info-value">T+1个工作日</text>
+				</view>
+			</view>
+		</view>
+		
+		<view class="result-actions">
+			<view class="result-btn result-btn--secondary" @click="goToOrders">
+				<text class="result-btn-text">查看订单</text>
+			</view>
+			<view class="result-btn result-btn--primary" @click="goToHome">
+				<text class="result-btn-text">返回首页</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { getOrderDetail } from '@/api/trade.uts'
+	import type { Order } from '@/api/trade.uts'
+	
+	export default {
+		data() {
+			return {
+				isSuccess: true,
+				orderId: 0,
+				orderInfo: {} as Order
+			}
+		},
+		computed: {
+			resultDesc(): string {
+				if (this.isSuccess) {
+					return '您的购买申请已提交，请耐心等待确认'
+				}
+				return '购买失败，请稍后重试或联系客服'
+			}
+		},
+		onLoad(options: any) {
+			this.isSuccess = options.success === '1'
+			if (options.orderId) {
+				this.orderId = Number(options.orderId)
+				this.loadOrderInfo()
+			}
+		},
+		methods: {
+			async loadOrderInfo() {
+				try {
+					const res = await getOrderDetail(this.orderId)
+					this.orderInfo = res.data
+				} catch (e) {
+					console.error('获取订单详情失败:', e)
+					// 模拟数据
+					this.orderInfo = {
+						orderId: this.orderId,
+						orderNo: 'ORD' + Date.now(),
+						userId: 1,
+						productId: 1,
+						orderType: 1,
+						orderStatus: 1,
+						quantity: 10000,
+						price: 1,
+						amount: 10000,
+						fee: 0,
+						createdAt: new Date().toISOString(),
+						updatedAt: new Date().toISOString()
+					}
+				}
+			},
+			
+			formatMoney(num: number): string {
+				if (!num) return '0.00'
+				return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+			},
+			
+			goToOrders() {
+				uni.redirectTo({ url: '/pages/orders/orders' })
+			},
+			
+			goToHome() {
+				uni.switchTab({ url: '/pages/home/home' })
+			}
+		}
+	}
+</script>

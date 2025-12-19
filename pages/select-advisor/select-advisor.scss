@@ -1,0 +1,141 @@
+/**
+ * 选择顾问页面样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.advisor-list-page {
+	min-height: 100vh;
+	background-color: $bg-base;
+	display: flex;
+	flex-direction: column;
+}
+
+.advisor-filter {
+	background-color: $bg-white;
+	padding: $spacing-sm 0;
+}
+
+.filter-scroll {
+	white-space: nowrap;
+}
+
+.filter-tags {
+	display: inline-flex;
+	padding: 0 $spacing-base;
+	gap: $spacing-sm;
+}
+
+.filter-tag {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: $spacing-xs $spacing-sm;
+	background-color: $bg-gray;
+	border-radius: $radius-round;
+	
+	&--active {
+		background-color: $primary-color;
+		
+		.filter-tag-text {
+			color: $text-inverse;
+		}
+	}
+}
+
+.filter-tag-text {
+	font-size: $font-sm;
+	color: $text-secondary;
+}
+
+.advisor-list {
+	flex: 1;
+	padding: $spacing-base;
+}
+
+.advisor-card {
+	display: flex;
+	padding: $spacing-base;
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	margin-bottom: $spacing-base;
+	
+	&:active {
+		background-color: $bg-gray;
+	}
+}
+
+.advisor-avatar {
+	width: 140rpx;
+	height: 140rpx;
+	border-radius: $radius-lg;
+	margin-right: $spacing-base;
+	flex-shrink: 0;
+}
+
+.advisor-info {
+	flex: 1;
+	overflow: hidden;
+}
+
+.advisor-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 4rpx;
+}
+
+.advisor-name {
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-primary;
+}
+
+.advisor-rating {
+	display: flex;
+	align-items: center;
+}
+
+.advisor-rating-star {
+	font-size: $font-sm;
+}
+
+.advisor-rating-value {
+	font-size: $font-sm;
+	color: $warning-color;
+	font-weight: bold;
+}
+
+.advisor-title {
+	font-size: $font-sm;
+	color: $text-secondary;
+	margin-bottom: $spacing-xs;
+}
+
+.advisor-tags {
+	display: flex;
+	gap: $spacing-xs;
+	margin-bottom: $spacing-xs;
+}
+
+.advisor-tag {
+	padding: 2rpx 12rpx;
+	background-color: rgba($primary-color, 0.1);
+	border-radius: $radius-sm;
+}
+
+.advisor-tag-text {
+	font-size: $font-xs;
+	color: $primary-color;
+}
+
+.advisor-stats {
+	display: flex;
+	gap: $spacing-base;
+}
+
+.advisor-stat {
+	font-size: $font-xs;
+	color: $text-placeholder;
+}

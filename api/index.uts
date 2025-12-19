@@ -1,0 +1,20 @@
+/**
+ * @description API模块统一导出
+ * @author SteadyGame Team
+ * @version 1.0.0
+ */
+
+// 认证相关API
+export * from './auth.uts'
+
+// 用户相关API
+export * from './user.uts'
+
+// 资产相关API
+export * from './asset.uts'
+
+// 交易相关API
+export * from './trade.uts'
+
+// AI理财相关API
+export * from './ai.uts'

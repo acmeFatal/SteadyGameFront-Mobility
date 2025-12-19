@@ -1,0 +1,70 @@
+/**
+ * sg-navbar 导航栏组件样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.sg-navbar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: $z-index-popup;
+	background-color: $bg-white;
+	
+	&__content {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		height: 88rpx;
+		padding: 0 $spacing-base;
+	}
+	
+	&__left {
+		display: flex;
+		align-items: center;
+		min-width: 120rpx;
+	}
+	
+	&__back {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 60rpx;
+		height: 60rpx;
+	}
+	
+	&__back-icon {
+		font-size: 40rpx;
+		color: $text-primary;
+	}
+	
+	&__center {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	
+	&__title {
+		font-size: $font-md;
+		font-weight: bold;
+		color: $text-primary;
+		max-width: 400rpx;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	
+	&__right {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		min-width: 120rpx;
+	}
+	
+	&__placeholder {
+		width: 100%;
+	}
+}

@@ -1,0 +1,283 @@
+<template>
+	<view class="risk-page">
+		<sg-navbar title="风险评估" />
+		
+		<view v-if="!showResult" class="risk-questions">
+			<view class="risk-progress">
+				<view class="risk-progress-bar">
+					<view class="risk-progress-fill" :style="{ width: progressWidth }"></view>
+				</view>
+				<text class="risk-progress-text">{{ currentIndex + 1 }}/{{ questions.length }}</text>
+			</view>
+			
+			<view class="risk-question">
+				<text class="risk-question-title">{{ currentQuestion.title }}</text>
+				<view class="risk-options">
+					<view 
+						v-for="(option, index) in currentQuestion.options" 
+						:key="index"
+						class="risk-option"
+						:class="{ 'risk-option--selected': answers[currentIndex] === option.value }"
+						@click="selectOption(option.value)"
+					>
+						<view class="risk-option-radio">
+							<view v-if="answers[currentIndex] === option.value" class="risk-option-radio-inner"></view>
+						</view>
+						<text class="risk-option-text">{{ option.label }}</text>
+					</view>
+				</view>
+			</view>
+			
+			<view class="risk-actions">
+				<view 
+					v-if="currentIndex > 0"
+					class="risk-btn risk-btn--prev" 
+					@click="prevQuestion"
+				>
+					<text class="risk-btn-text">上一题</text>
+				</view>
+				<view 
+					class="risk-btn risk-btn--next" 
+					:class="{ 'risk-btn--disabled': !hasAnswer }"
+					@click="nextQuestion"
+				>
+					<text class="risk-btn-text">{{ isLastQuestion ? '提交' : '下一题' }}</text>
+				</view>
+			</view>
+		</view>
+		
+		<view v-else class="risk-result">
+			<view class="risk-result-card">
+				<view class="risk-result-icon">
+					<text class="risk-result-icon-text">{{ riskIcon }}</text>
+				</view>
+				<text class="risk-result-level">{{ riskLevelText }}</text>
+				<text class="risk-result-score">评分：{{ score }}分</text>
+				<text class="risk-result-desc">{{ riskDesc }}</text>
+			</view>
+			
+			<view class="risk-result-detail">
+				<text class="risk-result-detail-title">评估结果说明</text>
+				<text class="risk-result-detail-text">{{ resultDetail }}</text>
+			</view>
+			
+			<view class="risk-result-actions">
+				<view class="risk-btn risk-btn--retest" @click="retest">
+					<text class="risk-btn-text">重新测评</text>
+				</view>
+				<view class="risk-btn risk-btn--confirm" @click="confirmResult">
+					<text class="risk-btn-text">确认结果</text>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { submitRiskAssessment } from '@/api/user.uts'
+	import { RISK_LEVEL_MAP } from '@/config/index.uts'
+	
+	interface QuestionOption {
+		label: string
+		value: number
+	}
+	
+	interface Question {
+		title: string
+		options: QuestionOption[]
+	}
+	
+	export default {
+		data() {
+			return {
+				currentIndex: 0,
+				answers: [] as number[],
+				showResult: false,
+				score: 0,
+				riskLevel: 0,
+				questions: [
+					{
+						title: '您的年龄段是？',
+						options: [
+							{ label: '25岁以下', value: 5 },
+							{ label: '25-35岁', value: 4 },
+							{ label: '35-45岁', value: 3 },
+							{ label: '45-55岁', value: 2 },
+							{ label: '55岁以上', value: 1 }
+						]
+					},
+					{
+						title: '您的家庭年收入水平是？',
+						options: [
+							{ label: '10万以下', value: 1 },
+							{ label: '10-30万', value: 2 },
+							{ label: '30-50万', value: 3 },
+							{ label: '50-100万', value: 4 },
+							{ label: '100万以上', value: 5 }
+						]
+					},
+					{
+						title: '您的投资经验有多少年？',
+						options: [
+							{ label: '没有投资经验', value: 1 },
+							{ label: '1-3年', value: 2 },
+							{ label: '3-5年', value: 3 },
+							{ label: '5-10年', value: 4 },
+							{ label: '10年以上', value: 5 }
+						]
+					},
+					{
+						title: '您能承受的最大投资亏损比例是？',
+						options: [
+							{ label: '不能接受亏损', value: 1 },
+							{ label: '10%以内', value: 2 },
+							{ label: '10%-30%', value: 3 },
+							{ label: '30%-50%', value: 4 },
+							{ label: '50%以上', value: 5 }
+						]
+					},
+					{
+						title: '如果您的投资短期内下跌20%，您会？',
+						options: [
+							{ label: '非常担心，全部卖出', value: 1 },
+							{ label: '有些担心，卖出一部分', value: 2 },
+							{ label: '继续观望，不做操作', value: 3 },
+							{ label: '可以接受，考虑加仓', value: 4 },
+							{ label: '这是机会，大幅加仓', value: 5 }
+						]
+					},
+					{
+						title: '您的主要投资目标是？',
+						options: [
+							{ label: '资产保值，避免亏损', value: 1 },
+							{ label: '稳健增值，略高于通胀', value: 2 },
+							{ label: '平衡收益与风险', value: 3 },
+							{ label: '追求较高收益，可承受波动', value: 4 },
+							{ label: '追求最高收益，接受高风险', value: 5 }
+						]
+					},
+					{
+						title: '这笔投资资金的预计使用时间？',
+						options: [
+							{ label: '1年以内', value: 1 },
+							{ label: '1-3年', value: 2 },
+							{ label: '3-5年', value: 3 },
+							{ label: '5-10年', value: 4 },
+							{ label: '10年以上', value: 5 }
+						]
+					},
+					{
+						title: '您目前的负债情况是？',
+						options: [
+							{ label: '负债较重，还款压力大', value: 1 },
+							{ label: '有一定负债，可正常偿还', value: 2 },
+							{ label: '少量负债，压力不大', value: 3 },
+							{ label: '基本无负债', value: 4 },
+							{ label: '无任何负债', value: 5 }
+						]
+					}
+				] as Question[]
+			}
+		},
+		computed: {
+			currentQuestion(): Question {
+				return this.questions[this.currentIndex]
+			},
+			progressWidth(): string {
+				return ((this.currentIndex + 1) / this.questions.length * 100) + '%'
+			},
+			hasAnswer(): boolean {
+				return this.answers[this.currentIndex] !== undefined
+			},
+			isLastQuestion(): boolean {
+				return this.currentIndex === this.questions.length - 1
+			},
+			riskLevelText(): string {
+				return RISK_LEVEL_MAP[this.riskLevel] || '未知'
+			},
+			riskIcon(): string {
+				const icons = ['🛡️', '🏦', '⚖️', '📈', '🚀']
+				return icons[this.riskLevel - 1] || '❓'
+			},
+			riskDesc(): string {
+				const descs = [
+					'您属于保守型投资者，建议以保本型产品为主',
+					'您属于稳健型投资者，建议以中低风险产品为主',
+					'您属于平衡型投资者，可适当配置中等风险产品',
+					'您属于积极型投资者，可配置较高风险产品',
+					'您属于激进型投资者，可承受高风险高收益产品'
+				]
+				return descs[this.riskLevel - 1] || ''
+			},
+			resultDetail(): string {
+				return `根据您的风险测评结果，您的风险承受能力评分为${this.score}分，属于${this.riskLevelText}投资者。系统将为您推荐与您风险等级匹配的理财产品，以确保您的投资安全和收益预期相匹配。`
+			}
+		},
+		methods: {
+			selectOption(value: number) {
+				this.answers[this.currentIndex] = value
+			},
+			
+			prevQuestion() {
+				if (this.currentIndex > 0) {
+					this.currentIndex--
+				}
+			},
+			
+			nextQuestion() {
+				if (!this.hasAnswer) return
+				
+				if (this.isLastQuestion) {
+					this.calculateResult()
+				} else {
+					this.currentIndex++
+				}
+			},
+			
+			calculateResult() {
+				let total = 0
+				for (const answer of this.answers) {
+					total += answer
+				}
+				this.score = total
+				
+				if (total <= 12) {
+					this.riskLevel = 1
+				} else if (total <= 18) {
+					this.riskLevel = 2
+				} else if (total <= 26) {
+					this.riskLevel = 3
+				} else if (total <= 34) {
+					this.riskLevel = 4
+				} else {
+					this.riskLevel = 5
+				}
+				
+				this.showResult = true
+			},
+			
+			retest() {
+				this.currentIndex = 0
+				this.answers = []
+				this.showResult = false
+				this.score = 0
+				this.riskLevel = 0
+			},
+			
+			async confirmResult() {
+				try {
+					await submitRiskAssessment({
+						score: this.score,
+						riskLevel: this.riskLevel
+					})
+					uni.showToast({ title: '评估结果已保存', icon: 'success' })
+					setTimeout(() => {
+						uni.navigateBack()
+					}, 1500)
+				} catch (e) {
+					console.error('保存风险评估失败:', e)
+				}
+			}
+		}
+	}
+</script>

@@ -1,0 +1,261 @@
+{
+	"pages": [
+		{
+			"path": "pages/home/home",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "首页"
+			}
+		},
+		{
+			"path": "pages/asset/asset",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "资产",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/ai/ai",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "AI助手"
+			}
+		},
+		{
+			"path": "pages/mine/mine",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "我的"
+			}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "登录"
+			}
+		},
+		{
+			"path": "pages/register/register",
+			"style": {
+				"navigationBarTitleText": "注册"
+			}
+		},
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "智能金融理财平台"
+			}
+		},
+		{
+			"path": "pages/risk-assess/risk-assess",
+			"style": {
+				"navigationBarTitleText": "风险评估"
+			}
+		},
+		{
+			"path": "pages/ai-chat/ai-chat",
+			"style": {
+				"navigationBarTitleText": "AI智能问答"
+			}
+		},
+		{
+			"path": "pages/orders/orders",
+			"style": {
+				"navigationBarTitleText": "我的订单"
+			}
+		},
+		{
+			"path": "pages/products/products",
+			"style": {
+				"navigationBarTitleText": "理财产品"
+			}
+		},
+		{
+			"path": "pages/my-advisor/my-advisor",
+			"style": {
+				"navigationBarTitleText": "我的顾问"
+			}
+		},
+		{
+			"path": "pages/security/security",
+			"style": {
+				"navigationBarTitleText": "账号安全"
+			}
+		},
+		{
+			"path": "pages/product-detail/product-detail",
+			"style": {
+				"navigationBarTitleText": "产品详情"
+			}
+		},
+		{
+			"path": "pages/buy/buy",
+			"style": {
+				"navigationBarTitleText": "购买确认"
+			}
+		},
+		{
+			"path": "pages/profile/profile",
+			"style": {
+				"navigationBarTitleText": "个人资料"
+			}
+		},
+		{
+			"path": "pages/finance-plan/finance-plan",
+			"style": {
+				"navigationBarTitleText": "理财规划"
+			}
+		},
+		{
+			"path": "pages/message/message",
+			"style": {
+				"navigationBarTitleText": "消息中心"
+			}
+		},
+		{
+			"path": "pages/help/help",
+			"style": {
+				"navigationBarTitleText": "帮助中心"
+			}
+		},
+		{
+			"path": "pages/about/about",
+			"style": {
+				"navigationBarTitleText": "关于我们"
+			}
+		},
+		{
+			"path": "pages/select-advisor/select-advisor",
+			"style": {
+				"navigationBarTitleText": "选择顾问"
+			}
+		},
+		{
+			"path": "pages/transactions/transactions",
+			"style": {
+				"navigationBarTitleText": "交易流水"
+			}
+		},
+		{
+			"path": "pages/buy-result/buy-result",
+			"style": {
+				"navigationBarTitleText": "购买结果",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/order-detail/order-detail",
+			"style": {
+				"navigationBarTitleText": "订单详情"
+			}
+		},
+		{
+			"path": "pages/user-profile/user-profile",
+			"style": {
+				"navigationBarTitleText": "用户画像"
+			}
+		},
+		{
+			"path": "pages/login-logs/login-logs",
+			"style": {
+				"navigationBarTitleText": "登录日志"
+			}
+		},
+		{
+			"path": "pages/forgot-password/forgot-password",
+			"style": {
+				"navigationBarTitleText": "忘记密码"
+			}
+		},
+		{
+			"path": "pages/change-password/change-password",
+			"style": {
+				"navigationBarTitleText": "修改密码"
+			}
+		},
+		{
+			"path": "pages/trade-password/trade-password",
+			"style": {
+				"navigationBarTitleText": "交易密码"
+			}
+		},
+		{
+			"path": "pages/feedback/feedback",
+			"style": {
+				"navigationBarTitleText": "意见反馈"
+			}
+		},
+		{
+			"path": "pages/agreement/agreement",
+			"style": {
+				"navigationBarTitleText": "协议"
+			}
+		},
+		{
+			"path": "pages/advisor/advisor-home/advisor-home",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "顾问工作台"
+			}
+		},
+		{
+			"path": "pages/advisor/advisor-clients/advisor-clients",
+			"style": {
+				"navigationBarTitleText": "客户管理"
+			}
+		},
+		{
+			"path": "pages/advisor/client-detail/client-detail",
+			"style": {
+				"navigationBarTitleText": "客户详情"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "智能金融理财平台",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#F5F6F7"
+	},
+	"tabBar": {
+		"color": "#999999",
+		"selectedColor": "#1890FF",
+		"borderStyle": "black",
+		"backgroundColor": "#FFFFFF",
+		"list": [
+			{
+				"pagePath": "pages/home/home",
+				"text": "首页",
+				"iconPath": "static/tabbar/home.png",
+				"selectedIconPath": "static/tabbar/home-active.png"
+			},
+			{
+				"pagePath": "pages/asset/asset",
+				"text": "资产",
+				"iconPath": "static/tabbar/asset.png",
+				"selectedIconPath": "static/tabbar/asset-active.png"
+			},
+			{
+				"pagePath": "pages/ai/ai",
+				"text": "AI助手",
+				"iconPath": "static/tabbar/ai.png",
+				"selectedIconPath": "static/tabbar/ai-active.png"
+			},
+			{
+				"pagePath": "pages/mine/mine",
+				"text": "我的",
+				"iconPath": "static/tabbar/mine.png",
+				"selectedIconPath": "static/tabbar/mine-active.png"
+			}
+		]
+	},
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"sg-(.*)": "@/components/sg-$1/sg-$1.uvue"
+		}
+	},
+	"uniIdRouter": {}
+}

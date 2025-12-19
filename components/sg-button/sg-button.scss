@@ -1,0 +1,156 @@
+/**
+ * sg-button 按钮组件样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.sg-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 32rpx;
+	font-size: $font-base;
+	border-radius: $radius-base;
+	transition: all $transition-base;
+	border: 2rpx solid transparent;
+	
+	&__text {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	
+	&__loading {
+		margin-right: 12rpx;
+	}
+	
+	&__loading-icon {
+		width: 32rpx;
+		height: 32rpx;
+		border: 4rpx solid rgba(255, 255, 255, 0.3);
+		border-top-color: #fff;
+		border-radius: 50%;
+		animation: sg-button-loading 0.8s linear infinite;
+	}
+	
+	/* 类型样式 */
+	&--default {
+		background-color: $bg-white;
+		border-color: $border-dark;
+		color: $text-regular;
+		
+		&:active {
+			background-color: $bg-gray;
+		}
+	}
+	
+	&--primary {
+		background-color: $primary-color;
+		color: $text-inverse;
+		
+		&:active {
+			background-color: $primary-dark;
+		}
+	}
+	
+	&--success {
+		background-color: $success-color;
+		color: $text-inverse;
+		
+		&:active {
+			opacity: 0.8;
+		}
+	}
+	
+	&--warning {
+		background-color: $warning-color;
+		color: $text-inverse;
+		
+		&:active {
+			opacity: 0.8;
+		}
+	}
+	
+	&--error {
+		background-color: $error-color;
+		color: $text-inverse;
+		
+		&:active {
+			opacity: 0.8;
+		}
+	}
+	
+	/* 镂空样式 */
+	&--plain {
+		background-color: transparent;
+		
+		&.sg-button--primary {
+			color: $primary-color;
+			border-color: $primary-color;
+		}
+		
+		&.sg-button--success {
+			color: $success-color;
+			border-color: $success-color;
+		}
+		
+		&.sg-button--warning {
+			color: $warning-color;
+			border-color: $warning-color;
+		}
+		
+		&.sg-button--error {
+			color: $error-color;
+			border-color: $error-color;
+		}
+	}
+	
+	/* 尺寸样式 */
+	&--large {
+		height: 96rpx;
+		font-size: $font-md;
+		padding: 0 48rpx;
+	}
+	
+	&--default {
+		height: 80rpx;
+	}
+	
+	&--small {
+		height: 64rpx;
+		font-size: $font-sm;
+		padding: 0 24rpx;
+	}
+	
+	&--mini {
+		height: 48rpx;
+		font-size: $font-xs;
+		padding: 0 16rpx;
+	}
+	
+	/* 圆角样式 */
+	&--round {
+		border-radius: $radius-round;
+	}
+	
+	/* 禁用样式 */
+	&--disabled {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+	
+	/* 加载样式 */
+	&--loading {
+		pointer-events: none;
+	}
+}
+
+@keyframes sg-button-loading {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}

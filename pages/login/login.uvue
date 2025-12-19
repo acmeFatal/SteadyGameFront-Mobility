@@ -1,0 +1,267 @@
+<template>
+	<view class="login-page">
+		<view class="login-header">
+			<image class="login-logo" src="/static/logo.png" mode="aspectFit"></image>
+			<text class="login-title">智能金融理财平台</text>
+			<text class="login-subtitle">安全·专业·智能</text>
+		</view>
+		
+		<view class="login-form">
+			<view class="login-tabs">
+				<view 
+					class="login-tab" 
+					:class="{ 'login-tab--active': loginType === 'password' }"
+					@click="switchLoginType('password')"
+				>
+					<text class="login-tab-text">密码登录</text>
+				</view>
+				<view 
+					class="login-tab"
+					:class="{ 'login-tab--active': loginType === 'sms' }"
+					@click="switchLoginType('sms')"
+				>
+					<text class="login-tab-text">验证码登录</text>
+				</view>
+			</view>
+			
+			<view v-if="loginType === 'password'" class="login-fields">
+				<view class="login-field">
+					<text class="login-field-icon">👤</text>
+					<input 
+						class="login-field-input"
+						v-model="form.username"
+						placeholder="请输入用户名/手机号/邮箱"
+						type="text"
+					/>
+				</view>
+				<view class="login-field">
+					<text class="login-field-icon">🔒</text>
+					<input 
+						class="login-field-input"
+						v-model="form.password"
+						placeholder="请输入密码"
+						:password="!showPassword"
+						type="text"
+					/>
+					<view class="login-field-eye" @click="showPassword = !showPassword">
+						<text>{{ showPassword ? '👁' : '👁‍🗨' }}</text>
+					</view>
+				</view>
+			</view>
+			
+			<view v-else class="login-fields">
+				<view class="login-field">
+					<text class="login-field-icon">📱</text>
+					<input 
+						class="login-field-input"
+						v-model="form.phone"
+						placeholder="请输入手机号"
+						type="number"
+						maxlength="11"
+					/>
+				</view>
+				<view class="login-field">
+					<text class="login-field-icon">🔢</text>
+					<input 
+						class="login-field-input login-field-input--code"
+						v-model="form.code"
+						placeholder="请输入验证码"
+						type="number"
+						maxlength="6"
+					/>
+					<view 
+						class="login-code-btn"
+						:class="{ 'login-code-btn--disabled': countdown > 0 }"
+						@click="sendSmsCode"
+					>
+						<text class="login-code-btn-text">
+							{{ countdown > 0 ? countdown + 's' : '获取验证码' }}
+						</text>
+					</view>
+				</view>
+			</view>
+			
+			<view class="login-actions">
+				<view class="login-btn login-btn--primary" @click="handleLogin">
+					<text class="login-btn-text">登 录</text>
+				</view>
+			</view>
+			
+			<view class="login-links">
+				<text class="login-link" @click="goToRegister">注册账号</text>
+				<text class="login-link" @click="goToForgotPassword">忘记密码</text>
+			</view>
+		</view>
+		
+		<view class="login-footer">
+			<view class="login-biometric" v-if="supportBiometric" @click="biometricLogin">
+				<text class="login-biometric-icon">🔐</text>
+				<text class="login-biometric-text">指纹/面容登录</text>
+			</view>
+			<text class="login-agreement">
+				登录即表示同意《用户协议》和《隐私政策》
+			</text>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { login, smsLogin, sendLoginSmsCode } from '@/api/auth.uts'
+	import type { LoginParams, SmsLoginParams, LoginResponse } from '@/api/auth.uts'
+	import { setStorage } from '@/utils/storage.uts'
+	import { isValidPhone, isValidPassword } from '@/utils/validate.uts'
+	import { getDeviceType, getDeviceId, supportBiometric } from '@/utils/platform.uts'
+	import { TOKEN_KEY, REFRESH_TOKEN_KEY, USER_INFO_KEY } from '@/config/index.uts'
+	
+	export default {
+		data() {
+			return {
+				loginType: 'password',
+				showPassword: false,
+				countdown: 0,
+				supportBiometric: false,
+				form: {
+					username: '',
+					password: '',
+					phone: '',
+					code: ''
+				}
+			}
+		},
+		onLoad() {
+			this.checkBiometricSupport()
+		},
+		methods: {
+			switchLoginType(type: string) {
+				this.loginType = type
+			},
+			
+			async checkBiometricSupport() {
+				this.supportBiometric = await supportBiometric()
+			},
+			
+			async handleLogin() {
+				if (this.loginType === 'password') {
+					await this.passwordLogin()
+				} else {
+					await this.codeLogin()
+				}
+			},
+			
+			async passwordLogin() {
+				if (!this.form.username) {
+					uni.showToast({ title: '请输入用户名', icon: 'none' })
+					return
+				}
+				if (!this.form.password) {
+					uni.showToast({ title: '请输入密码', icon: 'none' })
+					return
+				}
+				
+				try {
+					const params: LoginParams = {
+						username: this.form.username,
+						password: this.form.password,
+						deviceType: getDeviceType(),
+						deviceId: getDeviceId()
+					}
+					const res = await login(params)
+					this.handleLoginSuccess(res.data)
+				} catch (e) {
+					console.error('登录失败:', e)
+				}
+			},
+			
+			async codeLogin() {
+				if (!this.form.phone || !isValidPhone(this.form.phone)) {
+					uni.showToast({ title: '请输入正确的手机号', icon: 'none' })
+					return
+				}
+				if (!this.form.code || this.form.code.length !== 6) {
+					uni.showToast({ title: '请输入6位验证码', icon: 'none' })
+					return
+				}
+				
+				try {
+					const params: SmsLoginParams = {
+						phone: this.form.phone,
+						code: this.form.code
+					}
+					const res = await smsLogin(params)
+					this.handleLoginSuccess(res.data)
+				} catch (e) {
+					console.error('登录失败:', e)
+				}
+			},
+			
+			handleLoginSuccess(data: LoginResponse) {
+				setStorage(TOKEN_KEY, data.accessToken)
+				setStorage(REFRESH_TOKEN_KEY, data.refreshToken)
+				setStorage(USER_INFO_KEY, {
+					userId: data.userId,
+					username: data.username,
+					realName: data.realName,
+					avatar: data.avatar,
+					roles: data.roles
+				})
+				
+				uni.showToast({ title: '登录成功', icon: 'success' })
+				
+				setTimeout(() => {
+					uni.switchTab({ url: '/pages/home/home' })
+				}, 1500)
+			},
+			
+			async sendSmsCode() {
+				if (this.countdown > 0) return
+				
+				if (!this.form.phone || !isValidPhone(this.form.phone)) {
+					uni.showToast({ title: '请输入正确的手机号', icon: 'none' })
+					return
+				}
+				
+				try {
+					await sendLoginSmsCode(this.form.phone)
+					uni.showToast({ title: '验证码已发送', icon: 'success' })
+					this.startCountdown()
+				} catch (e) {
+					console.error('发送验证码失败:', e)
+				}
+			},
+			
+			startCountdown() {
+				this.countdown = 60
+				const timer = setInterval(() => {
+					this.countdown--
+					if (this.countdown <= 0) {
+						clearInterval(timer)
+					}
+				}, 1000)
+			},
+			
+			biometricLogin() {
+				uni.startSoterAuthentication({
+					requestAuthModes: ['fingerPrint', 'facial'],
+					challenge: String(Date.now()),
+					authContent: '请验证指纹或面容',
+					success: (res) => {
+						console.log('生物识别成功:', res)
+						uni.showToast({ title: '验证成功', icon: 'success' })
+					},
+					fail: (err) => {
+						console.error('生物识别失败:', err)
+						uni.showToast({ title: '验证失败', icon: 'none' })
+					}
+				})
+			},
+			
+			goToRegister() {
+				uni.navigateTo({ url: '/pages/register/register' })
+			},
+			
+			goToForgotPassword() {
+				uni.navigateTo({ url: '/pages/forgot-password/forgot-password' })
+			}
+		}
+	}
+</script>

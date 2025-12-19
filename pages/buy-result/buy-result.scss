@@ -1,0 +1,125 @@
+/**
+ * 购买结果页面样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.result-page {
+	min-height: 100vh;
+	background-color: $bg-white;
+	display: flex;
+	flex-direction: column;
+}
+
+.result-content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: $spacing-xl * 2 $spacing-base;
+}
+
+.result-icon {
+	width: 160rpx;
+	height: 160rpx;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: $spacing-md;
+	
+	&--success {
+		background-color: rgba($success-color, 0.1);
+	}
+	
+	&--fail {
+		background-color: rgba($error-color, 0.1);
+	}
+}
+
+.result-icon-text {
+	font-size: 80rpx;
+	
+	.result-icon--success & {
+		color: $success-color;
+	}
+	
+	.result-icon--fail & {
+		color: $error-color;
+	}
+}
+
+.result-title {
+	font-size: $font-xl;
+	font-weight: bold;
+	color: $text-primary;
+	margin-bottom: $spacing-sm;
+}
+
+.result-desc {
+	font-size: $font-base;
+	color: $text-secondary;
+	margin-bottom: $spacing-lg;
+}
+
+.result-info {
+	width: 100%;
+	padding: $spacing-base;
+	background-color: $bg-gray;
+	border-radius: $radius-lg;
+}
+
+.result-info-item {
+	display: flex;
+	justify-content: space-between;
+	padding: $spacing-sm 0;
+	border-bottom: 1rpx solid $border-light;
+	
+	&:last-child {
+		border-bottom: none;
+	}
+}
+
+.result-info-label {
+	font-size: $font-base;
+	color: $text-secondary;
+}
+
+.result-info-value {
+	font-size: $font-base;
+	color: $text-primary;
+}
+
+.result-actions {
+	display: flex;
+	gap: $spacing-base;
+	padding: $spacing-base;
+	padding-bottom: calc($spacing-base + env(safe-area-inset-bottom));
+}
+
+.result-btn {
+	flex: 1;
+	height: 88rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: $radius-round;
+	
+	&--secondary {
+		background-color: $bg-gray;
+		
+		.result-btn-text {
+			color: $text-secondary;
+		}
+	}
+	
+	&--primary {
+		background: linear-gradient(90deg, $primary-color 0%, $primary-light 100%);
+	}
+}
+
+.result-btn-text {
+	font-size: $font-md;
+	color: $text-inverse;
+}

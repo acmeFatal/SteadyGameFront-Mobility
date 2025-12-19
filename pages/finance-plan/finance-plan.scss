@@ -1,0 +1,258 @@
+/**
+ * 理财规划页面样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.plan-page {
+	min-height: 100vh;
+	background-color: $bg-base;
+	padding-bottom: $spacing-xl;
+}
+
+.plan-form {
+	padding: $spacing-base;
+}
+
+.plan-section {
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	padding: $spacing-base;
+	margin-bottom: $spacing-base;
+}
+
+.plan-section-title {
+	display: block;
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-primary;
+	margin-bottom: $spacing-sm;
+}
+
+.plan-goals {
+	display: flex;
+	flex-wrap: wrap;
+	gap: $spacing-sm;
+}
+
+.plan-goal {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: calc((100% - 32rpx) / 3);
+	padding: $spacing-sm;
+	background-color: $bg-gray;
+	border-radius: $radius-base;
+	border: 2rpx solid transparent;
+	
+	&--active {
+		background-color: rgba($primary-color, 0.1);
+		border-color: $primary-color;
+	}
+}
+
+.plan-goal-icon {
+	font-size: 48rpx;
+	margin-bottom: 8rpx;
+}
+
+.plan-goal-text {
+	font-size: $font-sm;
+	color: $text-primary;
+}
+
+.plan-input-wrap {
+	display: flex;
+	align-items: center;
+	padding: $spacing-sm;
+	background-color: $bg-gray;
+	border-radius: $radius-base;
+}
+
+.plan-input-prefix {
+	font-size: $font-lg;
+	color: $text-primary;
+	margin-right: $spacing-sm;
+}
+
+.plan-input {
+	flex: 1;
+	font-size: $font-md;
+	color: $text-primary;
+}
+
+.plan-periods,
+.plan-risks {
+	display: flex;
+	gap: $spacing-sm;
+}
+
+.plan-period,
+.plan-risk {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 72rpx;
+	background-color: $bg-gray;
+	border-radius: $radius-base;
+	border: 2rpx solid transparent;
+	
+	&--active {
+		background-color: rgba($primary-color, 0.1);
+		border-color: $primary-color;
+		
+		.plan-period-text,
+		.plan-risk-text {
+			color: $primary-color;
+		}
+	}
+}
+
+.plan-period-text,
+.plan-risk-text {
+	font-size: $font-sm;
+	color: $text-secondary;
+}
+
+.plan-submit {
+	margin: 0 $spacing-base;
+	height: 96rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(90deg, $primary-color 0%, $primary-light 100%);
+	border-radius: $radius-round;
+}
+
+.plan-submit-text {
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-inverse;
+}
+
+.plan-result {
+	margin: $spacing-base;
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	overflow: hidden;
+}
+
+.plan-result-header {
+	padding: $spacing-base;
+	background: linear-gradient(135deg, $primary-color 0%, $primary-light 100%);
+}
+
+.plan-result-title {
+	display: block;
+	font-size: $font-lg;
+	font-weight: bold;
+	color: $text-inverse;
+	margin-bottom: 4rpx;
+}
+
+.plan-result-goal {
+	font-size: $font-sm;
+	color: rgba(255, 255, 255, 0.8);
+}
+
+.plan-result-summary {
+	display: flex;
+	padding: $spacing-base;
+	border-bottom: 1rpx solid $border-light;
+}
+
+.plan-result-item {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.plan-result-value {
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-primary;
+}
+
+.plan-result-label {
+	font-size: $font-xs;
+	color: $text-placeholder;
+	margin-top: 4rpx;
+}
+
+.plan-portfolio {
+	padding: $spacing-base;
+}
+
+.plan-portfolio-title {
+	display: block;
+	font-size: $font-base;
+	font-weight: bold;
+	color: $text-primary;
+	margin-bottom: $spacing-sm;
+}
+
+.plan-portfolio-list {
+	display: flex;
+	flex-direction: column;
+	gap: $spacing-sm;
+}
+
+.plan-portfolio-item {
+	display: flex;
+	align-items: center;
+	position: relative;
+}
+
+.plan-portfolio-bar {
+	height: 32rpx;
+	border-radius: $radius-sm;
+	margin-right: $spacing-sm;
+}
+
+.plan-portfolio-name {
+	flex: 1;
+	font-size: $font-sm;
+	color: $text-primary;
+}
+
+.plan-portfolio-percent {
+	font-size: $font-sm;
+	color: $text-secondary;
+}
+
+.plan-result-actions {
+	display: flex;
+	gap: $spacing-sm;
+	padding: $spacing-base;
+	border-top: 1rpx solid $border-light;
+}
+
+.plan-action-btn {
+	flex: 1;
+	height: 80rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: $radius-round;
+	
+	&--save {
+		background-color: $bg-gray;
+		
+		.plan-action-btn-text {
+			color: $text-secondary;
+		}
+	}
+	
+	&--execute {
+		background: linear-gradient(90deg, $primary-color 0%, $primary-light 100%);
+	}
+}
+
+.plan-action-btn-text {
+	font-size: $font-base;
+	color: $text-inverse;
+}

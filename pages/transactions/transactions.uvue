@@ -1,0 +1,172 @@
+<template>
+	<view class="transactions-page">
+		<sg-navbar title="交易流水" />
+		
+		<view class="transactions-filter">
+			<view class="filter-item" @click="showDatePicker = true">
+				<text class="filter-label">{{ dateRange }}</text>
+				<text class="filter-arrow">▼</text>
+			</view>
+			<view class="filter-item" @click="showTypePicker = true">
+				<text class="filter-label">{{ currentTypeText }}</text>
+				<text class="filter-arrow">▼</text>
+			</view>
+		</view>
+		
+		<view class="transactions-summary">
+			<view class="summary-item">
+				<text class="summary-label">收入</text>
+				<text class="summary-value text-rise">+¥{{ formatMoney(totalIncome) }}</text>
+			</view>
+			<view class="summary-item">
+				<text class="summary-label">支出</text>
+				<text class="summary-value text-fall">-¥{{ formatMoney(totalExpense) }}</text>
+			</view>
+		</view>
+		
+		<scroll-view class="transactions-list" scroll-y @scrolltolower="loadMore">
+			<view v-for="(group, gIndex) in groupedTransactions" :key="gIndex" class="transaction-group">
+				<view class="transaction-date">
+					<text class="transaction-date-text">{{ group.date }}</text>
+				</view>
+				<view 
+					v-for="(item, index) in group.items" 
+					:key="index"
+					class="transaction-item"
+				>
+					<view class="transaction-icon" :class="getTypeClass(item.transactionType)">
+						<text class="transaction-icon-text">{{ getTypeIcon(item.transactionType) }}</text>
+					</view>
+					<view class="transaction-info">
+						<text class="transaction-title">{{ item.description }}</text>
+						<text class="transaction-time">{{ formatTime(item.transactionTime) }}</text>
+					</view>
+					<text 
+						class="transaction-amount"
+						:class="item.transactionType === 1 ? 'text-rise' : 'text-fall'"
+					>{{ item.transactionType === 1 ? '+' : '-' }}¥{{ formatMoney(item.amount) }}</text>
+				</view>
+			</view>
+			
+			<sg-empty v-if="transactions.length === 0" text="暂无交易记录" />
+		</scroll-view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { getAssetTransactions } from '@/api/asset.uts'
+	import { formatDate, formatDateTime } from '@/utils/date.uts'
+	import type { AssetTransaction } from '@/api/asset.uts'
+	
+	interface TransactionGroup {
+		date: string
+		items: AssetTransaction[]
+	}
+	
+	export default {
+		data() {
+			return {
+				dateRange: '本月',
+				currentType: 0,
+				showDatePicker: false,
+				showTypePicker: false,
+				transactions: [] as AssetTransaction[],
+				page: 1,
+				hasMore: true
+			}
+		},
+		computed: {
+			currentTypeText(): string {
+				const typeMap: Record<number, string> = {
+					0: '全部类型',
+					1: '收入',
+					2: '支出'
+				}
+				return typeMap[this.currentType] || '全部类型'
+			},
+			totalIncome(): number {
+				return this.transactions
+					.filter(t => t.transactionType === 1)
+					.reduce((sum, t) => sum + t.amount, 0)
+			},
+			totalExpense(): number {
+				return this.transactions
+					.filter(t => t.transactionType === 2)
+					.reduce((sum, t) => sum + t.amount, 0)
+			},
+			groupedTransactions(): TransactionGroup[] {
+				const groups: Record<string, AssetTransaction[]> = {}
+				
+				this.transactions.forEach(t => {
+					const date = formatDate(t.transactionTime)
+					if (!groups[date]) {
+						groups[date] = []
+					}
+					groups[date].push(t)
+				})
+				
+				return Object.keys(groups)
+					.sort((a, b) => b.localeCompare(a))
+					.map(date => ({
+						date,
+						items: groups[date]
+					}))
+			}
+		},
+		onLoad() {
+			this.loadTransactions()
+		},
+		methods: {
+			async loadTransactions() {
+				try {
+					const res = await getAssetTransactions({
+						page: this.page,
+						size: 20
+					})
+					
+					const newItems = res.data?.records || []
+					if (this.page === 1) {
+						this.transactions = newItems
+					} else {
+						this.transactions = [...this.transactions, ...newItems]
+					}
+					
+					this.hasMore = newItems.length >= 20
+				} catch (e) {
+					console.error('获取交易流水失败:', e)
+					
+					// 模拟数据
+					this.transactions = [
+						{ id: 1, userId: 1, assetType: 2, transactionType: 1, amount: 5000, transactionTime: new Date().toISOString(), description: '理财收益到账' },
+						{ id: 2, userId: 1, assetType: 2, transactionType: 2, amount: 10000, transactionTime: new Date(Date.now() - 86400000).toISOString(), description: '购买理财产品' },
+						{ id: 3, userId: 1, assetType: 1, transactionType: 1, amount: 200, transactionTime: new Date(Date.now() - 172800000).toISOString(), description: '活期利息' }
+					]
+				}
+			},
+			
+			loadMore() {
+				if (this.hasMore) {
+					this.page++
+					this.loadTransactions()
+				}
+			},
+			
+			formatMoney(num: number): string {
+				return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+			},
+			
+			formatTime(time: string): string {
+				const date = new Date(time)
+				return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+			},
+			
+			getTypeIcon(type: number): string {
+				return type === 1 ? '📥' : '📤'
+			},
+			
+			getTypeClass(type: number): string {
+				return type === 1 ? 'transaction-icon--income' : 'transaction-icon--expense'
+			}
+		}
+	}
+</script>

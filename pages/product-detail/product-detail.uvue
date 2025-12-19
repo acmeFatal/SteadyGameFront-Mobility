@@ -1,0 +1,207 @@
+<template>
+	<view class="detail-page">
+		<sg-navbar title="产品详情" />
+		
+		<scroll-view class="detail-content" scroll-y>
+			<view class="detail-header">
+				<text class="detail-name">{{ product.productName }}</text>
+				<view class="detail-tags">
+					<view class="detail-tag" :class="getRiskClass(product.riskLevel)">
+						<text class="detail-tag-text">{{ getRiskText(product.riskLevel) }}</text>
+					</view>
+					<view class="detail-tag detail-tag--type">
+						<text class="detail-tag-text">{{ getProductType(product.productType) }}</text>
+					</view>
+				</view>
+			</view>
+			
+			<view class="detail-rate-card">
+				<view class="detail-rate">
+					<text class="detail-rate-value">{{ (product.expectedReturn * 100).toFixed(2) }}</text>
+					<text class="detail-rate-unit">%</text>
+				</view>
+				<text class="detail-rate-label">预期年化收益率</text>
+				<view class="detail-rate-info">
+					<view class="detail-rate-item">
+						<text class="detail-rate-item-value">¥{{ formatMoney(product.minInvestment) }}</text>
+						<text class="detail-rate-item-label">起购金额</text>
+					</view>
+					<view class="detail-rate-divider"></view>
+					<view class="detail-rate-item">
+						<text class="detail-rate-item-value">{{ product.investmentPeriod }}天</text>
+						<text class="detail-rate-item-label">投资期限</text>
+					</view>
+					<view class="detail-rate-divider"></view>
+					<view class="detail-rate-item">
+						<text class="detail-rate-item-value">T+1</text>
+						<text class="detail-rate-item-label">到账时间</text>
+					</view>
+				</view>
+			</view>
+			
+			<view class="detail-section">
+				<text class="detail-section-title">产品介绍</text>
+				<text class="detail-section-content">{{ product.description || '暂无介绍' }}</text>
+			</view>
+			
+			<view class="detail-section">
+				<text class="detail-section-title">风险提示</text>
+				<view class="detail-risk-tips">
+					<view class="detail-risk-item">
+						<text class="detail-risk-icon">⚠️</text>
+						<text class="detail-risk-text">理财非存款，产品有风险，投资需谨慎</text>
+					</view>
+					<view class="detail-risk-item">
+						<text class="detail-risk-icon">📊</text>
+						<text class="detail-risk-text">本产品风险等级为{{ getRiskText(product.riskLevel) }}，适合{{ getRiskSuitText(product.riskLevel) }}投资者</text>
+					</view>
+					<view class="detail-risk-item">
+						<text class="detail-risk-icon">📋</text>
+						<text class="detail-risk-text">购买前请仔细阅读产品说明书和风险揭示书</text>
+					</view>
+				</view>
+			</view>
+			
+			<view class="detail-section">
+				<text class="detail-section-title">交易规则</text>
+				<view class="detail-rules">
+					<view class="detail-rule-item">
+						<text class="detail-rule-label">申购时间</text>
+						<text class="detail-rule-value">工作日 9:00-15:00</text>
+					</view>
+					<view class="detail-rule-item">
+						<text class="detail-rule-label">赎回时间</text>
+						<text class="detail-rule-value">工作日 9:00-15:00</text>
+					</view>
+					<view class="detail-rule-item">
+						<text class="detail-rule-label">起购金额</text>
+						<text class="detail-rule-value">¥{{ formatMoney(product.minInvestment) }}起</text>
+					</view>
+					<view class="detail-rule-item">
+						<text class="detail-rule-label">追加金额</text>
+						<text class="detail-rule-value">¥100起</text>
+					</view>
+				</view>
+			</view>
+		</scroll-view>
+		
+		<view class="detail-footer">
+			<view class="detail-footer-left">
+				<view class="detail-action" @click="toggleFavorite">
+					<text class="detail-action-icon">{{ isFavorite ? '❤️' : '🤍' }}</text>
+					<text class="detail-action-text">{{ isFavorite ? '已收藏' : '收藏' }}</text>
+				</view>
+				<view class="detail-action" @click="shareProduct">
+					<text class="detail-action-icon">📤</text>
+					<text class="detail-action-text">分享</text>
+				</view>
+			</view>
+			<view class="detail-buy-btn" @click="buyProduct">
+				<text class="detail-buy-btn-text">立即购买</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { getProductDetail } from '@/api/trade.uts'
+	import { RISK_LEVEL_MAP } from '@/config/index.uts'
+	import type { Product } from '@/api/trade.uts'
+	
+	export default {
+		data() {
+			return {
+				productId: 0,
+				product: {} as Product,
+				isFavorite: false
+			}
+		},
+		onLoad(options: any) {
+			if (options.id) {
+				this.productId = Number(options.id)
+				this.loadProduct()
+			}
+		},
+		methods: {
+			async loadProduct() {
+				try {
+					const res = await getProductDetail(this.productId)
+					this.product = res.data
+				} catch (e) {
+					console.error('获取产品详情失败:', e)
+				}
+			},
+			
+			formatMoney(num: number): string {
+				if (!num) return '0'
+				return num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+			},
+			
+			getRiskText(level: number): string {
+				return RISK_LEVEL_MAP[level] || '未知'
+			},
+			
+			getRiskSuitText(level: number): string {
+				const suitMap: Record<number, string> = {
+					1: '保守型及以上',
+					2: '稳健型及以上',
+					3: '平衡型及以上',
+					4: '积极型及以上',
+					5: '激进型'
+				}
+				return suitMap[level] || '所有'
+			},
+			
+			getRiskClass(level: number): string {
+				const classMap: Record<number, string> = {
+					1: 'detail-tag--low',
+					2: 'detail-tag--low-mid',
+					3: 'detail-tag--mid',
+					4: 'detail-tag--mid-high',
+					5: 'detail-tag--high'
+				}
+				return classMap[level] || ''
+			},
+			
+			getProductType(type: number): string {
+				const typeMap: Record<number, string> = {
+					1: '货币基金',
+					2: '债券基金',
+					3: '混合基金',
+					4: '股票基金',
+					5: '理财产品'
+				}
+				return typeMap[type] || '其他'
+			},
+			
+			toggleFavorite() {
+				this.isFavorite = !this.isFavorite
+				uni.showToast({
+					title: this.isFavorite ? '已添加收藏' : '已取消收藏',
+					icon: 'success'
+				})
+			},
+			
+			shareProduct() {
+				uni.share({
+					provider: 'weixin',
+					type: 0,
+					title: this.product.productName,
+					summary: `预期年化收益${(this.product.expectedReturn * 100).toFixed(2)}%`,
+					success: () => {
+						uni.showToast({ title: '分享成功', icon: 'success' })
+					},
+					fail: () => {
+						uni.showToast({ title: '分享功能开发中', icon: 'none' })
+					}
+				})
+			},
+			
+			buyProduct() {
+				uni.navigateTo({
+					url: `/pages/buy/buy?productId=${this.productId}`
+				})
+			}
+		}
+	}
+</script>

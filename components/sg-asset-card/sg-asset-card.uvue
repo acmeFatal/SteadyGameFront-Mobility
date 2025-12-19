@@ -1,0 +1,103 @@
+<template>
+	<view class="sg-asset-card">
+		<view class="sg-asset-card__header">
+			<text class="sg-asset-card__label">{{ label }}</text>
+			<view v-if="showEye" class="sg-asset-card__eye" @click="toggleVisible">
+				<text class="sg-asset-card__eye-icon">{{ isVisible ? '👁' : '👁‍🗨' }}</text>
+			</view>
+		</view>
+		<view class="sg-asset-card__amount">
+			<text class="sg-asset-card__currency">¥</text>
+			<text class="sg-asset-card__value">{{ displayAmount }}</text>
+		</view>
+		<view v-if="showEarnings" class="sg-asset-card__earnings">
+			<text class="sg-asset-card__earnings-label">{{ earningsLabel }}</text>
+			<text 
+				class="sg-asset-card__earnings-value"
+				:class="earningsClass"
+			>{{ displayEarnings }}</text>
+		</view>
+		<slot></slot>
+	</view>
+</template>
+
+<script lang="uts">
+	/**
+	 * sg-asset-card 资产卡片组件
+	 * @description 用于展示资产金额的卡片组件
+	 * @property {String} label - 标签文字
+	 * @property {Number} amount - 金额
+	 * @property {Boolean} showEye - 是否显示隐藏按钮
+	 * @property {Boolean} showEarnings - 是否显示收益
+	 * @property {String} earningsLabel - 收益标签
+	 * @property {Number} earnings - 收益金额
+	 * @property {Number} earningsRate - 收益率
+	 */
+	export default {
+		name: 'sg-asset-card',
+		props: {
+			label: {
+				type: String,
+				default: '总资产'
+			},
+			amount: {
+				type: Number,
+				default: 0
+			},
+			showEye: {
+				type: Boolean,
+				default: true
+			},
+			showEarnings: {
+				type: Boolean,
+				default: true
+			},
+			earningsLabel: {
+				type: String,
+				default: '昨日收益'
+			},
+			earnings: {
+				type: Number,
+				default: 0
+			},
+			earningsRate: {
+				type: Number,
+				default: 0
+			}
+		},
+		data() {
+			return {
+				isVisible: true
+			}
+		},
+		computed: {
+			displayAmount(): string {
+				if (!this.isVisible) {
+					return '****'
+				}
+				return this.formatMoney(this.amount)
+			},
+			displayEarnings(): string {
+				if (!this.isVisible) {
+					return '****'
+				}
+				const prefix = this.earnings >= 0 ? '+' : ''
+				const rate = this.earningsRate ? ` (${this.earningsRate.toFixed(2)}%)` : ''
+				return prefix + this.formatMoney(this.earnings) + rate
+			},
+			earningsClass(): string {
+				if (this.earnings > 0) return 'sg-asset-card__earnings-value--rise'
+				if (this.earnings < 0) return 'sg-asset-card__earnings-value--fall'
+				return ''
+			}
+		},
+		methods: {
+			toggleVisible() {
+				this.isVisible = !this.isVisible
+			},
+			formatMoney(num: number): string {
+				return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+			}
+		}
+	}
+</script>

@@ -1,0 +1,73 @@
+/**
+ * sg-asset-card 资产卡片组件样式
+ * @author SteadyGame Team
+ */
+
+@import '../../styles/variables.scss';
+
+.sg-asset-card {
+	background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
+	border-radius: $radius-lg;
+	padding: $spacing-md;
+	color: $text-inverse;
+	
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: $spacing-sm;
+	}
+	
+	&__label {
+		font-size: $font-sm;
+		opacity: 0.9;
+	}
+	
+	&__eye {
+		padding: $spacing-xs;
+	}
+	
+	&__eye-icon {
+		font-size: $font-base;
+	}
+	
+	&__amount {
+		display: flex;
+		align-items: baseline;
+		margin-bottom: $spacing-sm;
+	}
+	
+	&__currency {
+		font-size: $font-lg;
+		margin-right: 4rpx;
+	}
+	
+	&__value {
+		font-size: $font-giant;
+		font-weight: bold;
+		letter-spacing: 2rpx;
+	}
+	
+	&__earnings {
+		display: flex;
+		align-items: center;
+	}
+	
+	&__earnings-label {
+		font-size: $font-sm;
+		opacity: 0.8;
+		margin-right: $spacing-sm;
+	}
+	
+	&__earnings-value {
+		font-size: $font-base;
+		
+		&--rise {
+			color: #FFD700;
+		}
+		
+		&--fall {
+			color: #90EE90;
+		}
+	}
+}

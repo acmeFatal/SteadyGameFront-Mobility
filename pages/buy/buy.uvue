@@ -1,0 +1,235 @@
+<template>
+	<view class="buy-page">
+		<sg-navbar title="购买确认" />
+		
+		<view class="buy-product">
+			<text class="buy-product-name">{{ product.productName }}</text>
+			<view class="buy-product-rate">
+				<text class="buy-product-rate-label">预期年化</text>
+				<text class="buy-product-rate-value">{{ (product.expectedReturn * 100).toFixed(2) }}%</text>
+			</view>
+		</view>
+		
+		<view class="buy-amount-section">
+			<text class="buy-section-title">购买金额</text>
+			<view class="buy-amount-input">
+				<text class="buy-amount-prefix">¥</text>
+				<input 
+					class="buy-amount-value"
+					type="digit"
+					v-model="amount"
+					placeholder="请输入金额"
+					@input="onAmountInput"
+				/>
+			</view>
+			<view class="buy-amount-tips">
+				<text class="buy-amount-tip">起购金额 ¥{{ formatMoney(product.minInvestment) }}</text>
+				<text class="buy-amount-all" @click="buyAll">全部买入</text>
+			</view>
+			<view class="buy-quick-amounts">
+				<view 
+					v-for="(item, index) in quickAmounts" 
+					:key="index"
+					class="buy-quick-item"
+					:class="{ 'buy-quick-item--active': amount === String(item) }"
+					@click="setAmount(item)"
+				>
+					<text class="buy-quick-text">{{ item >= 10000 ? (item / 10000) + '万' : item }}</text>
+				</view>
+			</view>
+		</view>
+		
+		<view class="buy-info-section">
+			<view class="buy-info-item">
+				<text class="buy-info-label">预计收益</text>
+				<text class="buy-info-value text-rise">+¥{{ estimatedEarnings }}</text>
+			</view>
+			<view class="buy-info-item">
+				<text class="buy-info-label">投资期限</text>
+				<text class="buy-info-value">{{ product.investmentPeriod }}天</text>
+			</view>
+			<view class="buy-info-item">
+				<text class="buy-info-label">到期日期</text>
+				<text class="buy-info-value">{{ maturityDate }}</text>
+			</view>
+		</view>
+		
+		<view class="buy-agreement">
+			<view 
+				class="buy-checkbox"
+				:class="{ 'buy-checkbox--checked': agreed }"
+				@click="agreed = !agreed"
+			>
+				<text v-if="agreed" class="buy-checkbox-icon">✓</text>
+			</view>
+			<text class="buy-agreement-text">
+				我已阅读并同意《产品说明书》《风险揭示书》
+			</text>
+		</view>
+		
+		<view class="buy-footer">
+			<view class="buy-total">
+				<text class="buy-total-label">支付金额</text>
+				<text class="buy-total-value">¥{{ formatMoney(Number(amount) || 0) }}</text>
+			</view>
+			<view 
+				class="buy-submit-btn"
+				:class="{ 'buy-submit-btn--disabled': !canSubmit }"
+				@click="submitOrder"
+			>
+				<text class="buy-submit-btn-text">确认购买</text>
+			</view>
+		</view>
+		
+		<sg-modal
+			:visible="showPasswordModal"
+			title="请输入交易密码"
+			@confirm="confirmPassword"
+			@cancel="showPasswordModal = false"
+			@close="showPasswordModal = false"
+		>
+			<view class="password-input-wrap">
+				<input 
+					class="password-input"
+					type="number"
+					password
+					maxlength="6"
+					v-model="tradePassword"
+					placeholder="请输入6位交易密码"
+				/>
+			</view>
+		</sg-modal>
+	</view>
+</template>
+
+<script lang="uts">
+	import { getProductDetail, createOrder } from '@/api/trade.uts'
+	import { formatDate, getDateBefore } from '@/utils/date.uts'
+	import type { Product, CreateOrderParams } from '@/api/trade.uts'
+	
+	export default {
+		data() {
+			return {
+				productId: 0,
+				product: {} as Product,
+				amount: '',
+				agreed: false,
+				availableBalance: 100000,
+				quickAmounts: [1000, 5000, 10000, 50000, 100000],
+				showPasswordModal: false,
+				tradePassword: ''
+			}
+		},
+		computed: {
+			estimatedEarnings(): string {
+				const amt = Number(this.amount) || 0
+				const rate = this.product.expectedReturn || 0
+				const days = this.product.investmentPeriod || 0
+				const earnings = amt * rate * days / 365
+				return earnings.toFixed(2)
+			},
+			maturityDate(): string {
+				const days = this.product.investmentPeriod || 0
+				const date = new Date()
+				date.setDate(date.getDate() + days)
+				return formatDate(date)
+			},
+			canSubmit(): boolean {
+				const amt = Number(this.amount) || 0
+				return this.agreed && 
+					amt >= (this.product.minInvestment || 0) && 
+					amt <= this.availableBalance
+			}
+		},
+		onLoad(options: any) {
+			if (options.productId) {
+				this.productId = Number(options.productId)
+				this.loadProduct()
+			}
+		},
+		methods: {
+			async loadProduct() {
+				try {
+					const res = await getProductDetail(this.productId)
+					this.product = res.data
+				} catch (e) {
+					console.error('获取产品详情失败:', e)
+				}
+			},
+			
+			formatMoney(num: number): string {
+				return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+			},
+			
+			onAmountInput(e: any) {
+				let value = e.detail.value
+				value = value.replace(/[^\d.]/g, '')
+				const parts = value.split('.')
+				if (parts.length > 2) {
+					value = parts[0] + '.' + parts.slice(1).join('')
+				}
+				if (parts[1] && parts[1].length > 2) {
+					value = parts[0] + '.' + parts[1].slice(0, 2)
+				}
+				this.amount = value
+			},
+			
+			setAmount(value: number) {
+				this.amount = String(value)
+			},
+			
+			buyAll() {
+				this.amount = String(this.availableBalance)
+			},
+			
+			submitOrder() {
+				if (!this.canSubmit) {
+					if (!this.agreed) {
+						uni.showToast({ title: '请先同意相关协议', icon: 'none' })
+					} else if (Number(this.amount) < this.product.minInvestment) {
+						uni.showToast({ title: `起购金额为${this.product.minInvestment}元`, icon: 'none' })
+					}
+					return
+				}
+				this.showPasswordModal = true
+			},
+			
+			async confirmPassword() {
+				if (this.tradePassword.length !== 6) {
+					uni.showToast({ title: '请输入6位交易密码', icon: 'none' })
+					return
+				}
+				
+				this.showPasswordModal = false
+				
+				try {
+					uni.showLoading({ title: '提交中...' })
+					
+					const params: CreateOrderParams = {
+						productId: this.productId,
+						orderType: 1,
+						quantity: Number(this.amount),
+						amount: Number(this.amount),
+						tradePassword: this.tradePassword
+					}
+					
+					const res = await createOrder(params)
+					
+					uni.hideLoading()
+					uni.showToast({ title: '购买成功', icon: 'success' })
+					
+					setTimeout(() => {
+						uni.redirectTo({
+							url: `/pages/buy-result/buy-result?orderId=${res.data.orderId}&success=1`
+						})
+					}, 1500)
+				} catch (e) {
+					uni.hideLoading()
+					console.error('购买失败:', e)
+				} finally {
+					this.tradePassword = ''
+				}
+			}
+		}
+	}
+</script>

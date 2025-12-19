@@ -1,0 +1,149 @@
+<template>
+	<view class="feedback-page">
+		<sg-navbar title="意见反馈" />
+		
+		<view class="feedback-form">
+			<view class="feedback-section">
+				<text class="feedback-label">反馈类型</text>
+				<view class="feedback-types">
+					<view 
+						v-for="(type, index) in feedbackTypes" 
+						:key="index"
+						class="feedback-type"
+						:class="{ 'feedback-type--active': selectedType === type.value }"
+						@click="selectedType = type.value"
+					>
+						<text class="feedback-type-icon">{{ type.icon }}</text>
+						<text class="feedback-type-text">{{ type.label }}</text>
+					</view>
+				</view>
+			</view>
+			
+			<view class="feedback-section">
+				<text class="feedback-label">问题描述</text>
+				<textarea 
+					class="feedback-textarea"
+					v-model="content"
+					placeholder="请详细描述您遇到的问题或建议，以便我们更好地为您服务..."
+					maxlength="500"
+				></textarea>
+				<text class="feedback-count">{{ content.length }}/500</text>
+			</view>
+			
+			<view class="feedback-section">
+				<text class="feedback-label">上传截图（选填）</text>
+				<view class="feedback-images">
+					<view 
+						v-for="(img, index) in images" 
+						:key="index"
+						class="feedback-image"
+					>
+						<image class="feedback-image-src" :src="img" mode="aspectFill"></image>
+						<view class="feedback-image-delete" @click="removeImage(index)">
+							<text class="feedback-image-delete-icon">×</text>
+						</view>
+					</view>
+					<view 
+						v-if="images.length < 4" 
+						class="feedback-image feedback-image--add"
+						@click="addImage"
+					>
+						<text class="feedback-image-add-icon">+</text>
+						<text class="feedback-image-add-text">添加图片</text>
+					</view>
+				</view>
+			</view>
+			
+			<view class="feedback-section">
+				<text class="feedback-label">联系方式（选填）</text>
+				<input 
+					class="feedback-input"
+					v-model="contact"
+					placeholder="请留下您的手机号或邮箱，方便我们联系您"
+				/>
+			</view>
+		</view>
+		
+		<view 
+			class="feedback-submit" 
+			:class="{ 'feedback-submit--disabled': !canSubmit }"
+			@click="submitFeedback"
+		>
+			<text class="feedback-submit-text">提交反馈</text>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	interface FeedbackType {
+		label: string
+		value: string
+		icon: string
+	}
+	
+	export default {
+		data() {
+			return {
+				selectedType: '',
+				content: '',
+				images: [] as string[],
+				contact: '',
+				feedbackTypes: [
+					{ label: '功能建议', value: 'suggestion', icon: '💡' },
+					{ label: '问题反馈', value: 'bug', icon: '🐛' },
+					{ label: '体验问题', value: 'experience', icon: '😕' },
+					{ label: '其他', value: 'other', icon: '📝' }
+				] as FeedbackType[]
+			}
+		},
+		computed: {
+			canSubmit(): boolean {
+				return this.selectedType !== '' && this.content.trim().length >= 10
+			}
+		},
+		methods: {
+			addImage() {
+				uni.chooseImage({
+					count: 4 - this.images.length,
+					sizeType: ['compressed'],
+					sourceType: ['album', 'camera'],
+					success: (res) => {
+						this.images = [...this.images, ...res.tempFilePaths]
+					}
+				})
+			},
+			
+			removeImage(index: number) {
+				this.images.splice(index, 1)
+			},
+			
+			async submitFeedback() {
+				if (!this.canSubmit) {
+					if (!this.selectedType) {
+						uni.showToast({ title: '请选择反馈类型', icon: 'none' })
+					} else {
+						uni.showToast({ title: '请输入至少10字的问题描述', icon: 'none' })
+					}
+					return
+				}
+				
+				try {
+					uni.showLoading({ title: '提交中...' })
+					
+					// 模拟提交
+					await new Promise(resolve => setTimeout(resolve, 1500))
+					
+					uni.hideLoading()
+					uni.showToast({ title: '感谢您的反馈', icon: 'success' })
+					
+					setTimeout(() => {
+						uni.navigateBack()
+					}, 1500)
+				} catch (e) {
+					uni.hideLoading()
+					console.error('提交反馈失败:', e)
+				}
+			}
+		}
+	}
+</script>

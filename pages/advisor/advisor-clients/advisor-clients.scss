@@ -1,0 +1,149 @@
+/**
+ * 客户管理页面样式
+ * @author SteadyGame Team
+ */
+
+@import '../../../styles/variables.scss';
+
+.clients-page {
+	min-height: 100vh;
+	background-color: $bg-base;
+	display: flex;
+	flex-direction: column;
+}
+
+.clients-search {
+	padding: $spacing-sm $spacing-base;
+	background-color: $bg-white;
+}
+
+.clients-search-wrap {
+	display: flex;
+	align-items: center;
+	height: 72rpx;
+	padding: 0 $spacing-base;
+	background-color: $bg-gray;
+	border-radius: $radius-round;
+}
+
+.clients-search-icon {
+	font-size: $font-base;
+	margin-right: $spacing-xs;
+}
+
+.clients-search-input {
+	flex: 1;
+	font-size: $font-base;
+	color: $text-primary;
+}
+
+.clients-filter {
+	display: flex;
+	padding: $spacing-sm $spacing-base;
+	background-color: $bg-white;
+	border-top: 1rpx solid $border-light;
+	overflow-x: auto;
+}
+
+.clients-filter-tab {
+	display: flex;
+	align-items: center;
+	padding: $spacing-xs $spacing-sm;
+	margin-right: $spacing-sm;
+	background-color: $bg-gray;
+	border-radius: $radius-round;
+	white-space: nowrap;
+	
+	&--active {
+		background-color: $primary-color;
+		
+		.clients-filter-tab-text,
+		.clients-filter-tab-count {
+			color: $text-inverse;
+		}
+	}
+}
+
+.clients-filter-tab-text {
+	font-size: $font-sm;
+	color: $text-secondary;
+}
+
+.clients-filter-tab-count {
+	font-size: $font-xs;
+	color: $text-placeholder;
+	margin-left: 4rpx;
+}
+
+.clients-list {
+	flex: 1;
+	padding: $spacing-base;
+}
+
+.client-item {
+	display: flex;
+	align-items: center;
+	padding: $spacing-base;
+	background-color: $bg-white;
+	border-radius: $radius-lg;
+	margin-bottom: $spacing-sm;
+}
+
+.client-avatar {
+	width: 100rpx;
+	height: 100rpx;
+	border-radius: 50%;
+	margin-right: $spacing-sm;
+}
+
+.client-info {
+	flex: 1;
+}
+
+.client-header {
+	display: flex;
+	align-items: center;
+	margin-bottom: 4rpx;
+}
+
+.client-name {
+	font-size: $font-md;
+	font-weight: bold;
+	color: $text-primary;
+	margin-right: $spacing-xs;
+}
+
+.client-risk-tag {
+	padding: 2rpx 12rpx;
+	border-radius: $radius-sm;
+	
+	&--low { background-color: rgba($success-color, 0.1); .client-risk-tag-text { color: $success-color; } }
+	&--mid { background-color: rgba($warning-color, 0.1); .client-risk-tag-text { color: $warning-color; } }
+	&--high { background-color: rgba($error-color, 0.1); .client-risk-tag-text { color: $error-color; } }
+}
+
+.client-risk-tag-text {
+	font-size: $font-xs;
+}
+
+.client-phone {
+	display: block;
+	font-size: $font-sm;
+	color: $text-secondary;
+	margin-bottom: 4rpx;
+}
+
+.client-stats {
+	display: flex;
+	gap: $spacing-base;
+}
+
+.client-stat {
+	font-size: $font-xs;
+	color: $text-placeholder;
+}
+
+.client-arrow {
+	font-size: $font-lg;
+	color: $text-placeholder;
+}

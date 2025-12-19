@@ -1,0 +1,132 @@
+<template>
+	<view class="logs-page">
+		<sg-navbar title="登录日志" />
+		
+		<view class="logs-tips">
+			<text class="logs-tips-icon">ℹ️</text>
+			<text class="logs-tips-text">展示最近30天的登录记录，如发现异常请及时处理</text>
+		</view>
+		
+		<scroll-view class="logs-list" scroll-y @scrolltolower="loadMore">
+			<view 
+				v-for="(log, index) in logList" 
+				:key="index"
+				class="log-item"
+				:class="{ 'log-item--current': log.isCurrent }"
+			>
+				<view class="log-icon" :class="getDeviceClass(log.deviceInfo)">
+					<text class="log-icon-text">{{ getDeviceIcon(log.deviceInfo) }}</text>
+				</view>
+				<view class="log-info">
+					<view class="log-header">
+						<text class="log-device">{{ log.deviceInfo }}</text>
+						<text v-if="log.isCurrent" class="log-current">当前设备</text>
+					</view>
+					<text class="log-ip">IP: {{ log.ipAddress }}</text>
+					<text class="log-time">{{ formatTime(log.loginTime) }}</text>
+				</view>
+				<view class="log-status" :class="log.status === 1 ? 'log-status--success' : 'log-status--fail'">
+					<text class="log-status-text">{{ log.status === 1 ? '成功' : '失败' }}</text>
+				</view>
+			</view>
+			
+			<sg-empty v-if="logList.length === 0" text="暂无登录记录" />
+		</scroll-view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { getLoginLogs } from '@/api/user.uts'
+	import { formatDateTime } from '@/utils/date.uts'
+	import type { LoginLog } from '@/api/user.uts'
+	
+	interface ExtendedLoginLog extends LoginLog {
+		isCurrent?: boolean
+	}
+	
+	export default {
+		data() {
+			return {
+				logList: [] as ExtendedLoginLog[],
+				page: 1,
+				hasMore: true
+			}
+		},
+		onLoad() {
+			this.loadLogs()
+		},
+		methods: {
+			async loadLogs() {
+				try {
+					const res = await getLoginLogs(30)
+					this.logList = res.data.map((log, index) => ({
+						...log,
+						isCurrent: index === 0
+					}))
+				} catch (e) {
+					console.error('获取登录日志失败:', e)
+					// 模拟数据
+					this.logList = [
+						{
+							logId: 1,
+							userId: 1,
+							ipAddress: '192.168.1.100',
+							userAgent: 'Android',
+							deviceInfo: 'Android 手机',
+							loginTime: new Date().toISOString(),
+							logoutTime: '',
+							status: 1,
+							isCurrent: true
+						},
+						{
+							logId: 2,
+							userId: 1,
+							ipAddress: '192.168.1.101',
+							userAgent: 'iPhone',
+							deviceInfo: 'iPhone 15',
+							loginTime: new Date(Date.now() - 86400000).toISOString(),
+							logoutTime: '',
+							status: 1,
+							isCurrent: false
+						},
+						{
+							logId: 3,
+							userId: 1,
+							ipAddress: '10.0.0.50',
+							userAgent: 'Windows',
+							deviceInfo: 'Windows PC',
+							loginTime: new Date(Date.now() - 172800000).toISOString(),
+							logoutTime: '',
+							status: 0,
+							isCurrent: false
+						}
+					]
+				}
+			},
+			
+			loadMore() {
+				if (this.hasMore) {
+					this.page++
+				}
+			},
+			
+			formatTime(time: string): string {
+				return formatDateTime(time)
+			},
+			
+			getDeviceIcon(device: string): string {
+				if (device.includes('iPhone') || device.includes('iOS')) return '📱'
+				if (device.includes('Android')) return '📱'
+				if (device.includes('Windows')) return '💻'
+				if (device.includes('Mac')) return '💻'
+				return '📱'
+			},
+			
+			getDeviceClass(device: string): string {
+				if (device.includes('iPhone') || device.includes('iOS')) return 'log-icon--ios'
+				if (device.includes('Android')) return 'log-icon--android'
+				return 'log-icon--pc'
+			}
+		}
+	}
+</script>

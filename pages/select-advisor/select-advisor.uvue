@@ -1,0 +1,167 @@
+<template>
+	<view class="advisor-list-page">
+		<sg-navbar title="选择顾问" />
+		
+		<view class="advisor-filter">
+			<scroll-view class="filter-scroll" scroll-x>
+				<view class="filter-tags">
+					<view 
+						v-for="(tag, index) in filterTags" 
+						:key="index"
+						class="filter-tag"
+						:class="{ 'filter-tag--active': selectedTag === tag.value }"
+						@click="selectTag(tag.value)"
+					>
+						<text class="filter-tag-text">{{ tag.label }}</text>
+					</view>
+				</view>
+			</scroll-view>
+		</view>
+		
+		<scroll-view class="advisor-list" scroll-y @scrolltolower="loadMore">
+			<view 
+				v-for="(advisor, index) in advisorList" 
+				:key="index"
+				class="advisor-card"
+				@click="selectAdvisor(advisor)"
+			>
+				<image class="advisor-avatar" :src="advisor.avatar || '/static/default-avatar.png'" mode="aspectFill"></image>
+				<view class="advisor-info">
+					<view class="advisor-header">
+						<text class="advisor-name">{{ advisor.realName }}</text>
+						<view class="advisor-rating">
+							<text class="advisor-rating-star">⭐</text>
+							<text class="advisor-rating-value">{{ advisor.rating }}</text>
+						</view>
+					</view>
+					<text class="advisor-title">{{ advisor.title }}</text>
+					<view class="advisor-tags">
+						<view v-for="(specialty, sIndex) in advisor.specialties.slice(0, 3)" :key="sIndex" class="advisor-tag">
+							<text class="advisor-tag-text">{{ specialty }}</text>
+						</view>
+					</view>
+					<view class="advisor-stats">
+						<text class="advisor-stat">{{ advisor.serviceYears }}年经验</text>
+						<text class="advisor-stat">服务{{ advisor.clientCount }}人</text>
+					</view>
+				</view>
+			</view>
+			
+			<sg-empty v-if="advisorList.length === 0" text="暂无顾问" />
+		</scroll-view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { get } from '@/utils/request.uts'
+	
+	interface Advisor {
+		advisorId: number
+		realName: string
+		avatar: string
+		title: string
+		specialties: string[]
+		serviceYears: number
+		clientCount: number
+		rating: number
+	}
+	
+	interface FilterTag {
+		label: string
+		value: string
+	}
+	
+	export default {
+		data() {
+			return {
+				selectedTag: 'all',
+				filterTags: [
+					{ label: '全部', value: 'all' },
+					{ label: '资产配置', value: 'asset' },
+					{ label: '基金投资', value: 'fund' },
+					{ label: '保险规划', value: 'insurance' },
+					{ label: '养老规划', value: 'pension' },
+					{ label: '税务筹划', value: 'tax' }
+				] as FilterTag[],
+				advisorList: [] as Advisor[],
+				page: 1,
+				hasMore: true
+			}
+		},
+		onLoad() {
+			this.loadAdvisors()
+		},
+		methods: {
+			selectTag(value: string) {
+				this.selectedTag = value
+				this.page = 1
+				this.advisorList = []
+				this.loadAdvisors()
+			},
+			
+			loadAdvisors() {
+				// 模拟数据
+				const mockAdvisors: Advisor[] = [
+					{
+						advisorId: 1,
+						realName: '张明',
+						avatar: '',
+						title: '高级理财规划师',
+						specialties: ['资产配置', '基金投资', '保险规划'],
+						serviceYears: 8,
+						clientCount: 256,
+						rating: 4.9
+					},
+					{
+						advisorId: 2,
+						realName: '李华',
+						avatar: '',
+						title: '资深财富顾问',
+						specialties: ['养老规划', '税务筹划', '家族传承'],
+						serviceYears: 12,
+						clientCount: 389,
+						rating: 4.8
+					},
+					{
+						advisorId: 3,
+						realName: '王芳',
+						avatar: '',
+						title: '金融理财师',
+						specialties: ['基金投资', '股票分析', '定投策略'],
+						serviceYears: 5,
+						clientCount: 128,
+						rating: 4.7
+					}
+				]
+				this.advisorList = mockAdvisors
+			},
+			
+			loadMore() {
+				if (this.hasMore) {
+					this.page++
+					// 加载更多
+				}
+			},
+			
+			selectAdvisor(advisor: Advisor) {
+				uni.showModal({
+					title: '确认选择',
+					content: `确定选择"${advisor.realName}"作为您的专属顾问吗？`,
+					success: async (res) => {
+						if (res.confirm) {
+							try {
+								// 调用绑定顾问API
+								uni.showToast({ title: '绑定成功', icon: 'success' })
+								setTimeout(() => {
+									uni.navigateBack()
+								}, 1500)
+							} catch (e) {
+								console.error('绑定顾问失败:', e)
+							}
+						}
+					}
+				})
+			}
+		}
+	}
+</script>

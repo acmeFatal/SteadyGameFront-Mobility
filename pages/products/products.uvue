@@ -1,0 +1,179 @@
+<template>
+	<view class="products-page">
+		<sg-navbar title="理财产品" />
+		
+		<view class="products-filter">
+			<view class="filter-tabs">
+				<view 
+					v-for="(tab, index) in riskTabs" 
+					:key="index"
+					class="filter-tab"
+					:class="{ 'filter-tab--active': currentRisk === tab.value }"
+					@click="filterByRisk(tab.value)"
+				>
+					<text class="filter-tab-text">{{ tab.name }}</text>
+				</view>
+			</view>
+		</view>
+		
+		<scroll-view 
+			class="products-list" 
+			scroll-y
+			@scrolltolower="loadMore"
+			refresher-enabled
+			:refresher-triggered="isRefreshing"
+			@refresherrefresh="onRefresh"
+		>
+			<view 
+				v-for="(product, index) in productList" 
+				:key="index"
+				class="product-item"
+				@click="goToDetail(product.productId)"
+			>
+				<view class="product-header">
+					<text class="product-name">{{ product.productName }}</text>
+					<view class="product-risk" :class="getRiskClass(product.riskLevel)">
+						<text class="product-risk-text">{{ getRiskText(product.riskLevel) }}</text>
+					</view>
+				</view>
+				<view class="product-body">
+					<view class="product-rate">
+						<text class="product-rate-value">{{ (product.expectedReturn * 100).toFixed(2) }}</text>
+						<text class="product-rate-unit">%</text>
+					</view>
+					<view class="product-info">
+						<view class="product-info-item">
+							<text class="product-info-label">起购金额</text>
+							<text class="product-info-value">¥{{ formatMoney(product.minInvestment) }}</text>
+						</view>
+						<view class="product-info-item">
+							<text class="product-info-label">投资期限</text>
+							<text class="product-info-value">{{ product.investmentPeriod }}天</text>
+						</view>
+					</view>
+				</view>
+				<view class="product-footer">
+					<view class="product-btn" @click.stop="buyProduct(product)">
+						<text class="product-btn-text">立即购买</text>
+					</view>
+				</view>
+			</view>
+			
+			<sg-empty v-if="productList.length === 0 && !loading" text="暂无产品" />
+			
+			<view v-if="loading" class="products-loading">
+				<text class="products-loading-text">加载中...</text>
+			</view>
+		</scroll-view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { getProducts } from '@/api/trade.uts'
+	import { RISK_LEVEL_MAP } from '@/config/index.uts'
+	import type { Product } from '@/api/trade.uts'
+	
+	interface RiskTab {
+		name: string
+		value: number | null
+	}
+	
+	export default {
+		data() {
+			return {
+				currentRisk: null as number | null,
+				riskTabs: [
+					{ name: '全部', value: null },
+					{ name: '低风险', value: 1 },
+					{ name: '中低风险', value: 2 },
+					{ name: '中风险', value: 3 },
+					{ name: '中高风险', value: 4 },
+					{ name: '高风险', value: 5 }
+				] as RiskTab[],
+				productList: [] as Product[],
+				loading: false,
+				isRefreshing: false,
+				page: 1,
+				hasMore: true
+			}
+		},
+		onLoad() {
+			this.loadProducts()
+		},
+		methods: {
+			filterByRisk(risk: number | null) {
+				this.currentRisk = risk
+				this.page = 1
+				this.hasMore = true
+				this.productList = []
+				this.loadProducts()
+			},
+			
+			async loadProducts() {
+				if (this.loading || !this.hasMore) return
+				
+				this.loading = true
+				try {
+					const res = await getProducts({
+						riskLevel: this.currentRisk || undefined,
+						page: this.page,
+						size: 10
+					})
+					
+					const newProducts = res.data?.records || []
+					if (this.page === 1) {
+						this.productList = newProducts
+					} else {
+						this.productList = [...this.productList, ...newProducts]
+					}
+					
+					this.hasMore = newProducts.length >= 10
+					this.page++
+				} catch (e) {
+					console.error('获取产品失败:', e)
+				} finally {
+					this.loading = false
+					this.isRefreshing = false
+				}
+			},
+			
+			loadMore() {
+				this.loadProducts()
+			},
+			
+			onRefresh() {
+				this.isRefreshing = true
+				this.page = 1
+				this.hasMore = true
+				this.loadProducts()
+			},
+			
+			formatMoney(num: number): string {
+				return num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+			},
+			
+			getRiskText(level: number): string {
+				return RISK_LEVEL_MAP[level] || '未知'
+			},
+			
+			getRiskClass(level: number): string {
+				const classMap: Record<number, string> = {
+					1: 'product-risk--low',
+					2: 'product-risk--low-mid',
+					3: 'product-risk--mid',
+					4: 'product-risk--mid-high',
+					5: 'product-risk--high'
+				}
+				return classMap[level] || ''
+			},
+			
+			goToDetail(productId: number) {
+				uni.navigateTo({ url: `/pages/product-detail/product-detail?id=${productId}` })
+			},
+			
+			buyProduct(product: Product) {
+				uni.navigateTo({ url: `/pages/buy/buy?productId=${product.productId}` })
+			}
+		}
+	}
+</script>

@@ -1,0 +1,208 @@
+<template>
+	<view class="orders-page">
+		<sg-navbar title="我的订单" />
+		
+		<view class="orders-tabs">
+			<view 
+				v-for="(tab, index) in tabs" 
+				:key="index"
+				class="orders-tab"
+				:class="{ 'orders-tab--active': currentTab === index }"
+				@click="switchTab(index)"
+			>
+				<text class="orders-tab-text">{{ tab.name }}</text>
+			</view>
+		</view>
+		
+		<scroll-view 
+			class="orders-list" 
+			scroll-y
+			@scrolltolower="loadMore"
+			refresher-enabled
+			:refresher-triggered="isRefreshing"
+			@refresherrefresh="onRefresh"
+		>
+			<view 
+				v-for="(order, index) in orderList" 
+				:key="index"
+				class="order-item"
+				@click="goToOrderDetail(order.orderId)"
+			>
+				<view class="order-header">
+					<text class="order-no">订单号：{{ order.orderNo }}</text>
+					<text class="order-status" :class="getStatusClass(order.orderStatus)">
+						{{ getStatusText(order.orderStatus) }}
+					</text>
+				</view>
+				<view class="order-body">
+					<view class="order-info">
+						<text class="order-type">{{ getOrderTypeText(order.orderType) }}</text>
+						<text class="order-product">产品ID：{{ order.productId }}</text>
+					</view>
+					<view class="order-amount">
+						<text class="order-amount-value">¥{{ formatMoney(order.amount) }}</text>
+						<text class="order-amount-label">交易金额</text>
+					</view>
+				</view>
+				<view class="order-footer">
+					<text class="order-time">{{ formatTime(order.createdAt) }}</text>
+					<view class="order-actions">
+						<view 
+							v-if="order.orderStatus === 1" 
+							class="order-btn order-btn--cancel"
+							@click.stop="cancelOrder(order)"
+						>
+							<text class="order-btn-text">取消订单</text>
+						</view>
+						<view 
+							v-if="order.orderStatus === 5" 
+							class="order-btn order-btn--retry"
+							@click.stop="retryOrder(order)"
+						>
+							<text class="order-btn-text">重试</text>
+						</view>
+					</view>
+				</view>
+			</view>
+			
+			<sg-empty v-if="orderList.length === 0 && !loading" text="暂无订单" />
+			
+			<view v-if="loading" class="orders-loading">
+				<text class="orders-loading-text">加载中...</text>
+			</view>
+		</scroll-view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { getOrdersWithFilter, cancelOrder as apiCancelOrder, retryOrder as apiRetryOrder } from '@/api/trade.uts'
+	import { formatDateTime } from '@/utils/date.uts'
+	import { ORDER_STATUS_MAP, ORDER_TYPE_MAP } from '@/config/index.uts'
+	import type { Order } from '@/api/trade.uts'
+	
+	interface Tab {
+		name: string
+		status: number | null
+	}
+	
+	export default {
+		data() {
+			return {
+				currentTab: 0,
+				tabs: [
+					{ name: '全部', status: null },
+					{ name: '待处理', status: 1 },
+					{ name: '处理中', status: 2 },
+					{ name: '已成交', status: 3 },
+					{ name: '已取消', status: 4 }
+				] as Tab[],
+				orderList: [] as Order[],
+				loading: false,
+				isRefreshing: false,
+				page: 1,
+				hasMore: true
+			}
+		},
+		onLoad() {
+			this.loadOrders()
+		},
+		methods: {
+			switchTab(index: number) {
+				this.currentTab = index
+				this.page = 1
+				this.hasMore = true
+				this.orderList = []
+				this.loadOrders()
+			},
+			
+			async loadOrders() {
+				if (this.loading || !this.hasMore) return
+				
+				this.loading = true
+				try {
+					const status = this.tabs[this.currentTab].status
+					const res = await getOrdersWithFilter({
+						status: status || undefined,
+						page: this.page,
+						size: 10
+					})
+					
+					const newOrders = res.data || []
+					if (this.page === 1) {
+						this.orderList = newOrders
+					} else {
+						this.orderList = [...this.orderList, ...newOrders]
+					}
+					
+					this.hasMore = newOrders.length >= 10
+					this.page++
+				} catch (e) {
+					console.error('获取订单失败:', e)
+				} finally {
+					this.loading = false
+					this.isRefreshing = false
+				}
+			},
+			
+			loadMore() {
+				this.loadOrders()
+			},
+			
+			onRefresh() {
+				this.isRefreshing = true
+				this.page = 1
+				this.hasMore = true
+				this.loadOrders()
+			},
+			
+			formatMoney(num: number): string {
+				return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+			},
+			
+			formatTime(time: string): string {
+				return formatDateTime(time)
+			},
+			
+			getStatusText(status: number): string {
+				return ORDER_STATUS_MAP[status] || '未知'
+			},
+			
+			getStatusClass(status: number): string {
+				const classMap: Record<number, string> = {
+					1: 'order-status--pending',
+					2: 'order-status--processing',
+					3: 'order-status--success',
+					4: 'order-status--cancelled',
+					5: 'order-status--failed'
+				}
+				return classMap[status] || ''
+			},
+			
+			getOrderTypeText(type: number): string {
+				return ORDER_TYPE_MAP[type] || '未知'
+			},
+			
+			goToOrderDetail(orderId: number) {
+				uni.navigateTo({ url: `/pages/order-detail/order-detail?id=${orderId}` })
+			},
+			
+			async cancelOrder(order: Order) {
+				uni.showModal({
+					title: '提示',
+					content: '确定要取消该订单吗？',
+					success: async (res) => {
+						if (res.confirm) {
+							// 需要输入交易密码
+							// 这里简化处理
+							uni.showToast({ title: '取消订单功能开发中', icon: 'none' })
+						}
+					}
+				})
+			},
+			
+			async retryOrder(order: Order) {
+				uni.showToast({ title: '重试功能开发中', icon: 'none' })
+			}
+		}
+	}
+</script>

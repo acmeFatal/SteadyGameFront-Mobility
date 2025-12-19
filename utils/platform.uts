@@ -1,0 +1,193 @@
+/**
+ * @description 平台兼容性工具类
+ * @author SteadyGame Team
+ * @version 1.0.0
+ */
+
+/**
+ * 平台类型枚举
+ */
+export enum PlatformType {
+	WEB = 'web',
+	ANDROID = 'android',
+	IOS = 'ios',
+	HARMONY = 'harmony',
+	MP_WEIXIN = 'mp-weixin',
+	MP_ALIPAY = 'mp-alipay',
+	UNKNOWN = 'unknown'
+}
+
+/**
+ * 获取当前平台类型
+ * @returns 平台类型
+ */
+export function getPlatformType(): PlatformType {
+	// #ifdef APP-ANDROID
+	return PlatformType.ANDROID
+	// #endif
+	
+	// #ifdef APP-IOS
+	return PlatformType.IOS
+	// #endif
+	
+	// #ifdef APP-HARMONY
+	return PlatformType.HARMONY
+	// #endif
+	
+	// #ifdef MP-WEIXIN
+	return PlatformType.MP_WEIXIN
+	// #endif
+	
+	// #ifdef MP-ALIPAY
+	return PlatformType.MP_ALIPAY
+	// #endif
+	
+	// #ifdef H5
+	return PlatformType.WEB
+	// #endif
+	
+	return PlatformType.UNKNOWN
+}
+
+/**
+ * 判断是否为APP环境
+ * @returns 是否为APP
+ */
+export function isApp(): boolean {
+	const platform = getPlatformType()
+	return platform === PlatformType.ANDROID || 
+		platform === PlatformType.IOS || 
+		platform === PlatformType.HARMONY
+}
+
+/**
+ * 判断是否为小程序环境
+ * @returns 是否为小程序
+ */
+export function isMiniProgram(): boolean {
+	const platform = getPlatformType()
+	return platform === PlatformType.MP_WEIXIN || 
+		platform === PlatformType.MP_ALIPAY
+}
+
+/**
+ * 判断是否为H5环境
+ * @returns 是否为H5
+ */
+export function isH5(): boolean {
+	return getPlatformType() === PlatformType.WEB
+}
+
+/**
+ * 判断是否支持生物识别
+ * @returns Promise<boolean>
+ */
+export function supportBiometric(): Promise<boolean> {
+	return new Promise((resolve) => {
+		// #ifdef APP-ANDROID || APP-IOS
+		uni.checkIsSupportSoterAuthentication({
+			success: (res) => {
+				resolve(res.supportMode && res.supportMode.length > 0)
+			},
+			fail: () => {
+				resolve(false)
+			}
+		})
+		// #endif
+		
+		// #ifndef APP-ANDROID || APP-IOS
+		resolve(false)
+		// #endif
+	})
+}
+
+/**
+ * 获取系统信息
+ * @returns 系统信息
+ */
+export function getSystemInfo(): UniApp.GetSystemInfoResult | null {
+	try {
+		return uni.getSystemInfoSync()
+	} catch (e) {
+		console.error('getSystemInfo error:', e)
+		return null
+	}
+}
+
+/**
+ * 获取状态栏高度
+ * @returns 状态栏高度（px）
+ */
+export function getStatusBarHeight(): number {
+	const sysInfo = getSystemInfo()
+	return sysInfo?.statusBarHeight || 0
+}
+
+/**
+ * 获取导航栏高度（包含状态栏）
+ * @returns 导航栏高度（px）
+ */
+export function getNavBarHeight(): number {
+	const statusBarHeight = getStatusBarHeight()
+	// 标准导航栏内容高度为44px
+	return statusBarHeight + 44
+}
+
+/**
+ * 获取安全区域信息
+ * @returns 安全区域信息
+ */
+export function getSafeAreaInsets(): { top: number; bottom: number; left: number; right: number } {
+	const sysInfo = getSystemInfo()
+	const safeArea = sysInfo?.safeArea
+	
+	if (safeArea) {
+		return {
+			top: safeArea.top,
+			bottom: (sysInfo?.screenHeight || 0) - safeArea.bottom,
+			left: safeArea.left,
+			right: (sysInfo?.screenWidth || 0) - safeArea.right
+		}
+	}
+	
+	return { top: 0, bottom: 0, left: 0, right: 0 }
+}
+
+/**
+ * 获取设备类型标识（用于API请求）
+ * @returns 设备类型ID
+ */
+export function getDeviceType(): number {
+	const platform = getPlatformType()
+	switch (platform) {
+		case PlatformType.WEB:
+			return 1
+		case PlatformType.IOS:
+			return 2
+		case PlatformType.ANDROID:
+			return 3
+		case PlatformType.HARMONY:
+			return 4
+		default:
+			return 1
+	}
+}
+
+/**
+ * 获取设备唯一标识
+ * @returns 设备ID
+ */
+export function getDeviceId(): string {
+	const sysInfo = getSystemInfo()
+	// #ifdef APP-ANDROID || APP-IOS
+	return sysInfo?.deviceId || 'unknown'
+	// #endif
+	
+	// 非APP环境使用浏览器指纹或随机ID
+	let deviceId = uni.getStorageSync('device_id')
+	if (!deviceId) {
+		deviceId = 'web_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10)
+		uni.setStorageSync('device_id', deviceId)
+	}
+	return deviceId
+}

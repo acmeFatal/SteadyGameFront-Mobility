@@ -1,0 +1,243 @@
+<template>
+	<view class="client-detail-page">
+		<sg-navbar title="客户详情" />
+		
+		<view class="client-header">
+			<image class="client-avatar" :src="client.avatar || '/static/default-avatar.png'" mode="aspectFill"></image>
+			<view class="client-info">
+				<text class="client-name">{{ client.realName }}</text>
+				<view class="client-tags">
+					<view class="client-tag" :class="getRiskClass(client.riskLevel)">
+						<text class="client-tag-text">{{ getRiskText(client.riskLevel) }}</text>
+					</view>
+					<view v-if="client.isVip" class="client-tag client-tag--vip">
+						<text class="client-tag-text">VIP</text>
+					</view>
+				</view>
+			</view>
+			<view class="client-actions">
+				<view class="client-action" @click="makeCall">
+					<text class="client-action-icon">📞</text>
+				</view>
+				<view class="client-action" @click="sendMessage">
+					<text class="client-action-icon">💬</text>
+				</view>
+			</view>
+		</view>
+		
+		<view class="client-assets">
+			<view class="client-asset-item">
+				<text class="client-asset-value">¥{{ formatMoney(client.totalAssets) }}</text>
+				<text class="client-asset-label">总资产</text>
+			</view>
+			<view class="client-asset-item">
+				<text class="client-asset-value" :class="client.totalReturn >= 0 ? 'text-rise' : 'text-fall'">
+					{{ client.totalReturn >= 0 ? '+' : '' }}¥{{ formatMoney(Math.abs(client.totalReturn)) }}
+				</text>
+				<text class="client-asset-label">累计收益</text>
+			</view>
+			<view class="client-asset-item">
+				<text class="client-asset-value" :class="client.returnRate >= 0 ? 'text-rise' : 'text-fall'">
+					{{ client.returnRate >= 0 ? '+' : '' }}{{ (client.returnRate * 100).toFixed(2) }}%
+				</text>
+				<text class="client-asset-label">收益率</text>
+			</view>
+		</view>
+		
+		<view class="client-section">
+			<text class="client-section-title">基本信息</text>
+			<view class="client-info-list">
+				<view class="client-info-item">
+					<text class="client-info-label">手机号</text>
+					<text class="client-info-value">{{ formatPhone(client.phone) }}</text>
+				</view>
+				<view class="client-info-item">
+					<text class="client-info-label">邮箱</text>
+					<text class="client-info-value">{{ client.email || '未绑定' }}</text>
+				</view>
+				<view class="client-info-item">
+					<text class="client-info-label">风险等级</text>
+					<text class="client-info-value">{{ getRiskText(client.riskLevel) }}</text>
+				</view>
+				<view class="client-info-item">
+					<text class="client-info-label">分配时间</text>
+					<text class="client-info-value">{{ client.assignedAt }}</text>
+				</view>
+			</view>
+		</view>
+		
+		<view class="client-section">
+			<text class="client-section-title">资产配置</text>
+			<view class="client-portfolio">
+				<view 
+					v-for="(item, index) in portfolio" 
+					:key="index"
+					class="portfolio-item"
+				>
+					<view class="portfolio-bar" :style="{ width: item.percentage + '%', backgroundColor: getColor(index) }"></view>
+					<text class="portfolio-name">{{ item.name }}</text>
+					<text class="portfolio-amount">¥{{ formatMoney(item.amount) }}</text>
+					<text class="portfolio-percent">{{ item.percentage }}%</text>
+				</view>
+			</view>
+		</view>
+		
+		<view class="client-section">
+			<view class="client-section-header">
+				<text class="client-section-title">持仓记录</text>
+				<text class="client-section-more" @click="goToHoldings">查看全部 ›</text>
+			</view>
+			<view class="client-holdings">
+				<view 
+					v-for="(holding, index) in holdings" 
+					:key="index"
+					class="holding-item"
+				>
+					<text class="holding-name">{{ holding.productName }}</text>
+					<view class="holding-info">
+						<text class="holding-amount">¥{{ formatMoney(holding.amount) }}</text>
+						<text class="holding-return" :class="holding.returnRate >= 0 ? 'text-rise' : 'text-fall'">
+							{{ holding.returnRate >= 0 ? '+' : '' }}{{ (holding.returnRate * 100).toFixed(2) }}%
+						</text>
+					</view>
+				</view>
+			</view>
+		</view>
+		
+		<view class="client-footer">
+			<view class="client-footer-btn client-footer-btn--plan" @click="createPlan">
+				<text class="client-footer-btn-text">制定方案</text>
+			</view>
+			<view class="client-footer-btn client-footer-btn--consult" @click="bookConsult">
+				<text class="client-footer-btn-text">预约咨询</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script lang="uts">
+	import { RISK_LEVEL_MAP } from '@/config/index.uts'
+	import { formatPhone } from '@/utils/format.uts'
+	
+	interface Client {
+		userId: number
+		realName: string
+		avatar: string
+		phone: string
+		email: string
+		riskLevel: number
+		isVip: boolean
+		totalAssets: number
+		totalReturn: number
+		returnRate: number
+		assignedAt: string
+	}
+	
+	interface PortfolioItem {
+		name: string
+		amount: number
+		percentage: number
+	}
+	
+	interface Holding {
+		productId: number
+		productName: string
+		amount: number
+		returnRate: number
+	}
+	
+	const COLORS = ['#1890FF', '#52C41A', '#FAAD14', '#F5222D', '#722ED1']
+	
+	export default {
+		data() {
+			return {
+				userId: 0,
+				client: {} as Client,
+				portfolio: [] as PortfolioItem[],
+				holdings: [] as Holding[]
+			}
+		},
+		onLoad(options: any) {
+			if (options.id) {
+				this.userId = Number(options.id)
+				this.loadClientDetail()
+			}
+		},
+		methods: {
+			loadClientDetail() {
+				// 模拟数据
+				this.client = {
+					userId: this.userId,
+					realName: '张三',
+					avatar: '',
+					phone: '13800138001',
+					email: 'zhangsan@example.com',
+					riskLevel: 3,
+					isVip: true,
+					totalAssets: 1500000,
+					totalReturn: 125000,
+					returnRate: 0.086,
+					assignedAt: '2024-01-15'
+				}
+				
+				this.portfolio = [
+					{ name: '货币基金', percentage: 20, amount: 300000 },
+					{ name: '债券基金', percentage: 35, amount: 525000 },
+					{ name: '混合基金', percentage: 30, amount: 450000 },
+					{ name: '股票基金', percentage: 15, amount: 225000 }
+				]
+				
+				this.holdings = [
+					{ productId: 1, productName: '稳健增值理财A', amount: 500000, returnRate: 0.065 },
+					{ productId: 2, productName: '灵活配置混合B', amount: 450000, returnRate: 0.125 },
+					{ productId: 3, productName: '货币增强C', amount: 300000, returnRate: 0.032 }
+				]
+			},
+			
+			formatMoney(num: number): string {
+				if (num >= 10000) {
+					return (num / 10000).toFixed(2) + '万'
+				}
+				return num.toFixed(2)
+			},
+			
+			formatPhone(phone: string): string {
+				return formatPhone(phone)
+			},
+			
+			getRiskText(level: number): string {
+				return RISK_LEVEL_MAP[level] || '未知'
+			},
+			
+			getRiskClass(level: number): string {
+				if (level <= 2) return 'client-tag--low'
+				if (level <= 3) return 'client-tag--mid'
+				return 'client-tag--high'
+			},
+			
+			getColor(index: number): string {
+				return COLORS[index % COLORS.length]
+			},
+			
+			makeCall() {
+				uni.makePhoneCall({ phoneNumber: this.client.phone })
+			},
+			
+			sendMessage() {
+				uni.showToast({ title: '消息功能开发中', icon: 'none' })
+			},
+			
+			goToHoldings() {
+				uni.showToast({ title: '持仓详情开发中', icon: 'none' })
+			},
+			
+			createPlan() {
+				uni.navigateTo({ url: `/pages/advisor/create-plan/create-plan?userId=${this.userId}` })
+			},
+			
+			bookConsult() {
+				uni.showToast({ title: '预约咨询开发中', icon: 'none' })
+			}
+		}
+	}
+</script>

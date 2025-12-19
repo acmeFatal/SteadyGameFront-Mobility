@@ -10,84 +10,70 @@
 		<!-- 表单区域 -->
 		<view class="login-form">
 			<!-- 切换登录方式 -->
-			<view class="login-tabs">
-				<view 
-					class="login-tab" 
-					:class="loginType === 'password' ? 'login-tab-active' : ''"
-					@click="switchLoginType('password')"
-				>
-					<text class="login-tab-text" :class="loginType === 'password' ? 'login-tab-text-active' : ''">密码登录</text>
-				</view>
-				<view 
-					class="login-tab"
-					:class="loginType === 'sms' ? 'login-tab-active' : ''"
-					@click="switchLoginType('sms')"
-				>
-					<text class="login-tab-text" :class="loginType === 'sms' ? 'login-tab-text-active' : ''">验证码登录</text>
-				</view>
-			</view>
+			<up-subsection 
+				:list="['密码登录', '验证码登录']" 
+				:current="currentTab"
+				@change="onTabChange"
+			/>
 			
 			<!-- 密码登录 -->
 			<view v-if="loginType === 'password'" class="login-fields">
-				<view class="login-field">
-					<text class="login-field-icon">👤</text>
-					<input 
-						class="login-field-input"
-						v-model="form.username"
-						placeholder="请输入用户名/手机号/邮箱"
-						placeholder-class="input-placeholder"
-					/>
-				</view>
-				<view class="login-field">
-					<text class="login-field-icon">🔒</text>
-					<input 
-						class="login-field-input"
-						v-model="form.password"
-						placeholder="请输入密码"
-						placeholder-class="input-placeholder"
-						:password="!showPassword"
-					/>
-					<text class="login-field-eye" @click="showPassword = !showPassword">{{ showPassword ? '👁' : '👁‍🗨' }}</text>
-				</view>
+				<up-input
+					v-model="form.username"
+					placeholder="请输入用户名/手机号/邮箱"
+					prefixIcon="account"
+					clearable
+					border="surround"
+				/>
+				<up-input
+					v-model="form.password"
+					placeholder="请输入密码"
+					prefixIcon="lock"
+					:type="showPassword ? 'text' : 'password'"
+					:suffixIcon="showPassword ? 'eye-fill' : 'eye-off'"
+					@clickIcon="showPassword = !showPassword"
+					border="surround"
+				/>
 			</view>
 			
 			<!-- 验证码登录 -->
 			<view v-else class="login-fields">
-				<view class="login-field">
-					<text class="login-field-icon">📱</text>
-					<input 
-						class="login-field-input"
-						v-model="form.phone"
-						placeholder="请输入手机号"
-						placeholder-class="input-placeholder"
-						type="number"
-						maxlength="11"
-					/>
-				</view>
-				<view class="login-field">
-					<text class="login-field-icon">🔢</text>
-					<input 
-						class="login-field-input code-input"
+				<up-input
+					v-model="form.phone"
+					placeholder="请输入手机号"
+					prefixIcon="phone"
+					type="number"
+					maxlength="11"
+					clearable
+					border="surround"
+				/>
+				<view class="code-row">
+					<up-input
 						v-model="form.code"
 						placeholder="验证码"
-						placeholder-class="input-placeholder"
+						prefixIcon="lock"
 						type="number"
 						maxlength="6"
+						border="surround"
+						class="code-input"
 					/>
-					<view 
-						class="code-btn"
-						:class="countdown > 0 ? 'code-btn-disabled' : ''"
+					<up-button 
+						:text="countdown > 0 ? countdown + 's' : '获取验证码'"
+						:disabled="countdown > 0"
+						size="small"
+						type="primary"
 						@click="sendSmsCode"
-					>
-						<text class="code-btn-text">{{ countdown > 0 ? countdown + 's' : '获取验证码' }}</text>
-					</view>
+					/>
 				</view>
 			</view>
 			
 			<!-- 登录按钮 -->
-			<view class="login-btn" @click="handleLogin">
-				<text class="login-btn-text">登 录</text>
-			</view>
+			<up-button 
+				text="登 录" 
+				type="primary" 
+				shape="circle"
+				@click="handleLogin"
+			/>
 			
 			<!-- 链接 -->
 			<view class="login-links">
@@ -343,85 +329,19 @@
 }
 
 .login-fields {
+	margin-top: 32rpx;
 	margin-bottom: 32rpx;
 }
 
-.login-field {
+.code-row {
 	flex-direction: row;
 	align-items: center;
-	height: 100rpx;
-	padding-left: 24rpx;
-	padding-right: 24rpx;
-	background-color: #F5F5F5;
-	border-radius: 12rpx;
-	margin-bottom: 24rpx;
-}
-
-.login-field-icon {
-	font-size: 36rpx;
-	margin-right: 16rpx;
-}
-
-.login-field-input {
-	flex: 1;
-	height: 100rpx;
-	font-size: 28rpx;
-	color: #333333;
-	background-color: transparent;
-}
-
-.input-placeholder {
-	color: #999999;
-}
-
-.login-field-eye {
-	padding: 16rpx;
-	font-size: 32rpx;
+	margin-top: 24rpx;
 }
 
 .code-input {
-	flex: 0.5;
-}
-
-.code-btn {
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	padding-left: 24rpx;
-	padding-right: 24rpx;
-	height: 64rpx;
-	background-color: #1890FF;
-	border-radius: 8rpx;
-}
-
-.code-btn-disabled {
-	background-color: #E8E8E8;
-}
-
-.code-btn-text {
-	font-size: 24rpx;
-	color: #FFFFFF;
-}
-
-.code-btn-disabled .code-btn-text {
-	color: #999999;
-}
-
-.login-btn {
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	height: 96rpx;
-	background-color: #1890FF;
-	border-radius: 48rpx;
-	margin-top: 16rpx;
-}
-
-.login-btn-text {
-	font-size: 32rpx;
-	font-weight: bold;
-	color: #FFFFFF;
-	letter-spacing: 8rpx;
+	flex: 1;
+	margin-right: 20rpx;
 }
 
 .login-links {

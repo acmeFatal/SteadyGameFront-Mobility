@@ -33,7 +33,8 @@
 </script>
 
 <style lang="scss">
-/* 注意要写在第一行，同时给style标签加入lang="scss"属性 */
+/* 先导入主题变量，再导入组件样式 */
+@import "uview-plus/theme.scss";
 @import "uview-plus/index.scss";
 
 /*每个页面公共css */

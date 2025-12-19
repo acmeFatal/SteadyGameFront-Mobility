@@ -1,10 +1,10 @@
 <template>
 	<view class="home-page">
 		<view class="home-header">
-			<view class="home-user">
+			<view class="home-user" @click="handleUserClick">
 				<image class="home-avatar" :src="userInfo.avatar || '/static/default-avatar.png'" mode="aspectFill"></image>
 				<view class="home-user-info">
-					<text class="home-username">{{ userInfo.realName || userInfo.username || '未登录' }}</text>
+					<text class="home-username">{{ userInfo.realName || userInfo.username || '点击登录' }}</text>
 					<text class="home-greeting">{{ greeting }}</text>
 				</view>
 			</view>
@@ -18,7 +18,19 @@
 			</view>
 		</view>
 		
+		<!-- 未登录提示 -->
+		<view v-if="!isLoggedIn" class="home-login-tip" @click="goToLogin">
+			<text class="home-login-tip-icon">🔐</text>
+			<view class="home-login-tip-content">
+				<text class="home-login-tip-title">登录后查看您的资产</text>
+				<text class="home-login-tip-desc">享受AI智能理财推荐、资产管理等服务</text>
+			</view>
+			<text class="home-login-tip-arrow">›</text>
+		</view>
+		
+		<!-- 已登录显示资产卡片 -->
 		<sg-asset-card
+			v-if="isLoggedIn"
 			class="home-asset-card"
 			:amount="assetOverview.totalAssets"
 			:earnings="assetOverview.dailyEarnings"
@@ -94,7 +106,7 @@
 	import { getAssetOverview } from '@/api/asset.uts'
 	import { getAIRecommendations } from '@/api/ai.uts'
 	import { getStorage } from '@/utils/storage.uts'
-	import { USER_INFO_KEY, RISK_LEVEL_MAP } from '@/config/index.uts'
+	import { USER_INFO_KEY, TOKEN_KEY, RISK_LEVEL_MAP } from '@/config/index.uts'
 	import type { AssetOverview } from '@/api/asset.uts'
 	import type { AIRecommendProduct } from '@/api/ai.uts'
 	
@@ -122,6 +134,7 @@
 	export default {
 		data() {
 			return {
+				isLoggedIn: false,
 				userInfo: {} as UserInfo,
 				unreadCount: 0,
 				assetOverview: {
@@ -155,18 +168,24 @@
 			}
 		},
 		onLoad() {
-			this.loadUserInfo()
-			this.loadAssetOverview()
-			this.loadRecommendations()
+			this.checkLoginStatus()
 		},
 		onShow() {
-			this.loadAssetOverview()
+			this.checkLoginStatus()
 		},
 		methods: {
-			loadUserInfo() {
+			checkLoginStatus() {
+				const token = getStorage<string>(TOKEN_KEY)
 				const userInfo = getStorage<UserInfo>(USER_INFO_KEY)
-				if (userInfo) {
+				
+				if (token != null && userInfo != null) {
+					this.isLoggedIn = true
 					this.userInfo = userInfo
+					this.loadAssetOverview()
+					this.loadRecommendations()
+				} else {
+					this.isLoggedIn = false
+					this.userInfo = {} as UserInfo
 				}
 			},
 			
@@ -226,6 +245,16 @@
 			
 			goToMarket() {
 				uni.navigateTo({ url: '/pages/market/market' })
+			},
+			
+			goToLogin() {
+				uni.navigateTo({ url: '/pages/login/login' })
+			},
+			
+			handleUserClick() {
+				if (!this.isLoggedIn) {
+					this.goToLogin()
+				}
 			}
 		}
 	}

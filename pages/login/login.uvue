@@ -9,70 +9,85 @@
 		
 		<!-- 表单区域 -->
 		<view class="login-form">
-			<!-- 使用uni-segmented-control切换登录方式 -->
-			<uni-segmented-control 
-				:current="currentTab" 
-				:values="['密码登录', '验证码登录']" 
-				style-type="text"
-				active-color="#1890FF"
-				@clickItem="onTabChange"
-			/>
+			<!-- 切换登录方式 -->
+			<view class="login-tabs">
+				<view 
+					class="login-tab" 
+					:class="loginType === 'password' ? 'login-tab-active' : ''"
+					@click="switchLoginType('password')"
+				>
+					<text class="login-tab-text" :class="loginType === 'password' ? 'login-tab-text-active' : ''">密码登录</text>
+				</view>
+				<view 
+					class="login-tab"
+					:class="loginType === 'sms' ? 'login-tab-active' : ''"
+					@click="switchLoginType('sms')"
+				>
+					<text class="login-tab-text" :class="loginType === 'sms' ? 'login-tab-text-active' : ''">验证码登录</text>
+				</view>
+			</view>
 			
 			<!-- 密码登录 -->
 			<view v-if="loginType === 'password'" class="login-fields">
-				<uni-easyinput
-					v-model="form.username"
-					placeholder="请输入用户名/手机号/邮箱"
-					prefixIcon="person"
-					:clearable="true"
-				/>
-				<uni-easyinput
-					v-model="form.password"
-					placeholder="请输入密码"
-					prefixIcon="locked"
-					:clearable="true"
-					:type="showPassword ? 'text' : 'password'"
-				>
-					<template #right>
-						<uni-icons 
-							:type="showPassword ? 'eye' : 'eye-slash'" 
-							size="22" 
-							color="#999"
-							@click="showPassword = !showPassword"
-						/>
-					</template>
-				</uni-easyinput>
+				<view class="login-field">
+					<text class="login-field-icon">👤</text>
+					<input 
+						class="login-field-input"
+						v-model="form.username"
+						placeholder="请输入用户名/手机号/邮箱"
+						placeholder-class="input-placeholder"
+					/>
+				</view>
+				<view class="login-field">
+					<text class="login-field-icon">🔒</text>
+					<input 
+						class="login-field-input"
+						v-model="form.password"
+						placeholder="请输入密码"
+						placeholder-class="input-placeholder"
+						:password="!showPassword"
+					/>
+					<text class="login-field-eye" @click="showPassword = !showPassword">{{ showPassword ? '👁' : '👁‍🗨' }}</text>
+				</view>
 			</view>
 			
 			<!-- 验证码登录 -->
 			<view v-else class="login-fields">
-				<uni-easyinput
-					v-model="form.phone"
-					placeholder="请输入手机号"
-					prefixIcon="phone"
-					type="number"
-					maxlength="11"
-					:clearable="true"
-				/>
-				<view class="code-row">
-					<uni-easyinput
+				<view class="login-field">
+					<text class="login-field-icon">📱</text>
+					<input 
+						class="login-field-input"
+						v-model="form.phone"
+						placeholder="请输入手机号"
+						placeholder-class="input-placeholder"
+						type="number"
+						maxlength="11"
+					/>
+				</view>
+				<view class="login-field">
+					<text class="login-field-icon">🔢</text>
+					<input 
+						class="login-field-input code-input"
 						v-model="form.code"
-						placeholder="请输入验证码"
-						prefixIcon="locked"
+						placeholder="验证码"
+						placeholder-class="input-placeholder"
 						type="number"
 						maxlength="6"
-						class="code-input"
 					/>
-					<button 
+					<view 
 						class="code-btn"
-						:disabled="countdown > 0"
+						:class="countdown > 0 ? 'code-btn-disabled' : ''"
 						@click="sendSmsCode"
-					>{{ countdown > 0 ? countdown + 's' : '获取验证码' }}</button>
+					>
+						<text class="code-btn-text">{{ countdown > 0 ? countdown + 's' : '获取验证码' }}</text>
+					</view>
 				</view>
 			</view>
 			
 			<!-- 登录按钮 -->
-			<button class="login-btn" type="primary" @click="handleLogin">登 录</button>
+			<view class="login-btn" @click="handleLogin">
+				<text class="login-btn-text">登 录</text>
+			</view>
 			
 			<!-- 链接 -->
 			<view class="login-links">
@@ -84,7 +99,7 @@
 		<!-- 底部 -->
 		<view class="login-footer">
 			<view class="login-biometric" v-if="supportBiometric" @click="biometricLogin">
-				<uni-icons type="finger-print" size="50" color="#1890FF" />
+				<text class="login-biometric-icon">🔐</text>
 				<text class="login-biometric-text">指纹/面容登录</text>
 			</view>
 			<text class="login-agreement">登录即表示同意《用户协议》和《隐私政策》</text>
@@ -259,7 +274,7 @@
 	}
 </script>
 <style>
-/* 登录页面样式 - 配合uni-ui组件 */
+/* 登录页面样式 - uni-app x 兼容 */
 .login-page {
 	min-height: 100vh;
 	background-color: #1890FF;
@@ -296,51 +311,125 @@
 	padding: 32rpx;
 }
 
-.login-fields {
-	margin-top: 32rpx;
+.login-tabs {
+	flex-direction: row;
+	border-bottom-width: 1rpx;
+	border-bottom-style: solid;
+	border-bottom-color: #E8E8E8;
 	margin-bottom: 32rpx;
 }
 
-.code-row {
+.login-tab {
+	flex: 1;
+	align-items: center;
+	padding-bottom: 20rpx;
+	border-bottom-width: 4rpx;
+	border-bottom-style: solid;
+	border-bottom-color: transparent;
+}
+
+.login-tab-active {
+	border-bottom-color: #1890FF;
+}
+
+.login-tab-text {
+	font-size: 30rpx;
+	color: #666666;
+}
+
+.login-tab-text-active {
+	color: #1890FF;
+	font-weight: bold;
+}
+
+.login-fields {
+	margin-bottom: 32rpx;
+}
+
+.login-field {
 	flex-direction: row;
 	align-items: center;
-	margin-top: 20rpx;
+	height: 100rpx;
+	padding-left: 24rpx;
+	padding-right: 24rpx;
+	background-color: #F5F5F5;
+	border-radius: 12rpx;
+	margin-bottom: 24rpx;
+}
+
+.login-field-icon {
+	font-size: 36rpx;
+	margin-right: 16rpx;
+}
+
+.login-field-input {
+	flex: 1;
+	height: 100rpx;
+	font-size: 28rpx;
+	color: #333333;
+	background-color: transparent;
+}
+
+.input-placeholder {
+	color: #999999;
+}
+
+.login-field-eye {
+	padding: 16rpx;
+	font-size: 32rpx;
 }
 
 .code-input {
-	flex: 1;
+	flex: 0.5;
 }
 
 .code-btn {
-	margin-left: 20rpx;
-	padding: 0 24rpx;
-	height: 72rpx;
-	line-height: 72rpx;
-	font-size: 26rpx;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	padding-left: 24rpx;
+	padding-right: 24rpx;
+	height: 64rpx;
 	background-color: #1890FF;
-	color: #FFFFFF;
 	border-radius: 8rpx;
 }
 
-.code-btn[disabled] {
+.code-btn-disabled {
 	background-color: #E8E8E8;
+}
+
+.code-btn-text {
+	font-size: 24rpx;
+	color: #FFFFFF;
+}
+
+.code-btn-disabled .code-btn-text {
 	color: #999999;
 }
 
 .login-btn {
-	margin-top: 32rpx;
-	height: 88rpx;
-	line-height: 88rpx;
-	border-radius: 44rpx;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	height: 96rpx;
+	background-color: #1890FF;
+	border-radius: 48rpx;
+	margin-top: 16rpx;
+}
+
+.login-btn-text {
 	font-size: 32rpx;
 	font-weight: bold;
+	color: #FFFFFF;
+	letter-spacing: 8rpx;
 }
 
 .login-links {
 	flex-direction: row;
 	justify-content: space-between;
 	margin-top: 32rpx;
-	padding: 0 16rpx;
+	padding-left: 16rpx;
+	padding-right: 16rpx;
 }
 
 .login-link {
@@ -360,10 +449,14 @@
 	margin-bottom: 32rpx;
 }
 
+.login-biometric-icon {
+	font-size: 64rpx;
+	margin-bottom: 12rpx;
+}
+
 .login-biometric-text {
 	font-size: 24rpx;
 	color: #666666;
-	margin-top: 12rpx;
 }
 
 .login-agreement {

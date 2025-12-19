@@ -254,7 +254,8 @@
 	"easycom": {
 		"autoscan": true,
 		"custom": {
-			"sg-(.*)": "@/components/sg-$1/sg-$1.uvue"
+			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
+			"^sg-(.*)": "@/components/sg-$1/sg-$1.uvue"
 		}
 	},
 	"uniIdRouter": {}

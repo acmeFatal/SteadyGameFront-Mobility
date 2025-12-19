@@ -105,7 +105,7 @@ export function supportBiometric(): Promise<boolean> {
  * 获取系统信息
  * @returns 系统信息
  */
-export function getSystemInfo(): UniApp.GetSystemInfoResult | null {
+export function getSystemInfo(): any {
 	try {
 		return uni.getSystemInfoSync()
 	} catch (e) {
@@ -134,10 +134,20 @@ export function getNavBarHeight(): number {
 }
 
 /**
+ * 安全区域信息
+ */
+export interface SafeAreaInsets {
+	top: number
+	bottom: number
+	left: number
+	right: number
+}
+
+/**
  * 获取安全区域信息
  * @returns 安全区域信息
  */
-export function getSafeAreaInsets(): { top: number; bottom: number; left: number; right: number } {
+export function getSafeAreaInsets(): SafeAreaInsets {
 	const sysInfo = getSystemInfo()
 	const safeArea = sysInfo?.safeArea
 	

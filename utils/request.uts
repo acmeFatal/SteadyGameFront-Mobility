@@ -131,7 +131,7 @@ export function request<T = any>(options: RequestOptions): Promise<ResponseData<
 			data,
 			header: { ...getHeaders(), ...header },
 			timeout: REQUEST_TIMEOUT,
-			success: (res: UniApp.RequestSuccessCallbackResult) => {
+			success: (res: any) => {
 				if (needLoading) {
 					hideLoading()
 				}
@@ -162,7 +162,7 @@ export function request<T = any>(options: RequestOptions): Promise<ResponseData<
 					reject({ code: res.statusCode, msg: '服务器错误', data: null })
 				}
 			},
-			fail: (err: UniApp.GeneralCallbackResult) => {
+			fail: (err: any) => {
 				if (needLoading) {
 					hideLoading()
 				}

@@ -63,7 +63,7 @@ export function clearStorage(): void {
  * 获取存储信息
  * @returns 存储信息对象
  */
-export function getStorageInfo(): UniApp.GetStorageInfoSuccessData | null {
+export function getStorageInfo(): any {
 	try {
 		return uni.getStorageInfoSync()
 	} catch (e) {

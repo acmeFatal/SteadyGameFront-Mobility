@@ -90,8 +90,8 @@
 				this.createSession()
 			}
 			
-			if (options.question) {
-				this.inputText = decodeURIComponent(options.question)
+			if (options.question != null) {
+				this.inputText = decodeURIComponent(options.question as string)
 				setTimeout(() => {
 					this.sendMessage()
 				}, 500)

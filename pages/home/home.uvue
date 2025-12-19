@@ -200,7 +200,8 @@
 			
 			async loadRecommendations() {
 				try {
-					const res = await getAIRecommendations(3)
+					// riskLevel=3 表示平衡型，goal为默认理财目标
+					const res = await getAIRecommendations(3, '理财')
 					this.recommendations = res.data
 				} catch (e) {
 					console.error('获取推荐失败:', e)

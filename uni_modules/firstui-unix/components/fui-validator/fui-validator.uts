@@ -1,0 +1,351 @@
+/**
+ * 表单验证
+ * https://unix.firstui.cn/
+ **/
+import { FuiFormRulesParam, FuiFormErrorMsgParam, FuiFormValidatorResParam } from '../fui-types/index.uts';
+ 
+function _minLength(value : string, min : number) : boolean {
+	return value.length >= min
+}
+
+function _maxLength(value : string, max : number) : boolean {
+	return value.length <= max
+}
+
+function _isKeyword(value : string, keywords : string) : boolean {
+	//是否包含关键词，敏感词，多个以英文逗号分隔，包含则为false,弹出提示语！
+	let result = true;
+	if (keywords == '') return result;
+	const key = keywords.split(',');
+	for (let i = 0, len = key.length; i < len; i++) {
+		if (value.indexOf(key[i]) != -1) {
+			result = false;
+			break;
+		}
+	}
+	return result;
+}
+
+//允许填写字符串null或者undefined
+function _isNullOrEmpty(value : string | null) : boolean {
+	return (value == null || value == '') ? true : false;
+}
+
+function _isMobile(value : string) : boolean {
+	return /^(?:13\d|14\d|15\d|16\d|17\d|18\d|19\d)\d{5}(\d{3}|\*{3})$/.test(value);
+}
+
+function _isEmail(value : string) : boolean {
+	return /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/.test(value);
+}
+
+function _isCarNo(value : string) : boolean {
+	// 新能源车牌
+	const xreg =
+		/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}(([0-9]{5}[DF]$)|([DF][A-HJ-NP-Z0-9][0-9]{4}$))/;
+	// 旧车牌
+	const creg =
+		/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳]{1}$/;
+	if (value.length == 7) {
+		return creg.test(value);
+	} else if (value.length == 8) {
+		return xreg.test(value);
+	} else {
+		return false;
+	}
+}
+
+function _isIdCard(value : string) : boolean {
+	if (value.length == 15) {
+		return __isValidityBrithBy15IdCard(value);
+	} else if (value.length == 18) {
+		const arrIdCard = value.split('');
+		if (__isValidityBrithBy18IdCard(value) && __isTrueValidateCodeBy18IdCard(arrIdCard)) {
+			return true;
+		} else {
+			return false;
+		}
+	} else {
+		return false;
+	}
+}
+
+function __isTrueValidateCodeBy18IdCard(arrIdCard : string[]) : boolean {
+	let sum = 0;
+	const Wi = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2, 1];
+	const ValideCode = [1, 0, 10, 9, 8, 7, 6, 5, 4, 3, 2];
+	if (arrIdCard[17].toLowerCase() == 'x') {
+		arrIdCard[17] = '10';
+	}
+	for (let i = 0; i < 17; i++) {
+		sum += Wi[i] * parseInt(arrIdCard[i]);
+	}
+	const valCodePosition = sum % 11;
+	if (arrIdCard[17].toString() == ValideCode[valCodePosition].toString()) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function __isValidityBrithBy18IdCard(idCard18 : string) : boolean {
+	const year = idCard18.substring(6, 10);
+	const month = idCard18.substring(10, 12);
+	const day = idCard18.substring(12, 14);
+	let temp_date = new Date(parseFloat(year), parseFloat(month) - 1, parseFloat(day));
+	if (temp_date.getFullYear() != parseFloat(year) || temp_date.getMonth() != parseFloat(month) - 1 ||
+		temp_date.getDate() != parseFloat(day)) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function __isValidityBrithBy15IdCard(idCard15 : string) : boolean {
+	const year = idCard15.substring(6, 8);
+	const month = idCard15.substring(8, 10);
+	const day = idCard15.substring(10, 12);
+	const temp_date = new Date(parseFloat(year), parseFloat(month) - 1, parseFloat(day));
+	if (temp_date.getFullYear() != parseFloat(year) || temp_date.getMonth() != parseFloat(month) - 1 || temp_date.getDate() != parseFloat(day)) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function _isAmount(value : string) : boolean {
+	//是否为金额，只允许保留两位小数
+	return /^([0-9]*[.]?[0-9])[0-9]{0,1}$/.test(value);
+}
+
+function _isNumber(value : string) : boolean {
+	//是否全为数字
+	return /^[0-9]+$/.test(value);
+}
+//是否全部为中文
+function _isChinese(value : string) : boolean {
+	const reg = /^[\u4e00-\u9fa5]+$/;
+	if (value != "" && reg.test(value) && !_isSpecial(value) && !_isEmoji(value)) {
+		return true
+	} else {
+		return false
+	}
+}
+//是否不包含中文，可以有特殊字符
+function _isNotChinese(value : string) : boolean {
+	const reg = /.*[\u4e00-\u9fa5]+.*$/;
+	let result = true;
+	if (reg.test(value)) {
+		result = false
+	}
+	return result
+}
+
+function _isEnglish(value : string) : boolean {
+	return /^[a-zA-Z]*$/.test(value)
+}
+
+function _isEnAndNo(value : string) : boolean {
+	//4~30位数字和字母组合
+	return /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{4,30}$/.test(value);
+}
+
+function _isEnOrNo(value : string) : boolean {
+	const reg = /^[A-Za-z0-9]+$/;
+	return reg.test(value)
+}
+
+function _isSpecial(value : string) : boolean {
+	//是否包含特殊字符
+	const pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].+<>《》/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？ ]", 'im');
+	if (pattern.test(value) || value.indexOf(`"`) != -1) {
+		return true;
+	}
+	return false;
+}
+
+function _isEmoji(value : string) : boolean {
+	//是否包含表情
+	return /\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g.test(value);
+}
+
+function _isDate(value : string) : boolean {
+	//2019-10-12
+	const reg =
+		/^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)$/;
+	return reg.test(value);
+}
+
+function _isUrl(value : string) : boolean {
+	return /^((https?|ftp|file):\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})(:[0-9]{1,5})?((\/?)|(\/[\\\w_!~*\\'()\\\.;?:@&=+$,%#-]+)+\/?)$/
+		.test(value);
+}
+function _isSame(value1 : string, value2 : string) : boolean {
+	return value1 == value2
+}
+
+function _isRange(value : number, range1 : number, range2 : number) : boolean {
+	if (isNaN(range1) && isNaN(range2)) {
+		return true;
+	} else if (!isNaN(range2)) {
+		return value <= range2 ? true : false
+	} else if (!isNaN(range1)) {
+		return value >= range1 ? true : false
+	} else {
+		return value >= range1 && value <= range2 ? true : false
+	}
+}
+
+/**
+ * validator 表单校验方法
+ * @description 表单校验方法
+ * @param {UTSJSONObject} formData {UTSJSONObject} 表单对象数据 {key:value}
+ * @param {Array} rules {FuiFormRulesParam[]} 校验规则
+ */
+export function validator(formData : UTSJSONObject, rules : FuiFormRulesParam[]) : FuiFormValidatorResParam {
+	/*
+	  非必填情况下，如果值为空则不进行校验
+	*/
+
+	const result = {
+		isPassed: true,
+		errorMsg: [] as FuiFormErrorMsgParam[]
+	} as FuiFormValidatorResParam;
+	const rulesCount = rules.length;
+	for (let r = 0; r < rulesCount; r++) {
+		const item = rules[r]
+		const key = item.name;
+		const rule = item.rule ?? [];
+		const validator = item.validator ?? [];
+		const msgArr = item.msg ?? [];
+		const ruleLen = rule.length;
+		const validatorLen = validator.length;
+		if (key == '' || (ruleLen == 0 && validatorLen == 0) || (rule.indexOf("required") == -1 && (formData[key] ?? '').toString().length == 0)) {
+			continue;
+		}
+		if (ruleLen > 0) {
+			for (let i = 0; i < ruleLen; i++) {
+				let ruleItem = rule[i];
+				const msg = msgArr[i] == '' ? `${key} error !` : msgArr[i];
+				if (ruleItem == '') continue;
+				//数据处理
+				let value = '';
+				if (ruleItem.indexOf(":") != -1) {
+					let temp = ruleItem.split(":");
+					ruleItem = temp[0];
+					value = temp[1];
+				}
+				let isError = false;
+				switch (ruleItem) {
+					case "required":
+						isError = _isNullOrEmpty((formData[key] ?? '').toString());
+						break;
+					case "isMobile":
+						isError = !_isMobile((formData[key] ?? '').toString());
+						break;
+					case "isEmail":
+						isError = !_isEmail((formData[key] ?? '').toString());
+						break;
+					case "isCarNo":
+						isError = !_isCarNo((formData[key] ?? '').toString());
+						break;
+					case "isIdCard":
+						isError = !_isIdCard((formData[key] ?? '').toString());
+						break;
+					case "isAmount":
+						isError = !_isAmount((formData[key] ?? '').toString());
+						break;
+					case "isNumber":
+						isError = !_isNumber((formData[key] ?? '').toString());
+						break;
+					case "isChinese":
+						isError = !_isChinese((formData[key] ?? '').toString());
+						break;
+					case "isNotChinese":
+						isError = !_isNotChinese((formData[key] ?? '').toString());
+						break;
+					case "isEnglish":
+						isError = !_isEnglish((formData[key] ?? '').toString());
+						break;
+					case "isEnAndNo":
+						isError = !_isEnAndNo((formData[key] ?? '').toString());
+						break;
+					case "isEnOrNo":
+						isError = !_isEnOrNo((formData[key] ?? '').toString());
+						break;
+					case "isSpecial":
+						isError = _isSpecial((formData[key] ?? '').toString());
+						break;
+					case "isEmoji":
+						isError = _isEmoji((formData[key] ?? '').toString());
+						break;
+					case "isDate":
+						isError = !_isDate((formData[key] ?? '').toString());
+						break;
+					case "isUrl":
+						isError = !_isUrl((formData[key] ?? '').toString());
+						break;
+					case "isSame":
+
+						isError = !_isSame((formData[key] ?? '').toString(), (formData[value] ?? '').toString());
+						break;
+					case "range":
+						let range : number[] | null;
+						try {
+							range = JSON.parse<number[]>(value);
+							if (range == null || range.length <= 1) {
+								throw new Error("range值传入有误！")
+							}
+						} catch (e) {
+							result.isPassed = false;
+							result.errorMsg.push({
+								name: key,
+								msg: 'range值传入有误！'
+							} as FuiFormErrorMsgParam)
+							return result;
+						}
+						isError = !_isRange(parseFloat((formData[key] ?? '0').toString()), range[0], range[1]);
+						break;
+					case "minLength":
+						isError = !_minLength((formData[key] ?? '').toString(), parseFloat(value));
+						break;
+					case "maxLength":
+						isError = !_maxLength((formData[key] ?? '').toString(), parseFloat(value));
+						break;
+					case "isKeyword":
+						isError = !_isKeyword((formData[key] ?? '').toString(), value);
+						break;
+				}
+
+				if (isError) {
+					result.isPassed = false;
+					result.errorMsg.push({
+						name: key,
+						msg: msg
+					} as FuiFormErrorMsgParam)
+					break;
+				}
+			}
+		}
+
+		if (validatorLen > 0) {
+			for (let v = 0; v < validatorLen; v++) {
+				const model = validator[v];
+				const func = model.method;
+				if (!func(formData[key])) {
+					result.isPassed = false;
+					const isFindIndex = (element : FuiFormErrorMsgParam) : boolean => element.name == key;
+					const index = result.errorMsg.findIndex(isFindIndex)
+					if (index == -1) {
+						result.errorMsg.push({
+							name: key,
+							msg: model.msg == '' ? `${key} error !` : model.msg
+						} as FuiFormErrorMsgParam)
+					}
+					break;
+				}
+			}
+		}
+	}
+	return result;
+}

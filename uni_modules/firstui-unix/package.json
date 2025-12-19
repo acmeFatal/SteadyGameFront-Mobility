@@ -1,0 +1,27 @@
+{
+  "name": "firstui-unix",
+  "version": "1.4.0",
+  "description": "FirstUI unix Component library",
+  "main": "index.js",
+  "scripts": {
+    "test": "firstui-unix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FirstUI/FirstUI-uvue.git"
+  },
+  "keywords": [
+    "FirstUI",
+	"FirstUI组件库",
+	"uni-app-x component"
+  ],
+  "author": {
+    "name": "firstui",
+    "email": "firstui@126.com"
+  },
+  "license": "Apache",
+  "bugs": {
+    "url": "https://github.com/FirstUI/FirstUI-uvue/issues"
+  },
+  "homepage": "https://github.com/FirstUI/FirstUI-uvue#readme"
+}

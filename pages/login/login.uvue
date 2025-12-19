@@ -1,126 +1,103 @@
 ﻿<template>
 	<scroll-view class="login-page" scroll-y>
-		<!-- 头部渐变背景 -->
+		<!-- 头部 -->
 		<view class="login-header">
-			<view class="header-bg"></view>
 			<image class="login-logo" src="/static/logo.png" mode="aspectFit"></image>
-			<text class="login-title">智能金融理财平台</text>
-			<text class="login-subtitle">安全 · 专业 · 智能</text>
+			<fui-text text="智能金融理财平台" color="#FFFFFF" :size="42" fontWeight="bold" />
+			<fui-text text="安全 · 专业 · 智能" color="rgba(255,255,255,0.85)" :size="26" />
 		</view>
 		
 		<!-- 表单卡片 -->
 		<view class="login-card">
 			<!-- 切换登录方式 -->
-			<view class="login-tabs">
-				<view 
-					class="tab-item" 
-					:class="loginType === 'password' ? 'tab-active' : ''"
-					@click="switchLoginType('password')"
-				>
-					<text class="tab-text" :class="loginType === 'password' ? 'tab-text-active' : ''">密码登录</text>
-					<view class="tab-line" v-if="loginType === 'password'"></view>
-				</view>
-				<view 
-					class="tab-item"
-					:class="loginType === 'sms' ? 'tab-active' : ''"
-					@click="switchLoginType('sms')"
-				>
-					<text class="tab-text" :class="loginType === 'sms' ? 'tab-text-active' : ''">验证码登录</text>
-					<view class="tab-line" v-if="loginType === 'sms'"></view>
-				</view>
-			</view>
+			<fui-segmented-control 
+				:values="['密码登录', '验证码登录']"
+				:current="currentTab"
+				@click="onTabChange"
+			/>
 			
 			<!-- 密码登录表单 -->
 			<view v-if="loginType === 'password'" class="form-fields">
-				<view class="input-group">
-					<view class="input-icon">
-						<text class="icon-text">👤</text>
-					</view>
-					<input 
-						class="input-field"
-						v-model="form.username"
-						placeholder="请输入用户名/手机号/邮箱"
-						placeholder-class="placeholder-text"
-					/>
-				</view>
-				<view class="input-group">
-					<view class="input-icon">
-						<text class="icon-text">🔒</text>
-					</view>
-					<input 
-						class="input-field"
-						v-model="form.password"
-						placeholder="请输入密码"
-						placeholder-class="placeholder-text"
-						:password="!showPassword"
-					/>
-					<view class="input-suffix" @click="showPassword = !showPassword">
-						<text class="suffix-icon">{{ showPassword ? '👁' : '🙈' }}</text>
-					</view>
-				</view>
+				<fui-input 
+					v-model="form.username"
+					placeholder="请输入用户名/手机号/邮箱"
+					:clearable="true"
+					borderTop
+					borderBottom
+				/>
+				<fui-input 
+					v-model="form.password"
+					placeholder="请输入密码"
+					:password="!showPassword"
+					:clearable="true"
+					borderBottom
+				>
+					<template v-slot:right>
+						<fui-icon :name="showPassword ? 'eye' : 'eye-close'" :size="40" @click="showPassword = !showPassword" />
+					</template>
+				</fui-input>
 			</view>
 			
 			<!-- 验证码登录表单 -->
 			<view v-else class="form-fields">
-				<view class="input-group">
-					<view class="input-icon">
-						<text class="icon-text">📱</text>
+				<fui-input 
+					v-model="form.phone"
+					placeholder="请输入手机号"
+					type="number"
+					:maxlength="11"
+					:clearable="true"
+					borderTop
+					borderBottom
+				/>
+				<view class="code-row">
+					<view class="code-input-wrap">
+						<fui-input 
+							v-model="form.code"
+							placeholder="验证码"
+							type="number"
+							:maxlength="6"
+							borderBottom
+						/>
 					</view>
-					<input 
-						class="input-field"
-						v-model="form.phone"
-						placeholder="请输入手机号"
-						placeholder-class="placeholder-text"
-						type="number"
-						maxlength="11"
-					/>
-				</view>
-				<view class="input-group">
-					<view class="input-icon">
-						<text class="icon-text">🔢</text>
-					</view>
-					<input 
-						class="input-field input-code"
-						v-model="form.code"
-						placeholder="输入验证码"
-						placeholder-class="placeholder-text"
-						type="number"
-						maxlength="6"
-					/>
-					<view 
-						class="code-btn"
-						:class="countdown > 0 ? 'code-btn-disabled' : ''"
+					<fui-button 
+						:text="countdown > 0 ? countdown + 's' : '获取验证码'"
+						type="gray"
+						:disabled="countdown > 0"
+						width="200rpx"
+						height="72rpx"
+						:size="26"
 						@click="sendSmsCode"
-					>
-						<text class="code-btn-text" :class="countdown > 0 ? 'code-btn-text-disabled' : ''">
-							{{ countdown > 0 ? countdown + 's' : '获取验证码' }}
-						</text>
-					</view>
+					/>
 				</view>
 			</view>
 			
 			<!-- 登录按钮 -->
-			<view class="submit-btn" @click="handleLogin">
-				<text class="submit-btn-text">登 录</text>
-			</view>
+			<fui-button 
+				text="登 录" 
+				type="primary"
+				bold
+				:radius="96"
+				height="96rpx"
+				:size="32"
+				margin="40rpx 0 0 0"
+				@click="handleLogin"
+			/>
 			
 			<!-- 快捷链接 -->
 			<view class="quick-links">
-				<text class="link-text" @click="goToRegister">注册账号</text>
+				<fui-text text="注册账号" color="#1890FF" :size="26" @click="goToRegister" />
 				<view class="link-divider"></view>
-				<text class="link-text" @click="goToForgotPassword">忘记密码</text>
+				<fui-text text="忘记密码" color="#1890FF" :size="26" @click="goToForgotPassword" />
 			</view>
 		</view>
 		
 		<!-- 底部区域 -->
 		<view class="login-footer">
 			<view class="biometric-area" v-if="supportBiometric" @click="biometricLogin">
-				<view class="biometric-btn">
-					<text class="biometric-icon">🔐</text>
-				</view>
-				<text class="biometric-text">指纹/面容登录</text>
+				<fui-icon name="fingerprint" :size="80" color="#1890FF" />
+				<fui-text text="指纹/面容登录" color="#666666" :size="24" />
 			</view>
-			<text class="agreement-text">登录即表示同意《用户协议》和《隐私政策》</text>
+			<fui-text text="登录即表示同意《用户协议》和《隐私政策》" color="#999999" :size="22" align="center" />
 		</view>
 	</scroll-view>
 </template>
@@ -292,7 +269,7 @@
 	}
 </script>
 <style>
-/* 登录页面 - 专业级样式 */
+/* 登录页面 - FirstUI */
 .login-page {
 	flex: 1;
 	background-color: #F5F7FA;
@@ -300,7 +277,7 @@
 
 /* 头部区域 */
 .login-header {
-	height: 400rpx;
+	height: 380rpx;
 	align-items: center;
 	justify-content: center;
 	background-color: #1890FF;
@@ -309,163 +286,35 @@
 }
 
 .login-logo {
-	width: 120rpx;
-	height: 120rpx;
-	margin-bottom: 24rpx;
-	border-radius: 24rpx;
-}
-
-.login-title {
-	font-size: 42rpx;
-	font-weight: bold;
-	color: #FFFFFF;
-	margin-bottom: 12rpx;
-}
-
-.login-subtitle {
-	font-size: 26rpx;
-	color: rgba(255, 255, 255, 0.85);
-	letter-spacing: 4rpx;
+	width: 100rpx;
+	height: 100rpx;
+	margin-bottom: 20rpx;
+	border-radius: 20rpx;
 }
 
 /* 表单卡片 */
 .login-card {
-	margin-top: -60rpx;
+	margin-top: -50rpx;
 	margin-left: 32rpx;
 	margin-right: 32rpx;
-	padding: 40rpx;
+	padding: 32rpx;
 	background-color: #FFFFFF;
 	border-radius: 24rpx;
 }
 
-/* 标签切换 */
-.login-tabs {
-	flex-direction: row;
-	margin-bottom: 40rpx;
-}
-
-.tab-item {
-	flex: 1;
-	align-items: center;
-	padding-bottom: 24rpx;
-}
-
-.tab-text {
-	font-size: 30rpx;
-	color: #999999;
-}
-
-.tab-text-active {
-	color: #1890FF;
-	font-weight: bold;
-}
-
-.tab-line {
-	width: 48rpx;
-	height: 6rpx;
-	background-color: #1890FF;
-	border-radius: 3rpx;
-	margin-top: 12rpx;
-}
-
 /* 表单字段 */
 .form-fields {
-	margin-bottom: 40rpx;
+	margin-top: 32rpx;
 }
 
-.input-group {
+.code-row {
 	flex-direction: row;
 	align-items: center;
-	height: 100rpx;
-	padding-left: 24rpx;
-	padding-right: 24rpx;
-	margin-bottom: 24rpx;
-	background-color: #F8F9FC;
-	border-radius: 16rpx;
-	border-width: 2rpx;
-	border-style: solid;
-	border-color: #F0F0F0;
 }
 
-.input-icon {
-	width: 60rpx;
-	height: 60rpx;
-	align-items: center;
-	justify-content: center;
-}
-
-.icon-text {
-	font-size: 36rpx;
-}
-
-.input-field {
+.code-input-wrap {
 	flex: 1;
-	height: 100rpx;
-	font-size: 28rpx;
-	color: #333333;
-	padding-left: 16rpx;
-	padding-right: 16rpx;
-	background-color: transparent;
-}
-
-.placeholder-text {
-	color: #CCCCCC;
-}
-
-.input-suffix {
-	width: 60rpx;
-	height: 60rpx;
-	align-items: center;
-	justify-content: center;
-}
-
-.suffix-icon {
-	font-size: 32rpx;
-}
-
-.input-code {
-	flex: 0.5;
-}
-
-/* 验证码按钮 */
-.code-btn {
-	padding-left: 24rpx;
-	padding-right: 24rpx;
-	height: 64rpx;
-	align-items: center;
-	justify-content: center;
-	background-color: #E6F7FF;
-	border-radius: 32rpx;
-}
-
-.code-btn-disabled {
-	background-color: #F5F5F5;
-}
-
-.code-btn-text {
-	font-size: 24rpx;
-	color: #1890FF;
-}
-
-.code-btn-text-disabled {
-	color: #CCCCCC;
-}
-
-/* 提交按钮 */
-.submit-btn {
-	height: 96rpx;
-	align-items: center;
-	justify-content: center;
-	background-color: #1890FF;
-	border-radius: 48rpx;
-	margin-top: 20rpx;
-}
-
-.submit-btn-text {
-	font-size: 32rpx;
-	font-weight: bold;
-	color: #FFFFFF;
-	letter-spacing: 8rpx;
+	margin-right: 20rpx;
 }
 
 /* 快捷链接 */
@@ -474,11 +323,6 @@
 	align-items: center;
 	justify-content: center;
 	margin-top: 40rpx;
-}
-
-.link-text {
-	font-size: 26rpx;
-	color: #1890FF;
 }
 
 .link-divider {
@@ -491,40 +335,13 @@
 
 /* 底部区域 */
 .login-footer {
-	flex: 1;
 	align-items: center;
-	justify-content: flex-end;
 	padding-top: 60rpx;
 	padding-bottom: 60rpx;
 }
 
 .biometric-area {
 	align-items: center;
-	margin-bottom: 40rpx;
-}
-
-.biometric-btn {
-	width: 100rpx;
-	height: 100rpx;
-	align-items: center;
-	justify-content: center;
-	background-color: #FFFFFF;
-	border-radius: 50rpx;
-	margin-bottom: 16rpx;
-}
-
-.biometric-icon {
-	font-size: 48rpx;
-}
-
-.biometric-text {
-	font-size: 24rpx;
-	color: #666666;
-}
-
-.agreement-text {
-	font-size: 22rpx;
-	color: #999999;
-	text-align: center;
+	margin-bottom: 32rpx;
 }
 </style>

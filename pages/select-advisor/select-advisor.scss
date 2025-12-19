@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 选择顾问页面样式
  * @author SteadyGame Team
  */
@@ -81,6 +81,7 @@
 
 .advisor-header {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 	margin-bottom: 4rpx;
@@ -94,6 +95,7 @@
 
 .advisor-rating {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 }
 

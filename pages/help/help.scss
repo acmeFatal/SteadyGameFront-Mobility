@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 帮助中心页面样式
  * @author SteadyGame Team
  */
@@ -17,6 +17,7 @@
 
 .help-search-wrap {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	height: 80rpx;
 	padding: 0 $spacing-base;
@@ -95,6 +96,7 @@
 
 .help-category-header {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	padding: $spacing-base;
 	
@@ -131,6 +133,7 @@
 
 .help-question-item {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	padding: $spacing-sm $spacing-base;
 	padding-left: 96rpx;

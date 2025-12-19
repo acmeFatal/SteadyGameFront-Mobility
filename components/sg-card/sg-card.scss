@@ -1,4 +1,4 @@
-/**
+﻿/**
  * sg-card 卡片组件样式
  * @author SteadyGame Team
  */
@@ -17,6 +17,7 @@
 	
 	&__header {
 		display: flex;
+		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;
 		padding-bottom: $spacing-sm;
@@ -32,6 +33,7 @@
 	
 	&__extra {
 		display: flex;
+		flex-direction: row;
 		align-items: center;
 	}
 	

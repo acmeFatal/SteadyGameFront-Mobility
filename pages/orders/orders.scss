@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 订单列表页面样式
  * @author SteadyGame Team
  */
@@ -22,6 +22,7 @@
 .orders-tab {
 	flex: 1;
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	height: 88rpx;
@@ -66,6 +67,7 @@
 
 .order-header {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 	padding-bottom: $spacing-sm;
@@ -110,6 +112,7 @@
 
 .order-body {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 	padding: $spacing-sm 0;
@@ -151,6 +154,7 @@
 
 .order-footer {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 	padding-top: $spacing-sm;
@@ -195,6 +199,7 @@
 
 .orders-loading {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	padding: $spacing-base;

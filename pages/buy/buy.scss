@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 购买确认页面样式
  * @author SteadyGame Team
  */
@@ -13,6 +13,7 @@
 
 .buy-product {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 	padding: $spacing-base;
@@ -59,6 +60,7 @@
 
 .buy-amount-input {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	padding: $spacing-sm 0;
 	border-bottom: 2rpx solid $primary-color;
@@ -80,6 +82,7 @@
 
 .buy-amount-tips {
 	display: flex;
+	flex-direction: row;
 	justify-content: space-between;
 	margin-top: $spacing-sm;
 }
@@ -103,6 +106,7 @@
 .buy-quick-item {
 	flex: 1;
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	height: 72rpx;
@@ -133,6 +137,7 @@
 
 .buy-info-item {
 	display: flex;
+	flex-direction: row;
 	justify-content: space-between;
 	padding: $spacing-sm 0;
 	border-bottom: 1rpx solid $border-light;
@@ -154,6 +159,7 @@
 
 .buy-agreement {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	padding: $spacing-base;
 }
@@ -165,6 +171,7 @@
 	border-radius: $radius-sm;
 	margin-right: $spacing-sm;
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	
@@ -190,6 +197,7 @@
 	left: 0;
 	right: 0;
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 	padding: $spacing-base;
@@ -218,6 +226,7 @@
 	width: 300rpx;
 	height: 88rpx;
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	background: linear-gradient(90deg, $primary-color 0%, $primary-light 100%);

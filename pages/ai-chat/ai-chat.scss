@@ -1,4 +1,4 @@
-/**
+﻿/**
  * AI对话页面样式
  * @author SteadyGame Team
  */
@@ -60,6 +60,7 @@
 	border-radius: 50%;
 	background-color: $bg-white;
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	flex-shrink: 0;
@@ -90,6 +91,7 @@
 
 .chat-typing {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	gap: 8rpx;
 }
@@ -121,6 +123,7 @@
 
 .chat-input-bar {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	padding: $spacing-sm $spacing-base;
 	background-color: $bg-white;
@@ -142,6 +145,7 @@
 	width: 80rpx;
 	height: 80rpx;
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	margin-left: $spacing-sm;

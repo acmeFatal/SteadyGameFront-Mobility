@@ -1,4 +1,4 @@
-/**
+﻿/**
  * sg-empty 空状态组件样式
  * @author SteadyGame Team
  */
@@ -22,6 +22,7 @@
 		width: 200rpx;
 		height: 200rpx;
 		display: flex;
+		flex-direction: row;
 		align-items: center;
 		justify-content: center;
 		margin-bottom: $spacing-base;

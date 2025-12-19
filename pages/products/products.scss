@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 理财产品列表页面样式
  * @author SteadyGame Team
  */
@@ -64,6 +64,7 @@
 
 .product-header {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 	margin-bottom: $spacing-sm;
@@ -116,6 +117,7 @@
 
 .product-body {
 	display: flex;
+	flex-direction: row;
 	align-items: flex-end;
 	padding: $spacing-sm 0;
 	border-bottom: 1rpx solid $border-light;
@@ -123,6 +125,7 @@
 
 .product-rate {
 	display: flex;
+	flex-direction: row;
 	align-items: baseline;
 	margin-right: $spacing-lg;
 }
@@ -148,6 +151,7 @@
 
 .product-info-item {
 	display: flex;
+	flex-direction: row;
 	justify-content: space-between;
 	margin-bottom: $spacing-xs;
 	
@@ -168,6 +172,7 @@
 
 .product-footer {
 	display: flex;
+	flex-direction: row;
 	justify-content: flex-end;
 	padding-top: $spacing-sm;
 }
@@ -185,6 +190,7 @@
 
 .products-loading {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	padding: $spacing-base;

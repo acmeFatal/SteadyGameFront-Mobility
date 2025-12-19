@@ -7,8 +7,10 @@
 @import './variables.scss';
 
 /* ==================== 布局类 ==================== */
+/* 注意: uni-app x Android 需要显式设置 flex-direction */
 .flex {
 	display: flex;
+	flex-direction: row;
 }
 
 .flex-row {
@@ -359,6 +361,7 @@
 
 .card-header {
 	display: flex;
+	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
 	padding-bottom: $spacing-sm;

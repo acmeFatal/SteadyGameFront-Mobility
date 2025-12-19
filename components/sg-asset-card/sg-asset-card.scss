@@ -1,4 +1,4 @@
-/**
+﻿/**
  * sg-asset-card 资产卡片组件样式
  * @author SteadyGame Team
  */
@@ -13,6 +13,7 @@
 	
 	&__header {
 		display: flex;
+		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;
 		margin-bottom: $spacing-sm;
@@ -33,6 +34,7 @@
 	
 	&__amount {
 		display: flex;
+		flex-direction: row;
 		align-items: baseline;
 		margin-bottom: $spacing-sm;
 	}
@@ -50,6 +52,7 @@
 	
 	&__earnings {
 		display: flex;
+		flex-direction: row;
 		align-items: center;
 	}
 	

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 我的顾问页面样式
  * @author SteadyGame Team
  */
@@ -16,6 +16,7 @@
 
 .advisor-card {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	background-color: $bg-white;
 	border-radius: $radius-lg;
@@ -51,6 +52,7 @@
 
 .advisor-rating {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 }
 
@@ -188,6 +190,7 @@
 	background-color: $bg-gray;
 	border-radius: 50%;
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	margin-bottom: $spacing-base;

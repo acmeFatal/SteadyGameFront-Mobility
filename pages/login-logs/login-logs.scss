@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 登录日志页面样式
  * @author SteadyGame Team
  */
@@ -12,6 +12,7 @@
 
 .logs-tips {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	padding: $spacing-sm $spacing-base;
 	background-color: rgba($warning-color, 0.1);
@@ -33,6 +34,7 @@
 
 .log-item {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	padding: $spacing-base;
 	background-color: $bg-white;
@@ -49,6 +51,7 @@
 	height: 80rpx;
 	border-radius: 50%;
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	margin-right: $spacing-sm;
@@ -76,6 +79,7 @@
 
 .log-header {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	margin-bottom: 4rpx;
 }

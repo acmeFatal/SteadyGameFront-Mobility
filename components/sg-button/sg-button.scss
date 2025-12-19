@@ -1,4 +1,4 @@
-/**
+﻿/**
  * sg-button 按钮组件样式
  * @author SteadyGame Team
  */
@@ -17,6 +17,7 @@
 	
 	&__text {
 		display: flex;
+		flex-direction: row;
 		align-items: center;
 		justify-content: center;
 	}

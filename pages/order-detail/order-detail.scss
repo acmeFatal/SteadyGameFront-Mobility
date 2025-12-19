@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 订单详情页面样式
  * @author SteadyGame Team
  */
@@ -30,6 +30,7 @@
 	background-color: rgba(255, 255, 255, 0.2);
 	border-radius: 50%;
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	margin-bottom: $spacing-sm;
@@ -67,6 +68,7 @@
 
 .order-product-info {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 }
@@ -107,6 +109,7 @@
 
 .order-info-item {
 	display: flex;
+	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
 	padding: $spacing-sm 0;
@@ -124,6 +127,7 @@
 
 .order-info-value-wrap {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 }
 
@@ -233,6 +237,7 @@
 	flex: 1;
 	height: 88rpx;
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	border-radius: $radius-round;

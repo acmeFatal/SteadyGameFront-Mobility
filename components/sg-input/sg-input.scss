@@ -1,4 +1,4 @@
-/**
+﻿/**
  * sg-input 输入框组件样式
  * @author SteadyGame Team
  */
@@ -10,6 +10,7 @@
 	
 	&__label {
 		display: flex;
+		flex-direction: row;
 		align-items: center;
 		margin-bottom: $spacing-xs;
 	}
@@ -26,6 +27,7 @@
 	
 	&__wrapper {
 		display: flex;
+		flex-direction: row;
 		align-items: center;
 		height: 88rpx;
 		padding: 0 $spacing-base;
@@ -43,6 +45,7 @@
 	&__prefix,
 	&__suffix {
 		display: flex;
+		flex-direction: row;
 		align-items: center;
 		justify-content: center;
 	}
@@ -73,6 +76,7 @@
 	&__clear,
 	&__eye {
 		display: flex;
+		flex-direction: row;
 		align-items: center;
 		justify-content: center;
 		width: 48rpx;

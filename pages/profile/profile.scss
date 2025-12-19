@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 个人资料页面样式
  * @author SteadyGame Team
  */
@@ -12,6 +12,7 @@
 
 .profile-avatar-section {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 	padding: $spacing-base;
@@ -26,6 +27,7 @@
 
 .profile-avatar-wrap {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 }
 
@@ -48,6 +50,7 @@
 
 .profile-item {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	padding: $spacing-base;
 	border-bottom: 1rpx solid $border-light;

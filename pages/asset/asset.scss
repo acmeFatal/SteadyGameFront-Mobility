@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 资产页面样式
  * @author SteadyGame Team
  */
@@ -19,6 +19,7 @@
 
 .asset-stats {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	margin-top: $spacing-base;
@@ -57,6 +58,7 @@
 
 .asset-chart {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	padding: $spacing-sm 0;
 }
@@ -107,6 +109,7 @@
 
 .asset-legend-item {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	margin-bottom: $spacing-sm;
 	
@@ -139,6 +142,7 @@
 
 .asset-item {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
 	padding: $spacing-sm 0;

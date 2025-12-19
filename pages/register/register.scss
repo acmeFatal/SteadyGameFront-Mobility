@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 注册页面样式
  * @author SteadyGame Team
  */
@@ -55,6 +55,7 @@
 
 .register-agreement {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	padding: $spacing-base 0;
 }
@@ -66,6 +67,7 @@
 	border-radius: $radius-sm;
 	margin-right: $spacing-sm;
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	
@@ -91,6 +93,7 @@
 
 .register-btn {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	height: 96rpx;
@@ -118,6 +121,7 @@
 
 .register-login {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 }

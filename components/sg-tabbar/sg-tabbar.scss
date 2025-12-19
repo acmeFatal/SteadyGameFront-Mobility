@@ -1,4 +1,4 @@
-/**
+﻿/**
  * sg-tabbar 底部导航栏组件样式
  * @author SteadyGame Team
  */
@@ -12,6 +12,7 @@
 	right: 0;
 	z-index: $z-index-popup;
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: space-around;
 	height: 100rpx;

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 购买结果页面样式
  * @author SteadyGame Team
  */
@@ -25,6 +25,7 @@
 	height: 160rpx;
 	border-radius: 50%;
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	margin-bottom: $spacing-md;
@@ -72,6 +73,7 @@
 
 .result-info-item {
 	display: flex;
+	flex-direction: row;
 	justify-content: space-between;
 	padding: $spacing-sm 0;
 	border-bottom: 1rpx solid $border-light;
@@ -102,6 +104,7 @@
 	flex: 1;
 	height: 88rpx;
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	border-radius: $radius-round;

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 我的页面样式
  * @author SteadyGame Team
  */
@@ -19,6 +19,7 @@
 
 .mine-user {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	margin-bottom: $spacing-md;
 }
@@ -45,6 +46,7 @@
 
 .mine-verify {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 }
 

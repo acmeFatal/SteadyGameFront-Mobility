@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 交易流水页面样式
  * @author SteadyGame Team
  */
@@ -21,6 +21,7 @@
 
 .filter-item {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	padding: $spacing-xs $spacing-sm;
 	background-color: $bg-gray;
@@ -83,6 +84,7 @@
 
 .transaction-item {
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	padding: $spacing-sm;
 	background-color: $bg-white;
@@ -95,6 +97,7 @@
 	height: 72rpx;
 	border-radius: 50%;
 	display: flex;
+	flex-direction: row;
 	align-items: center;
 	justify-content: center;
 	margin-right: $spacing-sm;

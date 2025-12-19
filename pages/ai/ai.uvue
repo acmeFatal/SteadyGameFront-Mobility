@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<view class="ai-page">
 		<view class="ai-header">
 			<text class="ai-title">AI智能助手</text>
@@ -198,7 +198,6 @@
 		}
 	}
 </script>
-
 <style lang="scss">
 	@import './ai.scss';
 </style>

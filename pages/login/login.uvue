@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<view class="login-page">
 		<view class="login-header">
 			<image class="login-logo" src="/static/logo.png" mode="aspectFit"></image>
@@ -265,7 +265,6 @@
 		}
 	}
 </script>
-
 <style lang="scss">
 	@import './login.scss';
 </style>

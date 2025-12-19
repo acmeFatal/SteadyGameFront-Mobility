@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<view class="home-page">
 		<view class="home-header">
 			<view class="home-user" @click="handleUserClick">
@@ -259,7 +259,6 @@
 		}
 	}
 </script>
-
 <style lang="scss">
 	@import './home.scss';
 </style>

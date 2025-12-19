@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<view class="message-page">
 		<sg-navbar title="消息中心" />
 		
@@ -41,7 +41,7 @@
 		</scroll-view>
 		
 		<view v-if="hasUnread" class="message-footer" @click="markAllRead">
-			<text class="message-footer-text">全部标记为已�?/text>
+			<text class="message-footer-text">全部标记为已读</text>
 		</view>
 	</view>
 </template>
@@ -72,7 +72,7 @@
 					{ name: '全部', type: 'all', unread: 5 },
 					{ name: '系统通知', type: 'system', unread: 2 },
 					{ name: '交易提醒', type: 'trade', unread: 3 },
-					{ name: '活动推�?, type: 'activity', unread: 0 }
+					{ name: '活动推送', type: 'activity', unread: 0 }
 				] as Tab[],
 				messageList: [] as Message[],
 				page: 1,
@@ -102,7 +102,7 @@
 						id: 1,
 						type: 'system',
 						title: '系统升级通知',
-						content: '平台将于今晚22:00-24:00进行系统维护升级，届时部分功能可能无法使用�?,
+						content: '平台将于今晚22:00-24:00进行系统维护升级，届时部分功能可能无法使用。',
 						createTime: new Date().toISOString(),
 						isRead: false
 					},
@@ -110,7 +110,7 @@
 						id: 2,
 						type: 'trade',
 						title: '交易成功提醒',
-						content: '您购买的"稳健增值理财产�?已确认成交，金额10,000.00元�?,
+						content: '您购买的"稳健增值理财产品"已确认成交，金额10,000.00元。',
 						createTime: new Date(Date.now() - 3600000).toISOString(),
 						isRead: false
 					},
@@ -118,7 +118,7 @@
 						id: 3,
 						type: 'trade',
 						title: '收益到账提醒',
-						content: '您的理财产品收益58.00元已到账，请查收�?,
+						content: '您的理财产品收益58.00元已到账，请查收。',
 						createTime: new Date(Date.now() - 86400000).toISOString(),
 						isRead: true
 					},
@@ -126,7 +126,7 @@
 						id: 4,
 						type: 'activity',
 						title: '新人专享活动',
-						content: '首次投资�?万元即可获得50元红包奖励，活动时间有限，快来参与！',
+						content: '首次投资满1万元即可获得50元红包奖励，活动时间有限，快来参与！',
 						createTime: new Date(Date.now() - 172800000).toISOString(),
 						isRead: true
 					}
@@ -183,7 +183,6 @@
 		}
 	}
 </script>
-
 <style lang="scss">
 	@import './message.scss';
 </style>

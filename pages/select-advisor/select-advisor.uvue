@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<view class="advisor-list-page">
 		<sg-navbar title="选择顾问" />
 		
@@ -30,7 +30,7 @@
 					<view class="advisor-header">
 						<text class="advisor-name">{{ advisor.realName }}</text>
 						<view class="advisor-rating">
-							<text class="advisor-rating-star">�?/text>
+							<text class="advisor-rating-star">⭐</text>
 							<text class="advisor-rating-value">{{ advisor.rating }}</text>
 						</view>
 					</view>
@@ -41,8 +41,8 @@
 						</view>
 					</view>
 					<view class="advisor-stats">
-						<text class="advisor-stat">{{ advisor.serviceYears }}年经�?/text>
-						<text class="advisor-stat">服务{{ advisor.clientCount }}�?/text>
+						<text class="advisor-stat">{{ advisor.serviceYears }}年经验</text>
+						<text class="advisor-stat">服务{{ advisor.clientCount }}人</text>
 					</view>
 				</view>
 			</view>
@@ -80,7 +80,7 @@
 					{ label: '资产配置', value: 'asset' },
 					{ label: '基金投资', value: 'fund' },
 					{ label: '保险规划', value: 'insurance' },
-					{ label: '养老规�?, value: 'pension' },
+					{ label: '养老规划', value: 'pension' },
 					{ label: '税务筹划', value: 'tax' }
 				] as FilterTag[],
 				advisorList: [] as Advisor[],
@@ -106,7 +106,7 @@
 						advisorId: 1,
 						realName: '张明',
 						avatar: '',
-						title: '高级理财规划�?,
+						title: '高级理财规划师',
 						specialties: ['资产配置', '基金投资', '保险规划'],
 						serviceYears: 8,
 						clientCount: 256,
@@ -117,7 +117,7 @@
 						realName: '李华',
 						avatar: '',
 						title: '资深财富顾问',
-						specialties: ['养老规�?, '税务筹划', '家族传承'],
+						specialties: ['养老规划', '税务筹划', '家族传承'],
 						serviceYears: 12,
 						clientCount: 389,
 						rating: 4.8
@@ -126,7 +126,7 @@
 						advisorId: 3,
 						realName: '王芳',
 						avatar: '',
-						title: '金融理财�?,
+						title: '金融理财师',
 						specialties: ['基金投资', '股票分析', '定投策略'],
 						serviceYears: 5,
 						clientCount: 128,
@@ -165,7 +165,6 @@
 		}
 	}
 </script>
-
 <style lang="scss">
 	@import './select-advisor.scss';
 </style>

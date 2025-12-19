@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<view class="profile-page">
 		<sg-navbar title="个人资料" />
 		
@@ -6,41 +6,41 @@
 			<text class="profile-label">头像</text>
 			<view class="profile-avatar-wrap">
 				<image class="profile-avatar" :src="userInfo.avatar || '/static/default-avatar.png'" mode="aspectFill"></image>
-				<text class="profile-arrow">�?/text>
+				<text class="profile-arrow">›</text>
 			</view>
 		</view>
 		
 		<view class="profile-form">
 			<view class="profile-item" @click="editField('realName')">
 				<text class="profile-item-label">真实姓名</text>
-				<text class="profile-item-value">{{ userInfo.realName || '未设�? }}</text>
-				<text class="profile-arrow">�?/text>
+				<text class="profile-item-value">{{ userInfo.realName || '未设置' }}</text>
+				<text class="profile-arrow">›</text>
 			</view>
 			
 			<view class="profile-item">
-				<text class="profile-item-label">用户�?/text>
+				<text class="profile-item-label">用户名</text>
 				<text class="profile-item-value">{{ userInfo.username }}</text>
 			</view>
 			
 			<view class="profile-item" @click="editField('gender')">
 				<text class="profile-item-label">性别</text>
 				<text class="profile-item-value">{{ getGenderText(userInfo.gender) }}</text>
-				<text class="profile-arrow">�?/text>
+				<text class="profile-arrow">›</text>
 			</view>
 			
 			<view class="profile-item" @click="editField('birthDate')">
 				<text class="profile-item-label">出生日期</text>
-				<text class="profile-item-value">{{ userInfo.birthDate || '未设�? }}</text>
-				<text class="profile-arrow">�?/text>
+				<text class="profile-item-value">{{ userInfo.birthDate || '未设置' }}</text>
+				<text class="profile-arrow">›</text>
 			</view>
 		</view>
 		
 		<view class="profile-form">
 			<view class="profile-item">
-				<text class="profile-item-label">手机�?/text>
+				<text class="profile-item-label">手机号</text>
 				<text class="profile-item-value">{{ formatPhone(userInfo.phone) }}</text>
 				<view v-if="userInfo.phoneVerified" class="profile-verified">
-					<text class="profile-verified-text">已验�?/text>
+					<text class="profile-verified-text">已验证</text>
 				</view>
 			</view>
 			
@@ -48,7 +48,7 @@
 				<text class="profile-item-label">邮箱</text>
 				<text class="profile-item-value">{{ formatEmail(userInfo.email) }}</text>
 				<view v-if="userInfo.emailVerified" class="profile-verified">
-					<text class="profile-verified-text">已验�?/text>
+					<text class="profile-verified-text">已验证</text>
 				</view>
 			</view>
 		</view>
@@ -57,7 +57,7 @@
 			<view class="profile-item" @click="goToUserProfile">
 				<text class="profile-item-label">用户画像</text>
 				<text class="profile-item-value">查看/编辑</text>
-				<text class="profile-arrow">�?/text>
+				<text class="profile-arrow">›</text>
 			</view>
 		</view>
 	</view>
@@ -76,7 +76,7 @@
 				userInfo: {} as UserInfo,
 				showGenderPicker: false,
 				showDatePicker: false,
-				genderOptions: ['未知', '�?, '�?]
+				genderOptions: ['未知', '男', '女']
 			}
 		},
 		onLoad() {
@@ -103,8 +103,8 @@
 			getGenderText(gender: number): string {
 				const genderMap: Record<number, string> = {
 					0: '未知',
-					1: '�?,
-					2: '�?
+					1: '男',
+					2: '女'
 				}
 				return genderMap[gender] || '未知'
 			},
@@ -122,11 +122,11 @@
 			},
 			
 			async uploadAvatar(filePath: string) {
-				uni.showLoading({ title: '上传�?..' })
+				uni.showLoading({ title: '上传中...' })
 				try {
-					// 实际应上传到服务器，这里简化处�?
+					// 实际应上传到服务器，这里简化处理
 					this.userInfo.avatar = filePath
-					uni.showToast({ title: '头像已更�?, icon: 'success' })
+					uni.showToast({ title: '头像已更新', icon: 'success' })
 				} catch (e) {
 					console.error('上传头像失败:', e)
 				} finally {
@@ -139,7 +139,7 @@
 					uni.showModal({
 						title: '修改真实姓名',
 						editable: true,
-						placeholderText: '请输入真实姓�?,
+						placeholderText: '请输入真实姓名',
 						success: async (res) => {
 							if (res.confirm && res.content) {
 								await this.updateField({ realName: res.content })
@@ -148,15 +148,15 @@
 					})
 				} else if (field === 'gender') {
 					uni.showActionSheet({
-						itemList: ['�?, '�?],
+						itemList: ['男', '女'],
 						success: async (res) => {
 							const gender = res.tapIndex + 1
 							await this.updateField({ gender })
 						}
 					})
 				} else if (field === 'birthDate') {
-					// 使用日期选择�?
-					uni.showToast({ title: '请使用日期选择�?, icon: 'none' })
+					// 使用日期选择器
+					uni.showToast({ title: '请使用日期选择器', icon: 'none' })
 				}
 			},
 			
@@ -187,7 +187,6 @@
 		}
 	}
 </script>
-
 <style lang="scss">
 	@import './profile.scss';
 </style>

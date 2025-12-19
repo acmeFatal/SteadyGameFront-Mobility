@@ -8,7 +8,7 @@
 				<input 
 					class="clients-search-input"
 					v-model="keyword"
-					placeholder="搜索客户姓名/手机�?
+					placeholder="搜索客户姓名/手机号"
 					@confirm="searchClients"
 				/>
 			</view>
@@ -48,7 +48,7 @@
 						<text class="client-stat">收益 {{ client.returnRate > 0 ? '+' : '' }}{{ (client.returnRate * 100).toFixed(2) }}%</text>
 					</view>
 				</view>
-				<text class="client-arrow">�?/text>
+				<text class="client-arrow">›</text>
 			</view>
 			
 			<sg-empty v-if="clientList.length === 0" text="暂无客户" />
@@ -85,7 +85,7 @@
 				filterTabs: [
 					{ label: '全部', value: 'all', count: 128 },
 					{ label: '重点客户', value: 'focus', count: 15 },
-					{ label: '新客�?, value: 'new', count: 8 },
+					{ label: '新客户', value: 'new', count: 8 },
 					{ label: '预警客户', value: 'alert', count: 3 }
 				] as FilterTab[],
 				clientList: [] as Client[],
@@ -141,7 +141,7 @@
 			
 			formatAssets(num: number): string {
 				if (num >= 10000) {
-					return (num / 10000).toFixed(1) + '�?
+					return (num / 10000).toFixed(1) + '万'
 				}
 				return num.toString()
 			},

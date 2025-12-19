@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<view class="register-page">
 		<sg-navbar title="注册账号" />
 		
@@ -194,7 +194,6 @@
 		}
 	}
 </script>
-
 <style lang="scss">
 	@import './register.scss';
 </style>

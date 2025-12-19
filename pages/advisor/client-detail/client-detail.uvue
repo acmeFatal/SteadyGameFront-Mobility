@@ -28,7 +28,7 @@
 		<view class="client-assets">
 			<view class="client-asset-item">
 				<text class="client-asset-value">¥{{ formatMoney(client.totalAssets) }}</text>
-				<text class="client-asset-label">总资�?/text>
+				<text class="client-asset-label">总资产</text>
 			</view>
 			<view class="client-asset-item">
 				<text class="client-asset-value" :class="client.totalReturn >= 0 ? 'text-rise' : 'text-fall'">
@@ -40,7 +40,7 @@
 				<text class="client-asset-value" :class="client.returnRate >= 0 ? 'text-rise' : 'text-fall'">
 					{{ client.returnRate >= 0 ? '+' : '' }}{{ (client.returnRate * 100).toFixed(2) }}%
 				</text>
-				<text class="client-asset-label">收益�?/text>
+				<text class="client-asset-label">收益率</text>
 			</view>
 		</view>
 		
@@ -48,12 +48,12 @@
 			<text class="client-section-title">基本信息</text>
 			<view class="client-info-list">
 				<view class="client-info-item">
-					<text class="client-info-label">手机�?/text>
+					<text class="client-info-label">手机号</text>
 					<text class="client-info-value">{{ formatPhone(client.phone) }}</text>
 				</view>
 				<view class="client-info-item">
 					<text class="client-info-label">邮箱</text>
-					<text class="client-info-value">{{ client.email || '未绑�? }}</text>
+					<text class="client-info-value">{{ client.email || '未绑定' }}</text>
 				</view>
 				<view class="client-info-item">
 					<text class="client-info-label">风险等级</text>
@@ -85,7 +85,7 @@
 		<view class="client-section">
 			<view class="client-section-header">
 				<text class="client-section-title">持仓记录</text>
-				<text class="client-section-more" @click="goToHoldings">查看全部 �?/text>
+				<text class="client-section-more" @click="goToHoldings">查看全部 ›</text>
 			</view>
 			<view class="client-holdings">
 				<view 
@@ -196,7 +196,7 @@
 			
 			formatMoney(num: number): string {
 				if (num >= 10000) {
-					return (num / 10000).toFixed(2) + '�?
+					return (num / 10000).toFixed(2) + '万'
 				}
 				return num.toFixed(2)
 			},

@@ -1,10 +1,10 @@
-<template>
+﻿<template>
 	<view class="logs-page">
 		<sg-navbar title="登录日志" />
 		
 		<view class="logs-tips">
 			<text class="logs-tips-icon">ℹ️</text>
-			<text class="logs-tips-text">展示最�?0天的登录记录，如发现异常请及时处�?/text>
+			<text class="logs-tips-text">展示最近30天的登录记录，如发现异常请及时处理</text>
 		</view>
 		
 		<scroll-view class="logs-list" scroll-y @scrolltolower="loadMore">
@@ -130,7 +130,6 @@
 		}
 	}
 </script>
-
 <style lang="scss">
 	@import './login-logs.scss';
 </style>

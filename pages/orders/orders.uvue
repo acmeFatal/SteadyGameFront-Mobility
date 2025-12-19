@@ -68,7 +68,7 @@
 			<sg-empty v-if="orderList.length === 0 && !loading" text="暂无订单" />
 			
 			<view v-if="loading" class="orders-loading">
-				<text class="orders-loading-text">加载�?..</text>
+				<text class="orders-loading-text">加载中...</text>
 			</view>
 		</scroll-view>
 	</view>
@@ -91,10 +91,10 @@
 				currentTab: 0,
 				tabs: [
 					{ name: '全部', status: null },
-					{ name: '待处�?, status: 1 },
-					{ name: '处理�?, status: 2 },
-					{ name: '已成�?, status: 3 },
-					{ name: '已取�?, status: 4 }
+					{ name: '待处理', status: 1 },
+					{ name: '处理中', status: 2 },
+					{ name: '已成交', status: 3 },
+					{ name: '已取消', status: 4 }
 				] as Tab[],
 				orderList: [] as Order[],
 				loading: false,
@@ -192,8 +192,8 @@
 					content: '确定要取消该订单吗？',
 					success: async (res) => {
 						if (res.confirm) {
-							// 需要输入交易密�?
-							// 这里简化处�?
+							// 需要输入交易密码
+							// 这里简化处理
 							uni.showToast({ title: '取消订单功能开发中', icon: 'none' })
 						}
 					}

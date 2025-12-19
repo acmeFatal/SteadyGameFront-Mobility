@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<view class="advisor-page">
 		<sg-navbar title="我的顾问" />
 		
@@ -9,14 +9,14 @@
 					<text class="advisor-name">{{ advisor.realName }}</text>
 					<text class="advisor-title">{{ advisor.title }}</text>
 					<view class="advisor-rating">
-						<text class="advisor-rating-star">�?/text>
+						<text class="advisor-rating-star">⭐</text>
 						<text class="advisor-rating-value">{{ advisor.rating }}</text>
 					</view>
 				</view>
 			</view>
 			
 			<view class="advisor-intro">
-				<text class="advisor-intro-title">个人简�?/text>
+				<text class="advisor-intro-title">个人简介</text>
 				<text class="advisor-intro-text">{{ advisor.introduction }}</text>
 			</view>
 			
@@ -31,7 +31,7 @@
 			
 			<view class="advisor-stats">
 				<view class="advisor-stat">
-					<text class="advisor-stat-value">{{ advisor.serviceYears }}�?/text>
+					<text class="advisor-stat-value">{{ advisor.serviceYears }}年</text>
 					<text class="advisor-stat-label">从业经验</text>
 				</view>
 				<view class="advisor-stat">
@@ -43,7 +43,7 @@
 			<view class="advisor-actions">
 				<view class="advisor-btn advisor-btn--message" @click="goToMessage">
 					<text class="advisor-btn-icon">💬</text>
-					<text class="advisor-btn-text">发消�?/text>
+					<text class="advisor-btn-text">发消息</text>
 				</view>
 				<view class="advisor-btn advisor-btn--call" @click="makeCall">
 					<text class="advisor-btn-icon">📞</text>
@@ -62,10 +62,10 @@
 		
 		<view v-else class="advisor-empty">
 			<view class="advisor-empty-icon">
-				<text class="advisor-empty-icon-text">👨‍�?/text>
+				<text class="advisor-empty-icon-text">👨‍💼</text>
 			</view>
 			<text class="advisor-empty-text">您还没有专属顾问</text>
-			<text class="advisor-empty-desc">选择一位专属顾问，获得专业的理财建�?/text>
+			<text class="advisor-empty-desc">选择一位专属顾问，获得专业的理财建议</text>
 			<view class="advisor-empty-btn" @click="goToSelectAdvisor">
 				<text class="advisor-empty-btn-text">选择顾问</text>
 			</view>
@@ -130,7 +130,7 @@
 			changeAdvisor() {
 				uni.showModal({
 					title: '更换顾问',
-					content: '确定要申请更换顾问吗�?,
+					content: '确定要申请更换顾问吗？',
 					success: (res) => {
 						if (res.confirm) {
 							this.goToSelectAdvisor()
@@ -145,7 +145,6 @@
 		}
 	}
 </script>
-
 <style lang="scss">
 	@import './my-advisor.scss';
 </style>

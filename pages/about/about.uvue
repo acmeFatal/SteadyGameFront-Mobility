@@ -10,10 +10,10 @@
 		
 		<view class="about-intro">
 			<text class="about-intro-text">
-				智能金融理财平台是一款基于人工智能技术的智能理财服务应用，致力于为用户提供专业、安全、便捷的理财服务�?
+				智能金融理财平台是一款基于人工智能技术的智能理财服务应用，致力于为用户提供专业、安全、便捷的理财服务。
 			</text>
 			<text class="about-intro-text">
-				我们通过大数据分析和AI算法，为每位用户量身定制个性化的理财方案，帮助用户实现财富的稳健增值�?
+				我们通过大数据分析和AI算法，为每位用户量身定制个性化的理财方案，帮助用户实现财富的稳健增值。
 			</text>
 		</view>
 		
@@ -29,19 +29,19 @@
 				@click="goToAgreement('privacy')"
 			/>
 			<sg-list-item 
-				title="风险揭示�? 
+				title="风险揭示书" 
 				icon="⚠️"
 				@click="goToAgreement('risk')"
 			/>
 			<sg-list-item 
-				title="检查更�? 
+				title="检查更新" 
 				icon="🔄"
-				:value="isLatest ? '已是最新版�? : '发现新版�?"
+				:value="isLatest ? '已是最新版本' : '发现新版本'"
 				@click="checkUpdate"
 			/>
 			<sg-list-item 
 				title="清除缓存" 
-				icon="🗑�?
+				icon="🗑️"
 				:value="cacheSize"
 				:border="false"
 				@click="clearCache"
@@ -50,7 +50,7 @@
 		
 		<view class="about-footer">
 			<text class="about-copyright">© 2024 SteadyGame Team</text>
-			<text class="about-icp">ICP备案号：京ICP备XXXXXXXX�?/text>
+			<text class="about-icp">ICP备案号：京ICP备XXXXXXXX号</text>
 		</view>
 	</view>
 </template>
@@ -92,19 +92,19 @@
 				uni.showLoading({ title: '检查更新中...' })
 				setTimeout(() => {
 					uni.hideLoading()
-					uni.showToast({ title: '已是最新版�?, icon: 'success' })
+					uni.showToast({ title: '已是最新版本', icon: 'success' })
 				}, 1500)
 			},
 			
 			clearCache() {
 				uni.showModal({
 					title: '提示',
-					content: '确定要清除缓存吗�?,
+					content: '确定要清除缓存吗？',
 					success: (res) => {
 						if (res.confirm) {
 							clearStorage()
 							this.cacheSize = '0 KB'
-							uni.showToast({ title: '缓存已清�?, icon: 'success' })
+							uni.showToast({ title: '缓存已清除', icon: 'success' })
 						}
 					}
 				})

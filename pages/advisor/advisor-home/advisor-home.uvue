@@ -25,7 +25,7 @@
 			</view>
 			<view class="advisor-stat">
 				<text class="advisor-stat-value">{{ formatMoney(stats.totalAssets) }}</text>
-				<text class="advisor-stat-label">管理资产(�?</text>
+				<text class="advisor-stat-label">管理资产(万)</text>
 			</view>
 			<view class="advisor-stat">
 				<text class="advisor-stat-value">{{ stats.monthOrders }}</text>
@@ -63,8 +63,8 @@
 		
 		<view class="advisor-section">
 			<view class="advisor-section-header">
-				<text class="advisor-section-title">待处理事�?/text>
-				<text class="advisor-section-more" @click="goToTasks">查看全部 �?/text>
+				<text class="advisor-section-title">待处理事项</text>
+				<text class="advisor-section-more" @click="goToTasks">查看全部 ›</text>
 			</view>
 			<view class="advisor-tasks">
 				<view 
@@ -82,14 +82,14 @@
 					</view>
 					<text class="advisor-task-time">{{ task.time }}</text>
 				</view>
-				<sg-empty v-if="pendingTasks.length === 0" text="暂无待处理事�? />
+				<sg-empty v-if="pendingTasks.length === 0" text="暂无待处理事项" />
 			</view>
 		</view>
 		
 		<view class="advisor-section">
 			<view class="advisor-section-header">
 				<text class="advisor-section-title">重点关注客户</text>
-				<text class="advisor-section-more" @click="goToClients">查看全部 �?/text>
+				<text class="advisor-section-more" @click="goToClients">查看全部 ›</text>
 			</view>
 			<view class="advisor-focus-clients">
 				<view 
@@ -180,9 +180,9 @@
 			
 			loadPendingTasks() {
 				this.pendingTasks = [
-					{ id: 1, type: 'rebalance', title: '资产再平衡提�?, description: '客户张三的资产配置偏离目�?, time: '10分钟�? },
-					{ id: 2, type: 'expiring', title: '产品到期提醒', description: '3位客户的理财产品将于本周到期', time: '30分钟�? },
-					{ id: 3, type: 'consult', title: '咨询预约', description: '李四预约了下�?点的视频咨询', time: '1小时�? }
+					{ id: 1, type: 'rebalance', title: '资产再平衡提醒', description: '客户张三的资产配置偏离目标', time: '10分钟前' },
+					{ id: 2, type: 'expiring', title: '产品到期提醒', description: '3位客户的理财产品将于本周到期', time: '30分钟前' },
+					{ id: 3, type: 'consult', title: '咨询预约', description: '李四预约了下午3点的视频咨询', time: '1小时前' }
 				]
 			},
 			
@@ -200,7 +200,7 @@
 			
 			formatAssets(num: number): string {
 				if (num >= 10000) {
-					return (num / 10000).toFixed(1) + '�?
+					return (num / 10000).toFixed(1) + '万'
 				}
 				return num.toString()
 			},
@@ -212,7 +212,7 @@
 			getTaskIcon(type: string): string {
 				const iconMap: Record<string, string> = {
 					'rebalance': '⚖️',
-					'expiring': '�?,
+					'expiring': '⏰',
 					'consult': '📞',
 					'alert': '⚠️'
 				}
